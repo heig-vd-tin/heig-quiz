@@ -28,11 +28,13 @@ return [
 
     'user' => [
         // fillable user model attribute => server variable
-        'name' => 'Shib-cn',
-        'first_name' => 'givenName',
-        'last_name' => 'Shib-sn',
+        'name' => 'surname',
+        'firstname' => 'givenName',
+        'lastname' => 'surname',
         'email' => 'mail',
-        'emplid' => 'uniqueID',
+        'gender' => 'gender',
+        'unique_id' => 'uniqueID',
+        'affiliation' => 'affiliation'
     ],
 
     /*

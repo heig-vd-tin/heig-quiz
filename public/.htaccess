@@ -28,3 +28,9 @@
     ShibRequestSetting requireSession 1    
     Require valid-user    
 </If>
+<If "%{REQUEST_URI} =~ m#^/shibboleth-data#">
+    AuthType shibboleth
+    ShibUseEnvironment On
+    ShibRequestSetting requireSession 1    
+    Require valid-user    
+</If>

@@ -68,9 +68,9 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('shibboleth-logout') }}">Logout</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('shibboleth-login') }}">Login</a>
 
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}">Register</a>
@@ -84,6 +84,11 @@
                     chevallier.io
                 </div>
 
+                @auth
+                <div class="m-b-md">
+                    Bienvenue {{Auth::user()->firstname}}
+                </div>
+                @endauth
                 <div class="links">
                     <a href="https://heig-vd-tin.github.io/info-handout/">Cours</a>
                     <a href="http://gaps.heig-vd.ch/">Gaps</a>
