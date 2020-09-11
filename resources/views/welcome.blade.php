@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>chevallier.io</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -90,7 +90,8 @@
                 </div>
                 @endauth
                 <div class="links">
-                    <a href="https://heig-vd-tin.github.io/info-handout/">Cours</a>
+                    <a href="https://heig-tin-info.github.io/handout/">Cours</a>
+                    <a href="https://github.com/heig-vd-tin/refcard/releases/latest/download/refcard.pdf">Référence C</a>
                     <a href="http://gaps.heig-vd.ch/">Gaps</a>
                     <a href="http://socrative.com">Socrative</a>
                     <a href="https://github.com/heig-tin-info">GitHub</a>
