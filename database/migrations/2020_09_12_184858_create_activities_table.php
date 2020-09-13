@@ -17,10 +17,10 @@ class CreateActivitiesTable extends Migration
             $table->id();
             $table->foreignId('quiz_id');
             $table->foreignId('class_id');
-            $table->int('duration');
+            $table->integer('duration');
             $table->boolean('shuffle_questions')->default(false);
             $table->boolean('shuffle_propositions')->default(false);
-            $table->int('seed')->default(0);
+            $table->integer('seed')->default(0);
             $table->timestamps();
         });
     }

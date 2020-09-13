@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7.29
+    container_name: mysql-chevallier
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
