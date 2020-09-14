@@ -13,7 +13,6 @@ class CreateStudentsTable extends Migration
             $table->string('orientation');
             $table->enum('type', ['PT', 'TP']);
             $table->foreignId('user_id')->constrained();
-
             $table->timestamps();
         });
     }
