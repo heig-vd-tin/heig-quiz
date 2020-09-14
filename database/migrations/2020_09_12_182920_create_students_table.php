@@ -6,27 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateStudentsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('orientation');
             $table->enum('type', ['PT', 'TP']);
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained();
+
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('students');

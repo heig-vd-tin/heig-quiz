@@ -6,28 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAnswersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('activity_id');
-            $table->foreignId('student_id');
-            $table->text('answer');
-            $table->boolean('is_correct');
+            $table->foreignId('activity_id')->constrained('activities');
+            $table->foreignId('student_id')->constrained();
+            $table->foreignId('question_id')->constrained();
+            $table->text('answer'); // Raw given answer by student
+            $table->boolean('is_correct'); // This question was answered correctly
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('answers');

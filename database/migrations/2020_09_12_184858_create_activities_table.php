@@ -6,30 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateActivitiesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quiz_id');
-            $table->foreignId('class_id');
-            $table->integer('duration');
+            $table->foreignId('quiz_id')->constrained('quizzes');
+            $table->foreignId('class_id')->constrained('classrooms');
+            $table->integer('duration'); // In minutes
             $table->boolean('shuffle_questions')->default(false);
             $table->boolean('shuffle_propositions')->default(false);
-            $table->integer('seed')->default(0);
+            $table->integer('seed')->default(0); // For random generator
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('activities');

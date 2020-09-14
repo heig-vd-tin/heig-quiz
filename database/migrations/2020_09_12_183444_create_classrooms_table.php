@@ -6,28 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateClassroomsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
-            $table->string('number');
+            $table->string('number'); // A, B, C, D...
             $table->tinyInteger('semester');
             $table->year('year');
-            $table->foreignId('course_id');
+            $table->foreignId('course_id')->constrained();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('classrooms');
