@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\Quiz;
 
-class Quizzes extends Seeder
+class QuizSeeder extends Seeder
 {
     /**
      * Run the database seeds.

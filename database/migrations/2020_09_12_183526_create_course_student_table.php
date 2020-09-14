@@ -13,8 +13,8 @@ class CreateCourseStudentTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_student', function (Blueprint $table) {
-            $table->foreignId('course_id')->constrained();
+        Schema::create('class_student', function (Blueprint $table) {
+            $table->foreignId('class_id')->constrained();
             $table->foreignId('student_id')->constrained();
         });
     }
@@ -26,6 +26,7 @@ class CreateCourseStudentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('course_student');
+        Schema::dropIfExists('student');
+        Schema::dropIfExists('class_student');
     }
 }

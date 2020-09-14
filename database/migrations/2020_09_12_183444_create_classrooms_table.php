@@ -8,7 +8,7 @@ class CreateClassroomsTable extends Migration
 {
     public function up()
     {
-        Schema::create('classrooms', function (Blueprint $table) {
+        Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->string('number'); // A, B, C, D...
             $table->tinyInteger('semester');
@@ -21,5 +21,7 @@ class CreateClassroomsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('classrooms');
+        Schema::dropIfExists('classes');
+        Schema::dropIfExists('class');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoursesTable extends Migration
+class CreateKeywordQuestionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateCoursesTable extends Migration
      */
     public function up()
     {
-        /*Schema::create('courses', function (Blueprint $table) {
-            $table->id();
-            $table->string('name'); // Such as `info1`
-            $table->string('department'); // Such as `tin`
-            $table->timestamps();
-        });*/
+        Schema::create('keyword_question', function (Blueprint $table) {
+            $table->foreignId('keyword_id')->constrained();
+            $table->foreignId('question_id')->constrained();
+        });
     }
 
     /**
@@ -28,6 +26,6 @@ class CreateCoursesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('keyword_question');
     }
 }

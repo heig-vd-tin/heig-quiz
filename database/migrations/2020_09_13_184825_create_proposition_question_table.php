@@ -8,11 +8,11 @@ class CreatePropositionQuestionTable extends Migration
 {
     public function up()
     {
-        Schema::create('proposition_question', function (Blueprint $table) {
-            $table->foreignId('question_id')->constrained()->onDelete('cascade');
-            $table->foreignId('proposition_id')->constrained()->onDelete('cascade');
+        /*Schema::create('proposition_question', function (Blueprint $table) {
+            $table->foreignId('question_id');
+            $table->foreignId('proposition_id');
             $table->boolean('is_correct');
-        });
+        });*/
     }
 
     public function down()
