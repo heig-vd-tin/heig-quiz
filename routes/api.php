@@ -20,6 +20,14 @@ Route::middleware('api')->namespace('Api')
             Route::get('question/{id}', 'QuizController@index')->name('question');
             Route::get('keyword', 'QuizController@getKeywords')->name('keyword');
             Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
+
+            Route::get('classroom/{id}', 'ClassroomController@getClass');
+
+            Route::get('course/{id}', 'ClassroomController@getCourse');
+
+            Route::get('activity/{id}', 'ActivityController@getActivity');
+
+            Route::get('activity/answer/{id}', 'ActivityController@getActivityAnswer');
         }
     );
 
