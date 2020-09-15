@@ -13,7 +13,7 @@ class ActivitySeeder extends Seeder
     {
         DB::table('activities')->insert([
             'quiz_id' => '1',
-            'class_id' => '1',
+            'classroom_id' => '1',
             'duration' => '10'
         ]);
     }

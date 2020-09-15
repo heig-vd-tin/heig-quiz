@@ -11,7 +11,7 @@ class CreateActivitiesTable extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quiz_id')->constrained('quizzes');
-            $table->foreignId('class_id')->constrained('classes');
+            $table->foreignId('classroom_id')->constrained('classrooms');
             $table->integer('duration'); // In minutes
             $table->boolean('shuffle_questions')->default(false);
             $table->boolean('shuffle_propositions')->default(false);

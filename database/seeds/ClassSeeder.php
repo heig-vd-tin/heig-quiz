@@ -11,7 +11,7 @@ class ClassSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('classes')->insert([
+        DB::table('classrooms')->insert([
             'number' => '2',
             'course_id' => '1',
             //'name' => 'Info1',

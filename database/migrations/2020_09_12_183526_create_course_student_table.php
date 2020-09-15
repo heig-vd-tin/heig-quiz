@@ -13,8 +13,8 @@ class CreateCourseStudentTable extends Migration
      */
     public function up()
     {
-        Schema::create('class_student', function (Blueprint $table) {
-            $table->foreignId('class_id')->constrained();
+        Schema::create('classroom_student', function (Blueprint $table) {
+            $table->foreignId('classroom_id')->constrained();
             $table->foreignId('student_id')->constrained();
         });
     }
