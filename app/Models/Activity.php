@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Classroom;
-use Quiz;
+use App\Models\Classroom;
+use App\Models\Quiz;
 
 class Activity extends Model
 {
     function quiz() {
-        return $this->hasOne(Quiz::class);
+        return $this->belongsTo(Quiz::class);
     }
 
     function classroom() {
-        return $this->hasOne(Classroom::class);
+        return $this->belongsTo(Classroom::class);
     }
 }
