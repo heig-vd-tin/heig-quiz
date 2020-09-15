@@ -12,17 +12,19 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            //UserSeeder::class,            
-            //ClassSeeder::class
-            //StudentSeeder::class
+            UserSeeder::class,    
+            CourseSeeder::class,
 
-            //QuestionSeeder::class
-            //KeywordSeeder::class
-            //KeywordQuestionSeeder::class
+            ClassSeeder::class,
+            StudentSeeder::class,
 
-            //QuizSeeder::class
+            QuestionSeeder::class,
+            KeywordSeeder::class,
+            KeywordQuestionSeeder::class,
 
-            //ActivitySeeder::class
+            QuizSeeder::class,
+
+            ActivitySeeder::class
         ]);
     }
 }

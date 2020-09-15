@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'email' => 'tutu.toto@heig-vd.ch',
             'name' => 'Tutu Toto',
             'password' => Hash::make('password'),
-            'gender' => 'male',
+            'gender' => '1',
             'affiliation' => ''
         ]);
 
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             'email' => 'johndoe@heig-vd.ch',
             'name' => 'John Doe',
             'password' => Hash::make('password'),
-            'gender' => 'male',
+            'gender' => '1',
             'affiliation' => ''
         ]);
 
@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
             'email' => 'nicoledoe@heig-vd.ch',
             'name' => 'Nicole Doe',
             'password' => Hash::make('password'),
-            'gender' => 'female',
+            'gender' => '2',
             'affiliation' => ''
         ]);
     }

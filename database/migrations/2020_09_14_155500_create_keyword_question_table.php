@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateKeywordQuestionTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('keyword_question', function (Blueprint $table) {
@@ -19,11 +14,6 @@ class CreateKeywordQuestionTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('keyword_question');
