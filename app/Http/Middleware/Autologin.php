@@ -12,7 +12,7 @@ class AutoLogin
     {
         $identity = config('devel.autologin');
 
-        if (!Auth::check() && config('app.debug') && $identity) {
+        if (!Auth::check() && config('app.debug') && $identity) {            
             Auth::login(User::orWhere([
                 'id' => $identity,
                 'email' => $identity,

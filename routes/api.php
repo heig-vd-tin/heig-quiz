@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\QuestionController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,9 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('api')->namespace('Api')
+    ->group(
+        function () {
+            Route::get('question/{id}', 'QuestionController@index')->name('question');
+        }
+    );
+
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 
 // Route::middleware('auth:api')->prefix('quiz')->group(
 //     ['middleware' => App\Http\Middleware\TeacherMiddleware::class], function () {
