@@ -3,8 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\QuestionController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,8 +17,9 @@ use App\Http\Controllers\Api\QuestionController;
 Route::middleware('api')->namespace('Api')
     ->group(
         function () {
-            Route::get('question/{id}', 'QuestionController@index')->name('question');
-            Route::get('keyword', 'QuestionController@getKeywords')->name('question');
+            Route::get('question/{id}', 'QuizController@index')->name('question');
+            Route::get('keyword', 'QuizController@getKeywords')->name('keyword');
+            Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
         }
     );
 
