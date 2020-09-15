@@ -11,7 +11,7 @@ class Question extends Model
         return $this->belongsToMany('App\Models\Keyword');
     }
 
-    function propositions() {
-        return $this->belongsToMany(Proposition::class)->withPivot('is_correct');
+    function quiz() {
+        return $this->belongsToMany('App\Models\Quiz');
     }
 }

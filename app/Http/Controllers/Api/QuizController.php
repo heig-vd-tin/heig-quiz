@@ -7,11 +7,16 @@ use Illuminate\Http\Request;
 
 use App\Models\Question;
 use App\Models\Keyword;
+use App\Models\Quiz;
 
-class QuestionController extends Controller
+class QuizController extends Controller
 {
     function index($id) {
         return Question::with('keyword')->find(1);
+    }
+
+    function getQuiz($id) {
+        return Quiz::with('question')->find(1);
     }
 
     function getKeywords() {
