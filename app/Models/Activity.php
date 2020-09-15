@@ -13,6 +13,10 @@ class Activity extends Model
         return $this->belongsTo(Quiz::class);
     }
 
+    function teacher() {
+        return $this->belongsTo('App\User');
+    }
+
     function classroom() {
         return $this->belongsTo(Classroom::class);
     }

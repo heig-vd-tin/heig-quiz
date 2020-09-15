@@ -14,4 +14,8 @@ class Classroom extends Model
     function students() {
         return $this->belongsToMany('App\Models\Student');
     }
+
+    function activities() {
+        return $this->hasMany(Activity::class);
+    }
 }

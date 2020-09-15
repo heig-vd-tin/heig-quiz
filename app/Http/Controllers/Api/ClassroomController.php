@@ -11,7 +11,7 @@ use App\Models\Course;
 class ClassroomController extends Controller
 {
     function getClass($id) {
-        return Classroom::with(['course','students'])->find(1);
+        return Classroom::with(['course','students','activities'])->find(1);
     }
 
     function getCourse($id) {

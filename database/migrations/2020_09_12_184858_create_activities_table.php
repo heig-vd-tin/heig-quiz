@@ -12,7 +12,9 @@ class CreateActivitiesTable extends Migration
             $table->id();
             $table->foreignId('quiz_id')->constrained('quizzes');
             $table->foreignId('classroom_id')->constrained('classrooms');
+            $table->foreignId('teacher_id')->constrained('users');
             $table->integer('duration'); // In minutes
+            $table->enum('state', ['ready', 'in_progress', 'finish']);
             $table->boolean('shuffle_questions')->default(false);
             $table->boolean('shuffle_propositions')->default(false);
             $table->integer('seed')->default(0); // For random generator
