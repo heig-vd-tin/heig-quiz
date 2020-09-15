@@ -16,4 +16,8 @@ class ActivityController extends Controller
     function getActivity() {
         return Activity::with(['quiz','classroom'])->find(1);
     }
+
+    function getActivityAnswer() {
+        return Activity::with(['answer.student'])->find(1);
+    }
 }

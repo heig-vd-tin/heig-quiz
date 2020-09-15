@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Classroom;
 use App\Models\Quiz;
+use App\Models\Answer;
 
 class Activity extends Model
 {
@@ -14,5 +15,9 @@ class Activity extends Model
 
     function classroom() {
         return $this->belongsTo(Classroom::class);
+    }
+
+    function answer() {
+        return $this->hasMany(Answer::class);
     }
 }
