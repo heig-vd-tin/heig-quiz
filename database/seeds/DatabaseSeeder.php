@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             //KeywordQuestionSeeder::class
 
             //QuizSeeder::class
+
+            //ActivitySeeder::class
         ]);
     }
 }
