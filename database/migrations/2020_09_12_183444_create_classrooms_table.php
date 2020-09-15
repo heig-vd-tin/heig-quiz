@@ -22,6 +22,5 @@ class CreateClassroomsTable extends Migration
     {
         Schema::dropIfExists('classrooms');
         Schema::dropIfExists('classes');
-        Schema::dropIfExists('class');
     }
 }
