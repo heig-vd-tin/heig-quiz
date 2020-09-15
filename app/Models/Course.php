@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Classroom;
+use App\Models\Classroom;
 
 class Course extends Model
 {
-    function classrooms() {
-        return $this->belongsTo(Classroom::class);
+    function classroom() {
+        return $this->hasOne(Classroom::class);
     }
 }

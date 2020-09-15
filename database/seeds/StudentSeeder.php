@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Student;
+use App\Models\Classroom;
 
 class StudentSeeder extends Seeder
 {
@@ -22,5 +24,7 @@ class StudentSeeder extends Seeder
             'type' => 'TP',
             'user_id' => '3'
         ]);
+
+        Classroom::find(1)->students()->attach([1,2]);
     }
 }
