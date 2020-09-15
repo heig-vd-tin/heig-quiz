@@ -20,6 +20,7 @@ Route::middleware('api')->namespace('Api')
     ->group(
         function () {
             Route::get('question/{id}', 'QuestionController@index')->name('question');
+            Route::get('keyword', 'QuestionController@getKeywords')->name('question');
         }
     );
 
