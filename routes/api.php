@@ -25,9 +25,10 @@ Route::middleware('api')->namespace('Api')
 
             Route::get('course/{id}', 'ClassroomController@getCourse');
 
-            Route::get('activity/{id}', 'ActivityController@getActivity');
-
             Route::get('activity/answer/{id}', 'ActivityController@getActivityAnswer');
+            Route::get('activity/{activity_id}/{num}', 'ActivityController@getQuestion');
+            Route::get('activity', 'ActivityController@getMyActivities');
+            Route::get('activity/{id}', 'ActivityController@getActivity');
         }
     );
 
