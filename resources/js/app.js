@@ -11,6 +11,9 @@ window.Vue = require('vue');
 import Vue from 'vue'
 Vue.config.devtools = true
 Vue.use(BootstrapVue)
+
+import router from './router.js'
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -31,5 +34,6 @@ Vue.component('app', require('./components/HomeComponent.vue').default);
  */
 
 const app = new Vue({
+    router,
     el: '#app',
 });
