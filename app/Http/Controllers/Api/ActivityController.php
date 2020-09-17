@@ -72,7 +72,8 @@ class ActivityController extends Controller
         }
 
         foreach($classes as $cl) {
-            $activities = Activity::where('classroom_id', '=', $cl->id)->get()->all();
+            $activities = Activity::with(['quiz','classroom','teacher'])->
+                where('classroom_id', '=', $cl->id)->get()->all();
             foreach($activities as $a) {
                 array_push($act, $a);
             }            
