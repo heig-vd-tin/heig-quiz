@@ -1,7 +1,6 @@
 <template>
     <div class="container">
-        <!-- <router-view></router-view> -->
-        <activities></activities>
+        <router-view></router-view>
     </div>
 </template>
 

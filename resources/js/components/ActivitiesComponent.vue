@@ -2,7 +2,7 @@
     <div>
         <div v-if="loaded" class="row justify-content-center">
             <div> {{ title }} </div>
-            <b-table striped hover :items="activities" :fields="fields"></b-table>
+            <b-table striped hover :items="activities" :fields="fields" @row-clicked="activityClickHandler"></b-table>
         </div>
     </div>
 </template>
@@ -44,14 +44,16 @@
 
         methods: {
             loadActivities: function(){
-                console.log("Click load")
                 axios
                     .get('api/activity')
                     .then((rep) => {
-                        Vue.set
                         this.activities = rep.data
                         this.loaded = true
                     })
+            },
+
+            activityClickHandler(record, index) {
+                this.$router.push({ name: 'Quiz', params: { activity_id: record.id } })
             }
         },
 

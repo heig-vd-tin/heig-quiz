@@ -9,6 +9,13 @@ use App\Models\Answer;
 
 class Activity extends Model
 {
+    protected $appends = array('number');
+
+    public function getNumberAttribute()
+    {
+        return $this->quiz->question->count();  
+    }
+
     function quiz() {
         return $this->belongsTo(Quiz::class);
     }

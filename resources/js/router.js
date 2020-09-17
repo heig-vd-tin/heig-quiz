@@ -4,7 +4,7 @@ import VueRouter from "vue-router"
 Vue.use(VueRouter)
 
 import Activities from "./components/ActivitiesComponent.vue"
-//import Quiz from "./components/QuizComponent.vue"
+import Quiz from "./components/QuizComponent.vue"
 
 const routes = [
   {
@@ -12,11 +12,11 @@ const routes = [
     name: "Activities",
     component: Activities
   },
-  /*{
+  {
     path: "/quiz",
     name: "Quiz",
     component: Quiz
-  }*/
+  }
 ];
 
 const router = new VueRouter({

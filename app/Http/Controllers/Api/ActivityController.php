@@ -56,7 +56,9 @@ class ActivityController extends Controller
                     where('student_id', $student->id)->
                     first();
 
-        return [Question::find($question_id), $ans->answer];
+        $quest = Question::find($question_id)->toArray();
+        $quest['current_answer'] = $ans ? $ans->answer : '';
+        return $quest;
     }
 
     function getMyActivities() {
