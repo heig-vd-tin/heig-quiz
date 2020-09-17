@@ -24,7 +24,6 @@
 
         methods: {
             testclick: function(){
-                debugger
                 console.log("Click load")
                 axios
                     .get('api/activity')
