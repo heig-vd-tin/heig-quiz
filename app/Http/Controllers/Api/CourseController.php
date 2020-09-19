@@ -12,7 +12,7 @@ class CourseController extends Controller
         $courses = Course::with('classrooms')->get();
         return [
             'count' => count($courses),
-            'students' => $courses,
+            'courses' => $courses,
             'api' => [
             ]
         ];

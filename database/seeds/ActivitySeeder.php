@@ -12,48 +12,49 @@ class ActivitySeeder extends Seeder
     public function run()
     {
         DB::table('activities')->insert([
-            'quiz_id' => '1',
-            'classroom_id' => '1',
-            'duration' => '10',
+            'quiz_id' => 1,
+            'classroom_id' => 1,
+            'duration' => 60,
             'state' => 'in_progress',
+            'user_id' => 1
         ]);
 
         DB::table('answers')->insert([
-            'activity_id' => '1',
-            'student_id' => '1',
-            'question_id' => '1',
+            'activity_id' => 1,
+            'student_id' => 1,
+            'question_id' => 1,
             'answer' => '???',
             'is_correct' => '0'
         ]);
 
         DB::table('answers')->insert([
-            'activity_id' => '1',
-            'student_id' => '1',
+            'activity_id' => 1,
+            'student_id' => 1,
             'question_id' => '2',
             'answer' => '???',
             'is_correct' => '0'
         ]);
 
         DB::table('answers')->insert([
-            'activity_id' => '1',
+            'activity_id' => 1,
             'student_id' => '2',
             'question_id' => '4',
             'answer' => '???',
-            'is_correct' => '1'
+            'is_correct' => 1
         ]);
 
         DB::table('answers')->insert([
-            'activity_id' => '1',
+            'activity_id' => 1,
             'student_id' => '2',
-            'question_id' => '1',
+            'question_id' => 1,
             'answer' => '???',
-            'is_correct' => '1'
+            'is_correct' => 1
         ]);
 
         DB::table('answers')->insert([
-            'activity_id' => '1',
+            'activity_id' => 1,
             'student_id' => '2',
-            'question_id' => '1',
+            'question_id' => 1,
             'answer' => '???',
             'is_correct' => '0'
         ]);

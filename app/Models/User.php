@@ -54,4 +54,8 @@ class User extends Authenticatable
     function studentDetails() {
         return $this->hasOne(Student::class);
     }
+
+    function activities() {
+        return $this->hasMany(Activity::class);
+    }
 }

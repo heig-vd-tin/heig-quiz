@@ -10,14 +10,14 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->integer('unique_id');
+            $table->integer('unique_id')->comment('Switch AAI unique ID');
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->unique();
             $table->string('name');
-            $table->string('password');
+            $table->string('password')->comment('Always `shibboleth` for AAI authentication');
             $table->tinyInteger('gender');
-            $table->string('affiliation');
+            $table->string('affiliation')->comment('Usually `member;staff` or `member;student`');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -11,12 +11,13 @@ class CreateActivitiesTable extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quiz_id')->constrained('quizzes');
-            $table->foreignId('classroom_id')->constrained('classrooms');
-            $table->integer('duration'); // In minutes
-            $table->enum('state', ['ready', 'in_progress', 'finish']);
+            $table->foreignId('classroom_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->integer('duration')->comment('In seconds');
+            $table->enum('state', ['hidden', 'ready', 'in_progress', 'finish']);
             $table->boolean('shuffle_questions')->default(false);
             $table->boolean('shuffle_propositions')->default(false);
-            $table->integer('seed')->default(0); // For random generator
+            $table->integer('seed')->default(0)->comment('For random generator');
             $table->timestamps();
         });
     }
