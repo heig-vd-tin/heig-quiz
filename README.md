@@ -10,7 +10,7 @@ Base site for Teaching at HEIG-VD. This website features:
 
 ## Development
 
-Get the code:
+### Get the code
 
 ```
 git clone git@github.com:yves-chevallier/chevallier.io.git
@@ -20,18 +20,29 @@ composer install
 npm install
 ```
 
-Initialize:
+### Initialize
 
 ```
 docker-compose up
 
-./artisan key:generate
-./artisan migrate
-./artisan db:seed
+php artisan key:generate
+php artisan migrate:freah --seed
 ```
 
-Serve:
+### Serve
+
+You need more than one terminal...
 
 ```
-./artisan serve
+php artisan serve
+```
+
+```
+npm run watch
+```
+
+### Reset all the migrations
+
+``` 
+php artisan migrate:freah --seed
 ```
