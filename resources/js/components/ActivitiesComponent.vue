@@ -4,6 +4,7 @@
             <div> {{ title }} </div>
             <b-table striped hover :items="activities" :fields="fields" @row-clicked="activityClickHandler"></b-table>
         </div>
+        
     </div>
 </template>
 

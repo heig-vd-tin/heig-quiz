@@ -20,6 +20,6 @@ class QuizController extends Controller
     }
 
     function getKeywords() {
-        return Keyword::all();
+        return Keyword::orderBy('name')->get();
     }
 }

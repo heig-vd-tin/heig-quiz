@@ -18,7 +18,7 @@ Route::middleware('api')->namespace('Api')
     ->group(
         function () {
             Route::get('question/{id}', 'QuizController@index')->name('question');
-            Route::get('keyword', 'QuizController@getKeywords')->name('keyword');
+            Route::get('keywords', 'QuizController@getKeywords')->name('keyword');
             Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
 
             Route::get('classroom/{id}', 'ClassroomController@getClass');
