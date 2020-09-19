@@ -1,0 +1,6 @@
+duration: 10 minutes
+questions:
+  - questions/fill-in-the-gaps.md
+  - questions/multiple-choices.md
+  - questions/short-answer.md
+  - questions/code.md
