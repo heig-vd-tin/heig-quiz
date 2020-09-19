@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Keyword extends Model
 {
-    public function users()
+    protected $hidden = ['created_at', 'updated_at'];
+
+    public function questions()
     {
-        return $this->belongsToMany('App\Models\Question');
+        return $this->belongsToMany(Question::class);
     }
 }

@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::namespace('Api')->group(function () {
 
+    Route::get('keywords', 'KeywordController@index');
+    Route::get('keywords/{category}', 'KeywordController@with_category');
 
 
     Route::get('question/{id}', 'QuizController@index')->name('question');
-    Route::get('keywords', 'QuizController@getKeywords')->name('keyword');
     Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
 
     Route::get('classroom/{id}', 'ClassroomController@getClass');
