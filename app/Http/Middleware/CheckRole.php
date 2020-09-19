@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace App\Http\Middleware;
 
 use Closure;
+use Request;
 
 class CheckRole
 {
@@ -10,8 +11,17 @@ class CheckRole
 	{
 		if($request->user()->hasRole($role) || !$role)
 			return $next($request);
-   
-		return abort(403);
+
+        $error_code = 403;
+
+        if (Request::wantsJson() || strncmp(Request::path(), "api/", 4) === 0) {
+            return response()->json([
+                'error' => 'Unauthorized: only for teachers!',
+                'documentation_url' => url('docs')
+            ], $error_code);
+        } else {
+            return abort($error_code);
+        }
 	}
 
 	private function getRequiredRoleForRoute($route)

@@ -7,7 +7,7 @@ use App\Models\Classroom;
 
 class Course extends Model
 {
-    function classroom() {
-        return $this->hasOne(Classroom::class);
+    function classrooms() {
+        return $this->hasMany(Classroom::class)->withCount('students');
     }
 }

@@ -2,16 +2,18 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Course;
+
 class CourseSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('courses')->insert([
+        Course::create([
             'name' => 'Info1',
             'department' => 'tin'
         ]);
 
-        DB::table('courses')->insert([
+        Course::create([
             'name' => 'Info2',
             'department' => 'tin'
         ]);

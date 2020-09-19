@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     function classrooms() {
-        return $this->belongsToMany('App\Models\Classroom');
+        return $this->belongsToMany(Classroom::class);
+    }
+
+    function user() {
+        return $this->belongsTo(User::class);
     }
 }
