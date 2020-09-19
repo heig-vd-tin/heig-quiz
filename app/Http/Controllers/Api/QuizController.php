@@ -11,7 +11,11 @@ use App\Models\Quiz;
 
 class QuizController extends Controller
 {
-    function index($id) {
+    function index() {
+        return Quiz::withCount('questions')->get();
+    }
+
+    function show($id) {
         return Question::with('keyword')->find(1);
     }
 

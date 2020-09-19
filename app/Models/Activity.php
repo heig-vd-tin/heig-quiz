@@ -6,13 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
-    protected $appends = array('number');
-
-    public function getNumberAttribute()
-    {
-        return $this->quiz->question->count();
-    }
-
     function quiz() {
         return $this->belongsTo(Quiz::class);
     }

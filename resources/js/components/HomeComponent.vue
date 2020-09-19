@@ -5,11 +5,11 @@
 </template>
 
 <script>
-    import ActivitiesComp from './ActivitiesComponent'
-    
+    import ActivitiesComponent from './ActivitiesComponent'
+
     export default {
         components: {
-            'activities': ActivitiesComp
+            'activities': ActivitiesComponent
         }
     }
 </script>

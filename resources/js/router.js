@@ -5,6 +5,7 @@ Vue.use(VueRouter)
 
 import Activities from "./components/ActivitiesComponent.vue"
 import Quiz from "./components/QuizComponent.vue"
+import Progress from "./components/ProgressComponent.vue"
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path: "/quiz",
     name: "Quiz",
     component: Quiz
+  },
+  {
+    path: "/progress",
+    name: "Progression",
+    component: Progress
   }
 ];
 
