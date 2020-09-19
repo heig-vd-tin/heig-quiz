@@ -4,6 +4,7 @@
 
 use App\Models\User;
 use Faker\Generator as Faker;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 /*
@@ -18,11 +19,21 @@ use Illuminate\Support\Str;
 */
 
 $factory->define(User::class, function (Faker $faker) {
+
+    $gender = Arr::random([0 /* male */, 1 /* female */]);
+    $firstname = $faker->firstName(['male', 'female'][$gender]);
+    $lastname = $faker->lastName;
+    $email = strtolower($firstname) . '.' . strtolower($lastname) . '@heig-vd.com';
     return [
-        'name' => $faker->name,
+        'name' => "$firstname $lastname",
         'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        'unique_id' => $faker->unique()->randomNumber(),
+        'firstname' => $firstname,
+        'lastname' => $lastname,
+        'email' => $email,
+        'password' => 'shibboleth',
+        'gender' => $gender,
+        'affiliation' => 'member;student',
         'remember_token' => Str::random(10),
     ];
 });

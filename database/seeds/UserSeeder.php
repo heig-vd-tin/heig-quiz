@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('users')->insert([
-            'unique_id' => '10',
+        User::create([
+            'unique_id' => '1456',
             'firstname' => 'Tony',
             'lastname' => 'Maulaz',
             'email' => 'tony.maulaz@heig-vd.ch',
@@ -16,8 +17,9 @@ class UserSeeder extends Seeder
             'gender' => '1',
             'affiliation' => 'member;staff'
         ]);
-        DB::table('users')->insert([
-            'unique_id' => '10',
+
+        User::create([
+            'unique_id' => '7454',
             'firstname' => 'Yves',
             'lastname' => 'Chevallier',
             'email' => 'yves.chevallier@heig-vd.ch',
@@ -26,25 +28,11 @@ class UserSeeder extends Seeder
             'gender' => '1',
             'affiliation' => 'member;staff'
         ]);
-        DB::table('users')->insert([
-            'unique_id' => '100',
-            'firstname' => 'Nicole',
-            'lastname' => 'Lebouquet',
-            'email' => 'nicole.lebouquet@heig-vd.ch',
-            'name' => 'Nicole Lebouquet',
-            'password' => 'shibboleth',
-            'gender' => '2',
-            'affiliation' => 'member;student'
-        ]);
-        DB::table('users')->insert([
-            'unique_id' => '100',
-            'firstname' => 'Frédéric',
-            'lastname' => 'Giggoletta',
-            'email' => 'frederic.giggoletta@heig-vd.ch',
-            'name' => 'Frédéric Giggoletta',
-            'password' => 'shibboleth',
-            'gender' => '1',
-            'affiliation' => 'member;student'
-        ]);
+
+        factory(App\Models\User::class, 50)->create()->each(function ($user) {
+            if ($user->affiliation == 'member;student') {
+                $user->studentDetails()->save(factory(App\Models\Student::class)->make());
+            }
+        });
     }
 }

@@ -20,8 +20,6 @@ Route::namespace('Api')->group(function () {
 
     });
 
-
-
     Route::get('quizzes', 'QuizController@index');
 
     Route::get('question/{id}', 'QuizController@index')->name('question');

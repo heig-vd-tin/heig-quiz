@@ -18,7 +18,7 @@ class QuizSeeder extends Seeder
             'name' => 'Quiz 00'
         ]);
 
-        $quiz->question()->attach([1,2,3]);
+        $quiz->questions()->attach([1,2,3]);
 
     }
 }

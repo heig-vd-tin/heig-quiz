@@ -8,14 +8,6 @@ class CourseSeeder extends Seeder
 {
     public function run()
     {
-        Course::create([
-            'name' => 'Info1',
-            'department' => 'tin'
-        ]);
-
-        Course::create([
-            'name' => 'Info2',
-            'department' => 'tin'
-        ]);
+        factory(App\Models\Course::class, 10)->create();
     }
 }

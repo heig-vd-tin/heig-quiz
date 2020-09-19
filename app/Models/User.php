@@ -50,4 +50,8 @@ class User extends Authenticatable
 
         return false;
     }
+
+    function studentDetails() {
+        return $this->hasOne(Student::class);
+    }
 }

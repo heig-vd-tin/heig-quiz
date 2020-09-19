@@ -10,10 +10,11 @@ class CreateClassroomsTable extends Migration
     {
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
-            $table->string('number'); // A, B, C, D...
-            $table->tinyInteger('semester');
+            $table->string('name'); // A, B, C, D...
+            $table->tinyInteger('semester'); // 0 : fall, 1 : spring
             $table->year('year');
             $table->foreignId('course_id')->constrained();
+            $table->foreignId('teacher_id')->constrained('users');
             $table->timestamps();
         });
     }
@@ -21,6 +22,6 @@ class CreateClassroomsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('classrooms');
-        Schema::dropIfExists('classes');
+        Schema::dropIfExists('classes'); // Haha I had the same issue Tony :)
     }
 }
