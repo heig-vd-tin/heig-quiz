@@ -36,4 +36,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    function hasRole($roles) {
+        if (!is_array($roles))
+            $roles = [$roles];
+
+        foreach($roles as $role) {
+            if ($role == 'student' && $this->affiliation == 'member;student')
+                return true;
+            if ($role == 'teacher' && $this->affiliation == 'member;staff')
+                return true;                                
+        }
+
+        return false;
+    }    
 }

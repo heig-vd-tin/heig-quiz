@@ -4,11 +4,6 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         DB::table('users')->insert([
@@ -17,42 +12,39 @@ class UserSeeder extends Seeder
             'lastname' => 'Maulaz',
             'email' => 'tony.maulaz@heig-vd.ch',
             'name' => 'Tony Maulaz',
-            'password' => Hash::make('password'),
+            'password' => 'shibboleth',
             'gender' => '1',
-            'affiliation' => ''
+            'affiliation' => 'member;staff'
         ]);
-
+        DB::table('users')->insert([
+            'unique_id' => '10',
+            'firstname' => 'Yves',
+            'lastname' => 'Chevallier',
+            'email' => 'yves.chevallier@heig-vd.ch',
+            'name' => 'Yves Chevallier',
+            'password' => 'shibboleth',
+            'gender' => '1',
+            'affiliation' => 'member;staff'
+        ]);
         DB::table('users')->insert([
             'unique_id' => '100',
-            'firstname' => 'Tutu',
-            'lastname' => 'Toto',
-            'email' => 'tutu.toto@heig-vd.ch',
-            'name' => 'Tutu Toto',
-            'password' => Hash::make('password'),
-            'gender' => '1',
-            'affiliation' => ''
-        ]);
-
-        DB::table('users')->insert([
-            'unique_id' => '102',
-            'firstname' => 'John',
-            'lastname' => 'Doe',
-            'email' => 'johndoe@heig-vd.ch',
-            'name' => 'John Doe',
-            'password' => Hash::make('password'),
-            'gender' => '1',
-            'affiliation' => ''
-        ]);
-
-        DB::table('users')->insert([
-            'unique_id' => '103',
             'firstname' => 'Nicole',
-            'lastname' => 'Doe',
-            'email' => 'nicoledoe@heig-vd.ch',
-            'name' => 'Nicole Doe',
-            'password' => Hash::make('password'),
+            'lastname' => 'Lebouquet',
+            'email' => 'nicole.lebouquet@heig-vd.ch',
+            'name' => 'Nicole Lebouquet',
+            'password' => 'shibboleth',
             'gender' => '2',
-            'affiliation' => ''
+            'affiliation' => 'member;student'
+        ]);
+        DB::table('users')->insert([
+            'unique_id' => '100',
+            'firstname' => 'Frédéric',
+            'lastname' => 'Giggoletta',
+            'email' => 'frederic.giggoletta@heig-vd.ch',
+            'name' => 'Frédéric Giggoletta',
+            'password' => 'shibboleth',
+            'gender' => '1',
+            'affiliation' => 'member;student'
         ]);
     }
 }
