@@ -16,5 +16,5 @@ class ClassroomController extends Controller
 
     function getCourse($id) {
         return Course::with('classroom')->find(1);
-    }    
+    }
 }

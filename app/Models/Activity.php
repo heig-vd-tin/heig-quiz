@@ -3,9 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Classroom;
-use App\Models\Quiz;
-use App\Models\Answer;
 
 class Activity extends Model
 {
@@ -13,7 +10,7 @@ class Activity extends Model
 
     public function getNumberAttribute()
     {
-        return $this->quiz->question->count();  
+        return $this->quiz->question->count();
     }
 
     function quiz() {
@@ -21,7 +18,7 @@ class Activity extends Model
     }
 
     function teacher() {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
     function classroom() {

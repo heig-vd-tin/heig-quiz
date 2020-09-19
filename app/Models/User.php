@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -45,9 +45,9 @@ class User extends Authenticatable
             if ($role == 'student' && $this->affiliation == 'member;student')
                 return true;
             if ($role == 'teacher' && $this->affiliation == 'member;staff')
-                return true;                                
+                return true;
         }
 
         return false;
-    }    
+    }
 }

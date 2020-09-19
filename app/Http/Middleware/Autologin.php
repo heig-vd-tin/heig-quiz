@@ -2,7 +2,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use App\User;
+use App\Models\User;
 use Closure;
 use Auth;
 
@@ -12,7 +12,7 @@ class AutoLogin
     {
         $identity = config('devel.autologin');
 
-        if (!Auth::check() && config('app.debug') && $identity) {            
+        if (!Auth::check() && config('app.debug') && $identity) {
 
             Auth::login(User::orWhere([
                 'id' => $identity,
