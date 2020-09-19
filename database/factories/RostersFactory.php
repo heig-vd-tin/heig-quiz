@@ -2,13 +2,13 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Classroom;
+use App\Models\Roster;
 use Faker\Generator as Faker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Models\User;
 
-$factory->define(Classroom::class, function (Faker $faker) {
+$factory->define(Roster::class, function (Faker $faker) {
 
     $teachers_id = User::where('affiliation', 'member;staff')->pluck('id')->toArray();
     return [

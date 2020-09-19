@@ -35,9 +35,9 @@ Route::namespace('Api')->group(function () {
                 'description' => "Activities are quizzes served to students as an exam during a T time",
                 'url' => url('api/activities'),
             ],
-            'classrooms' => [
+            'rosters' => [
                 'description' => "Student roster associated to a course",
-                'url' => url('api/classrooms'),
+                'url' => url('api/rosters'),
             ]
         ];
     });
@@ -52,15 +52,15 @@ Route::namespace('Api')->group(function () {
         Route::get('users', 'UserController@index');
         Route::get('users/{id}', 'UserController@show');
         Route::get('users/{id}/activities', 'UserController@activities');
-        Route::get('users/{id}/classrooms', 'ClassroomController@teacher_classrooms');
+        Route::get('users/{id}/rosters', 'RosterController@teacher_rosters');
 
         Route::get('courses', 'CourseController@index');
 
-        Route::get('classrooms', 'ClassroomController@index');
-        Route::get('classrooms/{id}', 'ClassroomController@show');
-        Route::get('classrooms/{id}/students', 'ClassroomController@students');
-        Route::get('classrooms/{id}/course', 'ClassroomController@course');
-        Route::get('classrooms/{id}/activities', 'ClassroomController@activities');
+        Route::get('rosters', 'RosterController@index');
+        Route::get('rosters/{id}', 'RosterController@show');
+        Route::get('rosters/{id}/students', 'RosterController@students');
+        Route::get('rosters/{id}/course', 'RosterController@course');
+        Route::get('rosters/{id}/activities', 'RosterController@activities');
 
         Route::get('quizzes', 'QuizController@index');
         Route::get('quizzes/{id}', 'QuizController@show');

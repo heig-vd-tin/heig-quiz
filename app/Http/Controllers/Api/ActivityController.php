@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Activity;
 use App\Models\Student;
-use App\Models\Classroom;
+use App\Models\Roster;
 use App\Models\Question;
 use App\Models\Answer;
 use Auth;
@@ -19,7 +19,7 @@ class ActivityController extends Controller
     }
 
     function getActivity() {
-        return Activity::with(['quiz','classroom'])->find(1);
+        return Activity::with(['quiz','roster'])->find(1);
     }
 
     function startActivity($id) {
@@ -40,7 +40,7 @@ class ActivityController extends Controller
         $student = Student::where('user_id', '=', $user_id)->first();
 
         $act = Activity::find($activity_id);
-        if(!$act->classroom->students->contains('id', $student->id)){
+        if(!$act->roster->students->contains('id', $student->id)){
             return;
         }
 
@@ -67,18 +67,18 @@ class ActivityController extends Controller
         $student = Student::where('user_id', '=', $user_id)->first();
         $act = [];
         if($student) {
-            $classes = $student->classrooms;
+            $classes = $student->rosters;
         }
         else {
-            $classes = Classroom::all();
+            $classes = Roster::all();
         }
 
         foreach($classes as $cl) {
-            $activities = Activity::with(['quiz','classroom','teacher'])->
-                where('classroom_id', '=', $cl->id)->get()->all();
+            $activities = Activity::with(['quiz','roster','teacher'])->
+                where('roster_id', '=', $cl->id)->get()->all();
             foreach($activities as $a) {
                 array_push($act, $a);
-            }            
+            }
         }
         return $act;
     }

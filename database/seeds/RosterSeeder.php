@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Classroom;
+use App\Models\Roster;
 use App\Models\Course;
 use App\Models\Student;
 
-class ClassroomSeeder extends Seeder
+class RosterSeeder extends Seeder
 {
     public function run()
     {
@@ -18,20 +18,20 @@ class ClassroomSeeder extends Seeder
 
         // Generate the courses
         foreach (Course::all() as $course) {
-            $classroom = factory(App\Models\Classroom::class)->make();
-            $classroom->name = 'A';
-            $classroom->course_id = $course->id;
-            $classroom->save();
+            $roster = factory(App\Models\Roster::class)->make();
+            $roster->name = 'A';
+            $roster->course_id = $course->id;
+            $roster->save();
             for($i = 0; $i < $studentPerClass && $k < $studentsCount; $i++) {
-                $classroom->students()->attach($students[$k++]);
+                $roster->students()->attach($students[$k++]);
             }
 
-            $classroom = factory(App\Models\Classroom::class)->make();
-            $classroom->name = 'B';
-            $classroom->course_id = $course->id;
-            $classroom->save();
+            $roster = factory(App\Models\Roster::class)->make();
+            $roster->name = 'B';
+            $roster->course_id = $course->id;
+            $roster->save();
             for($i = 0; $i < $studentPerClass && $k < $studentsCount; $i++) {
-                $classroom->students()->attach($students[$k++]);
+                $roster->students()->attach($students[$k++]);
             }
         }
     }

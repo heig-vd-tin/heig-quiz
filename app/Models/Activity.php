@@ -14,8 +14,8 @@ class Activity extends Model
         return $this->belongsTo(User::class);
     }
 
-    function classroom() {
-        return $this->belongsTo(Classroom::class);
+    function roster() {
+        return $this->belongsTo(Roster::class);
     }
 
     function answer() {

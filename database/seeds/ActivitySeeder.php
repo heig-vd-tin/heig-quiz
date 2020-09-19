@@ -14,7 +14,7 @@ class ActivitySeeder extends Seeder
     {
         DB::table('activities')->insert([
             'quiz_id' => 1,
-            'classroom_id' => 1,
+            'roster_id' => 1,
             'duration' => 60,
             'state' => 'in_progress',
             'user_id' => 1

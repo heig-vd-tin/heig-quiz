@@ -9,7 +9,7 @@ use App\Models\Course;
 class CourseController extends Controller
 {
     function index() {
-        $courses = Course::with('classrooms')->get();
+        $courses = Course::with('rosters')->get();
         return [
             'count' => count($courses),
             'courses' => $courses,

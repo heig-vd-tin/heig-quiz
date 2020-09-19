@@ -51,7 +51,7 @@
                             sortable: true,
                         },
                         {
-                            key: 'classroom.number',
+                            key: 'roster.number',
                             label: 'Classe',
                             sortable: true,
                         },
@@ -86,7 +86,7 @@
                             sortable: true,
                         },
                         {
-                            key: 'classroom.number',
+                            key: 'roster.number',
                             label: 'Classe',
                             sortable: true,
                         },

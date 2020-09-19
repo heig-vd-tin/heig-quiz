@@ -59,7 +59,7 @@ class User extends Authenticatable
         return $this->hasMany(Activity::class);
     }
 
-    function classrooms() {
-        return $this->hasMany(Classroom::class, 'teacher_id');
+    function rosters() {
+        return $this->hasMany(Roster::class, 'teacher_id');
     }
 }

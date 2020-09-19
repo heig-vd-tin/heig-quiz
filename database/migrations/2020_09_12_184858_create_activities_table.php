@@ -11,7 +11,7 @@ class CreateActivitiesTable extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quiz_id')->constrained('quizzes');
-            $table->foreignId('classroom_id')->constrained();
+            $table->foreignId('roster_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->integer('duration')->comment('In seconds');
             $table->enum('state', ['hidden', 'ready', 'in_progress', 'finish']);

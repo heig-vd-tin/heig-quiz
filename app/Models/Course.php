@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Classroom;
+use App\Models\Roster;
 
 class Course extends Model
 {
-    function classrooms() {
-        return $this->hasMany(Classroom::class)->withCount('students');
+    function rosters() {
+        return $this->hasMany(Roster::class)->withCount('students');
     }
 }

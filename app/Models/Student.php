@@ -8,8 +8,8 @@ class Student extends Model
 {
     protected $hidden = ['pivot'];
 
-    function classrooms() {
-        return $this->belongsToMany(Classroom::class);
+    function rosters() {
+        return $this->belongsToMany(Roster::class);
     }
 
     function user() {

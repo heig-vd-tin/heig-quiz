@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Classroom extends Model
+class Roster extends Model
 {
     public function course()
     {
