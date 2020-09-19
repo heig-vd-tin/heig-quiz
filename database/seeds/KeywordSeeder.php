@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Keyword;
 
 class KeywordSeeder extends Seeder
 {
@@ -11,22 +12,22 @@ class KeywordSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'struct']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'conversion']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'binary']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'ide']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'toolchain']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'goto']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'operators']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'booleans']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'number-bases']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'promotions']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'types']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'algorithms']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'big-o']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'arrays']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'recursion']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'unions']);
-        DB::table('keywords')->insert(['category' => 'programming', 'name' => 'compiler']);
+        Keyword::create(['category' => 'programming', 'name' => 'struct']);
+        Keyword::create(['category' => 'programming', 'name' => 'conversion']);
+        Keyword::create(['category' => 'programming', 'name' => 'binary']);
+        Keyword::create(['category' => 'programming', 'name' => 'ide']);
+        Keyword::create(['category' => 'programming', 'name' => 'toolchain']);
+        Keyword::create(['category' => 'programming', 'name' => 'goto']);
+        Keyword::create(['category' => 'programming', 'name' => 'operators']);
+        Keyword::create(['category' => 'programming', 'name' => 'booleans']);
+        Keyword::create(['category' => 'programming', 'name' => 'number-bases']);
+        Keyword::create(['category' => 'programming', 'name' => 'promotions']);
+        Keyword::create(['category' => 'programming', 'name' => 'types']);
+        Keyword::create(['category' => 'programming', 'name' => 'algorithms']);
+        Keyword::create(['category' => 'programming', 'name' => 'big-o']);
+        Keyword::create(['category' => 'programming', 'name' => 'arrays']);
+        Keyword::create(['category' => 'programming', 'name' => 'recursion']);
+        Keyword::create(['category' => 'programming', 'name' => 'unions']);
+        Keyword::create(['category' => 'programming', 'name' => 'compiler']);
     }
 }

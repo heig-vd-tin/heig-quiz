@@ -12,9 +12,15 @@ class CreateQuestionsTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('content'); // Markdown
-            $table->text('answer'); // Regexp or Array
-            $table->tinyInteger('difficulty')->default(0);
-            $table->text('explanation'); // Markdown
+
+            // ['A', 'B'] for multiple answers
+            // {'pattern' : '/regex/'}
+            // {'contains' : 'string'}
+            // {'expression' : '$_ > 23 && $_ < 42'}
+            $table->json('answer');
+
+            $table->enum('difficulty', ['easy', 'medium', 'hard', 'insane'])->default('easy');
+            $table->text('explanation')->nullable()->default(null); // Markdown
             $table->timestamps();
         });
     }

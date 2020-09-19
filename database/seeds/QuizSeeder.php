@@ -18,15 +18,7 @@ class QuizSeeder extends Seeder
             'name' => 'Quiz 00'
         ]);
 
-        $question = $quiz->question()->create([
-            'name' => "Canard",
-            'content' => "Quelle est la différence entre un canard ?",
-            'answer' => "Un canard a deux pattes, et l'une se ressemble. Réponse absurde à une question absurde.",
-            'difficulty' => 1,
-            'explanation' => ''
-        ]);
-
-        $quiz->question()->attach([1,2]);
+        $quiz->question()->attach([1,2,3]);
 
     }
 }

@@ -7,7 +7,7 @@ use Proposition;
 
 class Question extends Model
 {
-    function keyword() {
+    function keywords() {
         return $this->belongsToMany('App\Models\Keyword');
     }
 
