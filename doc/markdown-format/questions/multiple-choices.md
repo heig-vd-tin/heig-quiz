@@ -5,6 +5,7 @@ keywords:
   - algorithms
 answers:
   - D
+allow-shuffle: true
 ---
 # Heap Sort
 
