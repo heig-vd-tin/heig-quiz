@@ -85,6 +85,6 @@ Dans l'algorithme de Shunting-yard dont l'image suitante résume le principe, pl
             'answer' => '["Une file d\'attente", "une file d\'attente", "une pile"]',
             'difficulty' => 'insane',
             'explanation' => ""
-    ]);
+        ]);
     }
 }

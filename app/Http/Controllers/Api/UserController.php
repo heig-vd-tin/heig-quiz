@@ -32,6 +32,14 @@ class UserController extends Controller
     }
 
     function classrooms($id) {
-
+        $classrooms = User::findOrFail($id)->classrooms()->get()->each(function ($item, $key) {
+            $item['course'] = url("/api/classrooms/{$item['id']}/course");
+            $item['students'] = url("/api/classrooms/{$item['id']}/students");
+            $item['activities'] = url("/api/classrooms/{$item['id']}/activities");
+        });
+        return [
+            'count' => count($classrooms),
+            'classrooms' => $classrooms
+        ];
     }
 }

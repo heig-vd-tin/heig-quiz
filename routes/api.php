@@ -28,10 +28,15 @@ Route::namespace('Api')->group(function () {
         Route::get('users', 'UserController@index');
         Route::get('users/{id}', 'UserController@show');
         Route::get('users/{id}/activities', 'UserController@activities');
-        Route::get('users/{id}/classrooms', 'UserController@classrooms');
+        Route::get('users/{id}/classrooms', 'ClassroomController@teacher_classrooms');
 
         Route::get('courses', 'CourseController@index');
-        Route::get('classrooms/{id}', 'ClassroomController@getClass');
+
+        Route::get('classrooms', 'ClassroomController@index');
+        Route::get('classrooms/{id}', 'ClassroomController@show');
+        Route::get('classrooms/{id}/students', 'ClassroomController@students');
+        Route::get('classrooms/{id}/course', 'ClassroomController@course');
+        Route::get('classrooms/{id}/activities', 'ClassroomController@activities');
     });
 
     // Student
