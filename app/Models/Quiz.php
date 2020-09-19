@@ -15,6 +15,10 @@ class Quiz extends Model
         return $this->belongsToMany(Question::class);
     }
 
+    function activities() {
+        return $this->belongsTo(Activity::class);
+    }
+
     function getDifficultyAttribute() {
         $difficulty = 0;
         $count = 0;

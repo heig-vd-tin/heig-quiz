@@ -24,9 +24,15 @@ class UserController extends Controller
     }
 
     function activities($id) {
-        $activities = User::findOrFail($id)->activities()->get();
+        $activities = User::findOrFail($id)->activities()->get()->each(function ($item, $key) {
+            $item['quiz'] = url("/api/quizzes/{$item['quiz_id']}");
+            $item['questions'] = url("/api/quizzes/{$item['quiz_id']}/questions");
+            $item['classroom'] = url("/api/classrooms/{$item['classroom_id']}");
+            $item['owner'] = url("/api/users/{$item['user_id']}");
+        });
         return [
             'count' => count($activities),
+            'user_id' => $id,
             'activities' => $activities
         ];
     }

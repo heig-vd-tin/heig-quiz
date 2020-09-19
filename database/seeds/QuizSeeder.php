@@ -5,6 +5,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Quiz;
 use App\Models\Question;
 use Illuminate\Support\Arr;
+
+
 class QuizSeeder extends Seeder
 {
     public function run()

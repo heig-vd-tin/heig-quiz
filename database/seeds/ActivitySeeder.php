@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Activity;
 
 class ActivitySeeder extends Seeder
 {
@@ -58,5 +59,7 @@ class ActivitySeeder extends Seeder
             'answer' => '???',
             'is_correct' => '0'
         ]);
+
+        factory(Activity::class, 20)->create();
     }
 }

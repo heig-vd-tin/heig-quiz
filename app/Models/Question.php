@@ -7,6 +7,8 @@ use Proposition;
 
 class Question extends Model
 {
+    protected $hidden = ['pivot'];
+
     function keywords() {
         return $this->belongsToMany('App\Models\Keyword');
     }

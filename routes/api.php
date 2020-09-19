@@ -11,10 +11,34 @@ Route::namespace('Api')->group(function () {
     // Public
     Route::get('/', function() {
         return [
-            'keywords' => url('/api/keywords'),
-            'students' => is_teacher() ? url('/api/students') : null,
-            'courses' => is_teacher() ? url('/api/courses') : null,
-            'users' => is_teacher() ? url('/api/users') : null
+            'keywords' => [
+                'description' => "Each question may be tagged with keywords",
+                'url' => url('/api/keywords'),
+            ],
+            'students' => [
+                'description' => "The list of all students that used the platform",
+                'url' => is_teacher() ? url('/api/students') : null,
+            ],
+            'users' => [
+                'description' => "People that have an account on this system",
+                'url' => is_teacher() ? url('/api/users') : null,
+            ],
+            'courses' => [
+                'description' => "All courses that have classes of students",
+                'url' => is_teacher() ? url('/api/courses') : null,
+            ],
+            'quizzes' => [
+                'description' => "The list of all available quizzes",
+                'url' => url('api/quizzes'),
+            ],
+            'activities' => [
+                'description' => "Activities are quizzes served to students as an exam during a T time",
+                'url' => url('api/activities'),
+            ],
+            'classrooms' => [
+                'description' => "Student roster associated to a course",
+                'url' => url('api/classrooms'),
+            ]
         ];
     });
 
@@ -37,6 +61,11 @@ Route::namespace('Api')->group(function () {
         Route::get('classrooms/{id}/students', 'ClassroomController@students');
         Route::get('classrooms/{id}/course', 'ClassroomController@course');
         Route::get('classrooms/{id}/activities', 'ClassroomController@activities');
+
+        Route::get('quizzes', 'QuizController@index');
+        Route::get('quizzes/{id}', 'QuizController@show');
+        Route::get('quizzes/{id}/questions', 'QuizController@questions');
+        Route::get('quizzes/{id}/activities', 'QuizController@activities');
     });
 
     // Student
@@ -44,7 +73,6 @@ Route::namespace('Api')->group(function () {
 
     });
 
-    Route::get('quizzes', 'QuizController@index');
 
     Route::get('question/{id}', 'QuizController@index')->name('question');
     Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
