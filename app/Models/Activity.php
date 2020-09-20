@@ -7,6 +7,10 @@ use Illuminate\Support\Carbon;
 
 class Activity extends Model
 {
+    protected $guarded = [
+        'id'
+    ];
+
     protected $appends = [
         'elapsed',   // Number of seconds elapsed since the beginning
         'started',   // The activity has started and isn't yet finished

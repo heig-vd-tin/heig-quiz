@@ -7,6 +7,10 @@ use App\Models\Question;
 
 class Quiz extends Model
 {
+    protected $withCount = [
+        'questions'
+    ];
+
     protected $appends = [
         'difficulty', 'keywords'
     ];

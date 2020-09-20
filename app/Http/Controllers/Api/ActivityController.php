@@ -12,6 +12,8 @@ use App\Models\Roster;
 use App\Models\Question;
 use App\Models\Answer;
 use App\Models\User;
+use App\Models\Quiz;
+use Validator;
 use Arr;
 use Auth;
 
@@ -32,6 +34,7 @@ class ActivityController extends Controller
 
     function show($id) {
         $activity = Activity::findOrFail($id);
+        $activity['students'] = $activity->roster->students_count;
         $activity['quiz'] = url("/api/quizzes/{$activity['quiz_id']}");
         $activity['roster'] = url("/api/rosters/{$activity['roster_id']}");
         $activity['questions'] = url("/api/quizzes/{$activity['quiz_id']}/questions");
@@ -149,19 +152,22 @@ class ActivityController extends Controller
         $activity->save();
     }
 
-    function create(Request $request, $quiz_id) {
-        $data = $request->validate([
+    function create(Request $request) {
+
+        $validator = Validator::make($request->all(), [
             'duration' => 'min:10',
+            'quiz_id' => 'required|exists:quizzes,id',
             'roster_id' => 'required|exists:rosters,id',
             'shuffle_questions' => 'boolean',
             'shuffle_propositions' => 'boolean',
             'seed' => 'numeric',
         ]);
 
-        if (Roster::findOrFail($request->input('roster_id'))->teacher_id != Auth::id()) {
+        if ($validator->fails()) {
             return response([
-                'message' => "Only the roster's teacher can create an activity",
-                'error' => "Bad Request"
+                'message' => 'Missing or invalid fields',
+                'details' => $validator->messages(),
+                'error' => 'Bad Request',
             ], 400);
         }
 
@@ -172,14 +178,29 @@ class ActivityController extends Controller
             ], 400);
         }
 
-        Quiz::findOrFail($quiz_id)->activities()->create([
+        if (Roster::findOrFail($request->input('roster_id'))->teacher_id != Auth::id()) {
+            return response([
+                'message' => "Only the roster's teacher can create an activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $quiz = Quiz::findOrFail($request->quiz_id);
+
+        $activity = Activity::create([
             'user_id' => Auth::id(),
             'roster_id' => $request->roster_id,
+            'quiz_id' => $quiz->id,
             'duration' => $request->input('duration', 600),
             'shuffle_questions' => $request->input('shuffle_questions', false),
             'shuffle_propositions' => $request->input('shuffle_propositions', false),
-            'seed' => input('seed', random_int(0, 4294967295))
+            'seed' => $request->input('seed', random_int(0, 4294967295))
         ]);
+
+        return response([
+            'message' => 'New activity created',
+            'activity' => $activity,
+        ], 200);
     }
 
     /**

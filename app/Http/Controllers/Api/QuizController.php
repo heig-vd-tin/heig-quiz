@@ -13,8 +13,9 @@ class QuizController extends Controller
 {
     function index() {
         $quiz = Quiz::withCount('questions')->get()->each(function ($item, $key) {
-            $item['questions'] = url("/api/quiz/{$item['id']}/questions");
-            $item['activities'] = url("/api/quiz/{$item['id']}/activities");
+            $item['quiz'] = url("/api/quizzes/{$item['id']}");
+            $item['questions'] = url("/api/quizzes/{$item['id']}/questions");
+            $item['activities'] = url("/api/quizzes/{$item['id']}/activities");
         });
         return [
             'count' => count($quiz),

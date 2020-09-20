@@ -37,6 +37,7 @@
 - [ ] Singular or Plural for api routes?
 - [ ] API request message for JSON output -> Exception JSON?
 - [ ] Student can pass questions?
+- [ ] Question pool?
 
 ## New features
 

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Roster extends Model
 {
+    protected $withCount = [
+        'students'
+    ];
+
     public function course()
     {
         return $this->belongsTo('App\Models\Course');
