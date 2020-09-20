@@ -7,10 +7,11 @@
 - [x] Models 
 - [x] Base API
 - [x] Base Controller to get data
-- [ ] Actions
-  - [ ] Show/Hide Activity
+- [ ] Get student questions in order
+- [.] Actions
+  - [x] Show/Hide Activity
+  - [x] Start/Stop Activity
   - [ ] Create Activity
-  - [ ] Start/Stop Activity
   - [ ] Answer Question
 - [ ] Setup Event System (with Pusher?)
 - [ ] Redis/Pusher Events
@@ -35,6 +36,7 @@
 
 - [ ] Singular or Plural for api routes?
 - [ ] API request message for JSON output -> Exception JSON?
+- [ ] Student can pass questions?
 
 ## New features
 
@@ -43,3 +45,5 @@
 - [ ] Give Bundle Hash to Student
 - [ ] Question pool (table of all questions)
 - [ ] Create quiz from questions (difficulty, keywords, number of questions, duration)
+- [ ] Force Stop Quiz (add stopped_at in activities)
+- [ ] Limited time per question, the question is seen once by the student

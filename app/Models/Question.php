@@ -10,10 +10,15 @@ class Question extends Model
     protected $hidden = ['pivot'];
 
     function keywords() {
-        return $this->belongsToMany('App\Models\Keyword');
+        return $this->belongsToMany(Keyword::class);
     }
 
     function quiz() {
-        return $this->belongsToMany('App\Models\Quiz');
+        return $this->belongsToMany(Quiz::class);
     }
+
+    function answers() {
+        return $this->hasMany(Answer::class);
+    }
+
 }

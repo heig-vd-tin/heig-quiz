@@ -39,7 +39,7 @@ class Activity extends Model
             return $elapsed;
         }
 
-        return $elapsed;
+        return min($elapsed, $this->duration);
     }
 
     function getStartedAttribute() {
@@ -47,6 +47,6 @@ class Activity extends Model
     }
 
     function getCompletedAttribute() {
-        return $this->elapsed > $this->duration;
+        return $this->elapsed >= $this->duration;
     }
 }

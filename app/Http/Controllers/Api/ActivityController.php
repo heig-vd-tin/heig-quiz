@@ -12,6 +12,7 @@ use App\Models\Roster;
 use App\Models\Question;
 use App\Models\Answer;
 use App\Models\User;
+use Arr;
 use Auth;
 
 class ActivityController extends Controller
@@ -181,19 +182,113 @@ class ActivityController extends Controller
         ]);
     }
 
-    function get_random_question($activity, $id) {
-        $questions = $activity->quiz->questions()->orderBy('id')->get();
-        return Arr::shuffle($questions, $activity->seed + Auth::id() + $activity->quiz_id)[$id];
+    /**
+     * Get all the questions ordered as the student should see them.
+     * (randomized or not)
+     *
+     * TODO: ... Not really working
+     */
+    protected function get_ordered_questions($activity) {
+        $questions = $activity->quiz->questions()->orderBy('id')->get()->toArray();
+        if ($activity->shuffle_questions)
+            return Arr::shuffle($questions, $activity->seed + Auth::id() + $activity->quiz_id);
+        else
+            return $questions;
+    }
+
+    /**
+     * Student questions with her answers.
+     */
+    protected function activity_questions($activity) {
+        return $activity->quiz->questions()->with(['answers' => function($query) use($activity) {
+            $query->where('activity_id', $activity->id)->where('student_id', Auth::id());
+        }])->get();
+    }
+
+    /**
+     * Return the answered and the current question for the current activity.
+     */
+    function questions($id) {
+        $activity = Activity::findOrFail($id);
+        $questions = $this->get_ordered_questions($activity);
+        $questions_count = $activity->quiz()->withCount('questions')->first()->questions_count;
+
+        $data = [];
+        foreach($this->activity_questions($activity) as $question) {
+            $item = [
+                'id' => $question->id,
+                'name' => $question->name,
+                'content' => $question->content,
+
+                'answer' => count($question->answers) > 0 ? $question->answers[0]->answer : null
+            ];
+
+            $data[] = $item;
+        };
+
+        $answers = $activity->answers()->where('student_id', Auth::id())->orderBy('created_at')->get();
+
+        $previous_question = max(count($answers) - 1, 0);
+        $current_question = count($answers) < $questions_count ? count($answers) : null;
+        $next_question = $current_question + 1 < $questions_count ? $current_questions + 1 : null;
+
+        $response = [
+            'questions' => $data,
+            'current_question_id' => $current_question,
+            'next_question_id' => $next_question,
+            'previous_question_id' => $previous_question,
+
+            'remaining_seconds' => $activity->duration - $activity->elapsed,
+
+            'total_answered' => count($answers),
+            'total_questions' => $questions_count,
+            'percent_progression' => round(count($answers) / $questions_count * 100),
+
+            'activity' => url("/api/activities/{$id}"),
+
+            'current_question' => $current_question ? url("/api/activities/{$id}/questions/{$current_question}") : null,
+            'next_question' => $next_question ? url("/api/activities/{$id}/questions/{$next_question}") : null,
+            'previous_question' => url("/api/activities/{$id}/questions/{$previous_question}"),
+        ];
+
+        return $response;
     }
 
     function question(Request $request, $id, $question_id) {
         $activity = Activity::findOrFail($id);
-        $question = null;
-        return [
-            'question' => $question,
-            'remaining_seconds' => $activity->duration - $activity->elapsed,
-            'next' => url("/api/activities/{$id}/questions/{$next_question_id}"),
-            'previous' => url("/api/activities/{$id}/questions/{$previous_question_id}")
-        ];
+        $question = $activity->quiz->questions()->findOrFail($question_id);
+
+        if ($request->isMethod('post')) {
+            if (!$request->answer) {
+                return response([
+                    'message' => "No answer given",
+                    'error' => "Bad Request"
+                ], 400);
+            }
+
+            //$activity->quiz->questions()
+            $answer = Answer::updateOrCreate(
+                [
+                    'activity_id' => $activity->id,
+                    'student_id' => Auth::id(),
+                    'question_id' => $question_id
+                ],
+                [
+                    'answer' => $request->answer,
+                    'is_correct' => $this->validate_answer($request->answer, $question->answer)
+                ]
+            );
+        }
+
+        $question = $this->activity_questions($activity)[$question_id];
+        return $question;
+
+    }
+
+    /**
+     * Validate an answer
+     */
+    protected function validate_answer($given, $wanted) {
+        return true;
     }
 }

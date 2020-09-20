@@ -81,10 +81,11 @@ Route::namespace('Api')->group(function () {
     });
 
     // Student
-    Route::group(['middleware' => 'role:student'], function() {
+    //Route::group(['middleware' => 'role:student'], function() {
+        Route::get('activities/{id}/questions', 'ActivityController@questions');
         Route::get('activities/{id}/questions/{question_id}', 'ActivityController@question');
         Route::post('activities/{id}/questions/{question_id}', 'ActivityController@question'); // New answer
-    });
+    //});
 
 
     // Route::get('question/{id}', 'QuizController@index')->name('question');
