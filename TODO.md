@@ -12,12 +12,15 @@
   - [ ] Create Activity
   - [ ] Start/Stop Activity
   - [ ] Answer Question
+- [ ] Setup Event System (with Pusher?)
 - [ ] Redis/Pusher Events
   - [ ] New activity
   - [ ] Activity finished
   - [ ] Activity started
   - [ ] New answer given
 - [ ] View Home Teacher
+  - [ ] Show Rosters Tabs
+  - [ ] Create Activity from Quiz
 - [ ] View Home Student
 - [ ] View Progress
 - [ ] View Question
@@ -38,3 +41,5 @@
 - [ ] Activity Type (quiz, exercise, exam)
 - [ ] Code Question Type
 - [ ] Give Bundle Hash to Student
+- [ ] Question pool (table of all questions)
+- [ ] Create quiz from questions (difficulty, keywords, number of questions, duration)
