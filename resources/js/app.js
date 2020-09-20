@@ -3,7 +3,7 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BIconTypeStrikethrough, BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 require('./bootstrap');
 
@@ -15,6 +15,7 @@ Vue.use(BootstrapVue)
 import router from './router.js'
 
 require('./fontawesome');
+
 
 /**
  * The following block of code may be used to automatically register your
