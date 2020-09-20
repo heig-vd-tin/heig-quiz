@@ -13,6 +13,7 @@
   - [x] Start/Stop Activity
   - [x] Create Activity
   - [x] Answer Question
+- [x] Setup Event System (with Pusher?)
 - [ ] View Home Teacher
   - [ ] Show Rosters Tabs
   - [ ] Create Activity from Quiz
@@ -22,7 +23,6 @@
   - [ ] Short Answer
   - [ ] Fill-In-The-Gaps
   - [ ] Multiple Choices
-- [ ] Setup Event System (with Pusher?)
 - [ ] Redis/Pusher Events
   - [ ] New activity
   - [ ] Activity finished
@@ -48,3 +48,22 @@
 - [ ] Create quiz from questions (difficulty, keywords, number of questions, duration)
 - [ ] Force Stop Quiz (add stopped_at in activities)
 - [ ] Limited time per question, the question is seen once by the student
+
+## Discussions
+
+### Events
+
+A channel per entity:
+
+- activity
+  - ActivityCreated
+- activity.{id}
+  - ActivityStarted
+  - ActivityEnded
+  - ActivityJoined
+  - QuestionAnswered
+  - QuizFinished
+- roster
+  - NewActivitiesAvailable
+- quiz
+  - QuizCreated
