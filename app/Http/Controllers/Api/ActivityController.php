@@ -24,7 +24,7 @@ class ActivityController extends Controller
             $item['activity'] = url("/api/activities/{$item['id']}");
             $item['quiz'] = url("/api/quizzes/{$item['quiz_id']}");
             $item['roster'] = url("/api/rosters/{$item['roster_id']}");
-            $item['questions'] = url("/api/quiz/{$item['quiz_id']}/questions");
+            $item['questions'] = url("/api/activities/{$item['id']}/questions");
         });
         return [
             'count' => count($activities),
@@ -37,15 +37,15 @@ class ActivityController extends Controller
         $activity['students'] = $activity->roster->students_count;
         $activity['quiz'] = url("/api/quizzes/{$activity['quiz_id']}");
         $activity['roster'] = url("/api/rosters/{$activity['roster_id']}");
-        $activity['questions'] = url("/api/quizzes/{$activity['quiz_id']}/questions");
+        $activity['questions'] = url("/api/activities/{$activity['id']}/questions");
 
         if ($activity->hidden)
-            $activity['@show'] = url("/api/quizzes/{$activity['quiz_id']}/show");
+            $activity['@show'] = url("/api/activities/{$activity['id']}/show");
         else
-            $activity['@hide'] = url("/api/quizzes/{$activity['quiz_id']}/hide");
+            $activity['@hide'] = url("/api/activities/{$activity['id']}/hide");
 
         if (!$activity->started && !$activity->completed)
-            $activity['@start'] = url("/api/quizzes/{$activity['quiz_id']}/start");
+            $activity['@start'] = url("/api/activities/{$activity['id']}/start");
 
         return $activity;
     }
@@ -231,53 +231,76 @@ class ActivityController extends Controller
      */
     function questions($id) {
         $activity = Activity::findOrFail($id);
-        $questions = $this->get_ordered_questions($activity);
-        $questions_count = $activity->quiz()->withCount('questions')->first()->questions_count;
 
+        if (!$activity->started) {
+            return response([
+                'message' => "Cannot access questions before the activity start",
+                'error' => "Unauthorized"
+            ], 403);
+        }
+
+        if ($activity->completed) {
+            return response([
+                'message' => "One the quiz is finished, students won't have access to the questions",
+                'error' => "Unauthorized"
+            ], 403);
+        }
+
+        $questions = $this->get_ordered_questions($activity);
+
+        // Reformat the questions for the students
         $data = [];
-        foreach($this->activity_questions($activity) as $question) {
+        $answers = 0;
+        foreach($this->activity_questions($activity) as $key=>$question) {
             $item = [
-                'id' => $question->id,
+                'id' => $key,
                 'name' => $question->name,
                 'content' => $question->content,
-
                 'answer' => count($question->answers) > 0 ? $question->answers[0]->answer : null
             ];
+            $answers += $item['answer'] != null;
 
             $data[] = $item;
         };
+        $questions_count = count($data);
 
-        $answers = $activity->answers()->where('student_id', Auth::id())->orderBy('created_at')->get();
+        // Get first unanswered question
+        $current_question = 0;
+        foreach($data as $item) {
+            if ($item['answer'] == null) {
+                $current_question = $item['id'];
+                break;
+            }
+        }
 
-        $previous_question = max(count($answers) - 1, 0);
-        $current_question = count($answers) < $questions_count ? count($answers) : null;
-        $next_question = $current_question + 1 < $questions_count ? $current_questions + 1 : null;
-
-        $response = [
+        // Format response
+        return [
             'questions' => $data,
             'current_question_id' => $current_question,
-            'next_question_id' => $next_question,
-            'previous_question_id' => $previous_question,
 
             'remaining_seconds' => $activity->duration - $activity->elapsed,
 
-            'total_answered' => count($answers),
+            'total_answered' => $answers,
             'total_questions' => $questions_count,
-            'percent_progression' => round(count($answers) / $questions_count * 100),
+
+            'percent_progression' => round($answers / $questions_count * 100),
+
+            'current_question' => $current_question < $questions_count ? url("/api/activities/{$id}/questions/{$current_question}") : null,
 
             'activity' => url("/api/activities/{$id}"),
-
-            'current_question' => $current_question ? url("/api/activities/{$id}/questions/{$current_question}") : null,
-            'next_question' => $next_question ? url("/api/activities/{$id}/questions/{$next_question}") : null,
-            'previous_question' => url("/api/activities/{$id}/questions/{$previous_question}"),
         ];
-
-        return $response;
     }
 
     function question(Request $request, $id, $question_id) {
         $activity = Activity::findOrFail($id);
-        $question = $activity->quiz->questions()->findOrFail($question_id);
+        $question = $this->activity_questions($activity)[$question_id];
+
+        $item = [
+            'id' => $question_id,
+            'name' => $question['name'],
+            'content' => $question['content'],
+            'answer' => count($question['answers']) > 0 ? $question['answers'][0]->answer : null
+        ];
 
         if ($request->isMethod('post')) {
             if (!$request->answer) {
@@ -292,18 +315,19 @@ class ActivityController extends Controller
                 [
                     'activity_id' => $activity->id,
                     'student_id' => Auth::id(),
-                    'question_id' => $question_id
+                    'question_id' => $question->id,
                 ],
                 [
                     'answer' => $request->answer,
                     'is_correct' => $this->validate_answer($request->answer, $question->answer)
                 ]
             );
+
+            $item['answer'] = $request->answer;
+            $item['answer_id'] = $answer->id;
         }
 
-        $question = $this->activity_questions($activity)[$question_id];
-        return $question;
-
+        return $item;
     }
 
     /**

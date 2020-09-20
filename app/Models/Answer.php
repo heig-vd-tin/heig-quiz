@@ -8,6 +8,8 @@ use App\Models\Activity;
 
 class Answer extends Model
 {
+    protected $guarded = ['id'];
+
     function activity() {
         return $this->belongsTo(Activity::class);
     }

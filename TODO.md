@@ -11,14 +11,8 @@
 - [.] Actions
   - [x] Show/Hide Activity
   - [x] Start/Stop Activity
-  - [ ] Create Activity
-  - [ ] Answer Question
-- [ ] Setup Event System (with Pusher?)
-- [ ] Redis/Pusher Events
-  - [ ] New activity
-  - [ ] Activity finished
-  - [ ] Activity started
-  - [ ] New answer given
+  - [x] Create Activity
+  - [x] Answer Question
 - [ ] View Home Teacher
   - [ ] Show Rosters Tabs
   - [ ] Create Activity from Quiz
@@ -28,6 +22,12 @@
   - [ ] Short Answer
   - [ ] Fill-In-The-Gaps
   - [ ] Multiple Choices
+- [ ] Setup Event System (with Pusher?)
+- [ ] Redis/Pusher Events
+  - [ ] New activity
+  - [ ] Activity finished
+  - [ ] Activity started
+  - [ ] New answer given
 - [ ] View Correction
 
 - [ ] Git Sync
