@@ -1,22 +1,24 @@
 <?php
+namespace Database\Factories;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 use App\Models\Roster;
-use Faker\Generator as Faker;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use App\Models\User;
 
-$factory->define(Roster::class, function (Faker $faker) {
+class RosterFactory extends Factory
+{
+    protected $model = Roster::class;
 
-    $teachers_id = User::where('affiliation', 'member;staff')->pluck('id')->toArray();
-    return [
-        'name' => Arr::random(['A', 'B', 'C']),
-        'semester' => Arr::random([0, 0, 0, 0, 0, 1]),
-        'year' => Arr::random([2018, 2019, 2020, 2020, 2020, 2020, 2020, 2020, 2021]),
-        'teacher_id' => Arr::random($teachers_id),
-    ];
-
-
-});
+    public function definition()
+    {
+        $teachers_id = User::where('affiliation', 'member;staff')->pluck('id')->toArray();
+        return [
+            'name' => Arr::random(['A', 'B', 'C']),
+            'semester' => Arr::random([0, 0, 0, 0, 0, 1]),
+            'year' => Arr::random([2018, 2019, 2020, 2020, 2020, 2020, 2020, 2020, 2021]),
+            'teacher_id' => Arr::random($teachers_id),
+        ];
+    }
+}

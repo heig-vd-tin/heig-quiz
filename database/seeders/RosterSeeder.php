@@ -1,9 +1,10 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Roster;
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Roster;
 
 class RosterSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class RosterSeeder extends Seeder
 
         // Generate the courses
         foreach (Course::all() as $course) {
-            $roster = factory(App\Models\Roster::class)->make();
+            $roster = Roster::factory()->make();
             $roster->name = 'A';
             $roster->course_id = $course->id;
             $roster->save();
@@ -26,7 +27,7 @@ class RosterSeeder extends Seeder
                 $roster->students()->attach($students[$k++]);
             }
 
-            $roster = factory(App\Models\Roster::class)->make();
+            $roster = Roster::factory()->make();
             $roster->name = 'B';
             $roster->course_id = $course->id;
             $roster->save();

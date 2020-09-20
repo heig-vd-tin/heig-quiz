@@ -1,25 +1,23 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Activity;
+use App\Models\Answer;
+use DB;
 
 class ActivitySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        DB::table('activities')->insert([
+        Activity::create([
             'quiz_id' => 1,
             'roster_id' => 1,
             'duration' => 60,
             'user_id' => 1
         ]);
 
-        DB::table('answers')->insert([
+        Answer::create([
             'activity_id' => 1,
             'student_id' => 1,
             'question_id' => 1,
@@ -27,7 +25,7 @@ class ActivitySeeder extends Seeder
             'is_correct' => '0'
         ]);
 
-        DB::table('answers')->insert([
+        Answer::create([
             'activity_id' => 1,
             'student_id' => 1,
             'question_id' => '2',
@@ -35,7 +33,7 @@ class ActivitySeeder extends Seeder
             'is_correct' => '0'
         ]);
 
-        DB::table('answers')->insert([
+        Answer::create([
             'activity_id' => 1,
             'student_id' => '2',
             'question_id' => '4',
@@ -43,7 +41,7 @@ class ActivitySeeder extends Seeder
             'is_correct' => 1
         ]);
 
-        DB::table('answers')->insert([
+        Answer::create([
             'activity_id' => 1,
             'student_id' => '2',
             'question_id' => 1,
@@ -51,7 +49,7 @@ class ActivitySeeder extends Seeder
             'is_correct' => 1
         ]);
 
-        DB::table('answers')->insert([
+        Answer::create([
             'activity_id' => 1,
             'student_id' => '2',
             'question_id' => 1,
@@ -59,6 +57,6 @@ class ActivitySeeder extends Seeder
             'is_correct' => '0'
         ]);
 
-        factory(Activity::class, 20)->create();
+        Activity::factory()->count(20)->create();
     }
 }

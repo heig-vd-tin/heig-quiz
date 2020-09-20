@@ -1,28 +1,32 @@
 <?php
+namespace Database\Factories;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-
-use App\Models\Activity;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+
 use App\Models\User;
 use App\Models\Quiz;
 use App\Models\Roster;
+use App\Models\Activity;
 
-$factory->define(Activity::class, function (Faker $faker) {
+class ActivityFactory extends Factory
+{
+    protected $model = Activity::class;
 
-    $teacher_id = User::where('affiliation', 'member;staff')->inRandomOrder()->limit(1)->get()[0]->id;
-    $quiz_id = Quiz::inRandomOrder()->limit(1)->get()[0]->id;
-    $roster_id = Roster::inRandomOrder()->limit(1)->get()[0]->id;
-    return [
-        'quiz_id' => $quiz_id,
-        'roster_id' => $roster_id,
-        'user_id' => $teacher_id,
-        'duration' => Arr::random([20, 60, 600, 600, 600, 600, 600, 600, 1000 ]),
-        'hidden' => false,
-        'shuffle_questions' => Arr::random([0, 1]),
-        'shuffle_propositions' => Arr::random([0, 1]),
-        'seed' => $faker->randomNumber()
-    ];
-});
+    public function definition()
+    {
+        $teacher_id = User::where('affiliation', 'member;staff')->inRandomOrder()->limit(1)->get()[0]->id;
+        $quiz_id = Quiz::inRandomOrder()->limit(1)->get()[0]->id;
+        $roster_id = Roster::inRandomOrder()->limit(1)->get()[0]->id;
+        return [
+            'quiz_id' => $quiz_id,
+            'roster_id' => $roster_id,
+            'user_id' => $teacher_id,
+            'duration' => Arr::random([20, 60, 600, 600, 600, 600, 600, 600, 1000 ]),
+            'hidden' => false,
+            'shuffle_questions' => Arr::random([0, 1]),
+            'shuffle_propositions' => Arr::random([0, 1]),
+            'seed' => $this->faker->randomNumber()
+        ];
+    }
+};

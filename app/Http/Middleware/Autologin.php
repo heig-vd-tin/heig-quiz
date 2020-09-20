@@ -13,14 +13,11 @@ class AutoLogin
         $identity = config('devel.autologin');
 
         if (!Auth::check() && config('app.debug') && $identity) {
-
             Auth::login(User::orWhere([
                 'id' => $identity,
                 'email' => $identity,
                 'unique_id' => $identity
             ], true /* remembering */)->firstOrFail());
-
-
         }
 
         return $next($request);

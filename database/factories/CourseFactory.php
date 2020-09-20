@@ -1,17 +1,20 @@
 <?php
+namespace Database\Factories;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 use App\Models\Course;
-use Faker\Generator as Faker;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
+class CourseFactory extends Factory
+{
+    protected $model = Course::class;
 
-$factory->define(Course::class, function (Faker $faker) {
-
-    return [
-        'name' => Arr::random(['Info1', 'Info1', 'Info1', 'Info2', 'Info2', 'ProgOO', 'VisIndus', 'TraiSignAp']),
-        'department' => 'TIN',
-    ];
-});
+    public function definition()
+    {
+        return [
+            'name' => Arr::random(['Info1', 'Info1', 'Info1', 'Info2', 'Info2', 'ProgOO', 'VisIndus', 'TraiSignAp']),
+            'department' => 'TIN',
+        ];
+    }
+}

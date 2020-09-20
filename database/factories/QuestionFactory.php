@@ -1,19 +1,23 @@
 <?php
+namespace Database\Factories;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 use App\Models\Question;
-use Faker\Generator as Faker;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
-$factory->define(Question::class, function (Faker $faker) {
+class QuestionFactory extends Factory
+{
+    protected $model = Question::class;
 
-    return [
-        'name' => $faker->sentence(),
-        'content' => $faker->paragraph(),
-        'answer' => '42',
-        'difficulty' => Arr::random(['easy', 'medium', 'hard', 'insane']),
-        'explanation' => $faker->paragraph()
-    ];
-});
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->sentence(),
+            'content' => $this->faker->paragraph(),
+            'answer' => '42',
+            'difficulty' => Arr::random(['easy', 'medium', 'hard', 'insane']),
+            'explanation' => $this->faker->paragraph()
+        ];
+    }
+}

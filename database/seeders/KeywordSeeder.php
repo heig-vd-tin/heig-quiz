@@ -1,15 +1,11 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Keyword;
 
 class KeywordSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         Keyword::create(['category' => 'programming', 'name' => 'struct']);

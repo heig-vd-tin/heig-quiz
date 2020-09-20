@@ -1,7 +1,9 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Student;
 
 class UserSeeder extends Seeder
 {
@@ -29,9 +31,9 @@ class UserSeeder extends Seeder
             'affiliation' => 'member;staff'
         ]);
 
-        factory(App\Models\User::class, 50)->create()->each(function ($user) {
+        User::factory()->count(50)->create()->each(function ($user) {
             if ($user->affiliation == 'member;student') {
-                $user->studentDetails()->save(factory(App\Models\Student::class)->make());
+                $user->studentDetails()->save(Student::factory()->make());
             }
         });
     }

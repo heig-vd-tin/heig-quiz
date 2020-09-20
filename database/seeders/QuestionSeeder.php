@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
@@ -7,11 +8,6 @@ use App\Models\Question;
 
 class QuestionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $q = new Question;
@@ -22,7 +18,7 @@ class QuestionSeeder extends Seeder
         $q->keywords()->attach(Keyword::where('name', 'binary')->get());
         $q->save();
 
-        DB::table('questions')->insert([
+        Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0x8` en binaire ?',
             'answer' => '{"pattern" : "\b(0b?)0*1000\b"}',
@@ -30,7 +26,7 @@ class QuestionSeeder extends Seeder
             'explanation' => "`8` exprimé en hexadécimal correspond à $2^4$ soit le quatrième bit du nombre à un."
         ]);
 
-        DB::table('questions')->insert([
+        Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0` en binaire ?',
             'answer' => '{"pattern" : "\b(0b?)0*0\b"}',
@@ -39,7 +35,7 @@ class QuestionSeeder extends Seeder
         ]);
 
         // Exemple de question avec des choix multiples
-        DB::table('questions')->insert([
+        Question::create([
             'name' => 'Complément à deux',
             'content' => "
 Le complément à deux c'est...
@@ -72,7 +68,7 @@ Ajouter 1 puis inverer tous les bits
         // Exemple de question avec des choix possibles
         // @a,b,c@ pour les listes possibles et
         // @...@ pour les champs libres
-        DB::table('questions')->insert([
+        Question::create([
             'name' => 'Shunting Yard',
             'content' => "
 
