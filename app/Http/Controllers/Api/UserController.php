@@ -29,6 +29,7 @@ class UserController extends Controller
             $item['questions'] = url("/api/quizzes/{$item['quiz_id']}/questions");
             $item['roster'] = url("/api/rosters/{$item['roster_id']}");
             $item['owner'] = url("/api/users/{$item['user_id']}");
+            $item['activity'] = url("/api/activities/{$item['id']}");
         });
         return [
             'count' => count($activities),

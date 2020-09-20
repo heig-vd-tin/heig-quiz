@@ -50,18 +50,9 @@ class RosterController extends Controller
         ];
     }
 
-    function activities($id) {
-        $activities = Roster::with('activities')->findOrFail($id)->activities->each(function ($item, $key) {
-        });
-        return [
-            'count' => count($activities),
-            'roster' => $id,
-            'activities' => $activities
-        ];
-    }
-
     function course($id) {
         $course = Roster::with('course')->findOrFail($id)->course;
         return $course;
     }
+
 }

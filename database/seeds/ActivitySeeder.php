@@ -16,7 +16,6 @@ class ActivitySeeder extends Seeder
             'quiz_id' => 1,
             'roster_id' => 1,
             'duration' => 60,
-            'state' => 'in_progress',
             'user_id' => 1
         ]);
 

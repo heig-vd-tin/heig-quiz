@@ -55,12 +55,13 @@ Route::namespace('Api')->group(function () {
         Route::get('users/{id}/rosters', 'RosterController@teacher_rosters');
 
         Route::get('courses', 'CourseController@index');
+        Route::get('courses/{id}', 'CourseController@show');
 
         Route::get('rosters', 'RosterController@index');
         Route::get('rosters/{id}', 'RosterController@show');
         Route::get('rosters/{id}/students', 'RosterController@students');
         Route::get('rosters/{id}/course', 'RosterController@course');
-        Route::get('rosters/{id}/activities', 'RosterController@activities');
+        Route::get('rosters/{id}/activities', 'ActivityController@rosterActivities');
 
         Route::get('quizzes', 'QuizController@index');
         Route::get('quizzes/{id}', 'QuizController@show');
@@ -71,12 +72,18 @@ Route::namespace('Api')->group(function () {
         Route::get('activities/{id}', 'ActivityController@show');
         Route::get('activities/{id}/roster', 'ActivityController@roster');
         Route::get('activities/{id}/quiz', 'ActivityController@quiz');
+
+        Route::post('activities/create', 'ActivityController@create');
+
+        Route::post('activities/{id}/start', 'ActivityController@start');
+        Route::post('activities/{id}/hide', 'ActivityController@set_hidden');
+        Route::post('activities/{id}/show', 'ActivityController@set_visible');
     });
 
     // Student
     Route::group(['middleware' => 'role:student'], function() {
-        Route::get('activities/{activity}/questions/{question}');
-        Route::post('activities/{activity}/questions/{question}'); // New answer
+        Route::get('activities/{id}/questions/{question_id}', 'ActivityController@question');
+        Route::post('activities/{id}/questions/{question_id}', 'ActivityController@question'); // New answer
     });
 
 

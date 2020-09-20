@@ -4,82 +4,196 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 use App\Models\Activity;
 use App\Models\Student;
 use App\Models\Roster;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\User;
 use Auth;
 
 class ActivityController extends Controller
 {
     function index() {
-        return Activity::where('class.teacher_id', User::id());
+        $activities = Activity::all()->each(function ($item, $key) {
+            $item['activity'] = url("/api/activities/{$item['id']}");
+            $item['quiz'] = url("/api/quizzes/{$item['quiz_id']}");
+            $item['roster'] = url("/api/rosters/{$item['roster_id']}");
+            $item['questions'] = url("/api/quiz/{$item['quiz_id']}/questions");
+        });
+        return [
+            'count' => count($activities),
+            'activities' => $activities
+        ];
     }
 
-    function getActivity() {
-        return Activity::with(['quiz','roster'])->find(1);
+    function show($id) {
+        $activity = Activity::findOrFail($id);
+        $activity['quiz'] = url("/api/quizzes/{$activity['quiz_id']}");
+        $activity['roster'] = url("/api/rosters/{$activity['roster_id']}");
+        $activity['questions'] = url("/api/quizzes/{$activity['quiz_id']}/questions");
+
+        if ($activity->hidden)
+            $activity['@show'] = url("/api/quizzes/{$activity['quiz_id']}/show");
+        else
+            $activity['@hide'] = url("/api/quizzes/{$activity['quiz_id']}/hide");
+
+        if (!$activity->started && !$activity->completed)
+            $activity['@start'] = url("/api/quizzes/{$activity['quiz_id']}/start");
+
+        return $activity;
     }
 
-    function startActivity($id) {
-        $act = Activity::with(['answer.student'])->find($id);
-        if( $act->teacher->id == Auth::user()->id ){
-            //Todo(tmz) Start activity
-        }
+    function roster($id) {
+        $roster = Activity::findOrFail($id)->roster()->get()->each(function ($item, $key) {
+            $item['course'] = url("/api/courses/{$item['course_id']}");
+            $item['teacher'] = url("/api/users/{$item['teacher_id']}");
+        });
+        return $roster;
     }
 
-    function getActivityAnswer($id) {
-        //if( Auth::user() ) //Todo(tmz) Check if teacher
-        return Activity::with(['answer.student'])->find($id);
+    function rosterActivities($roster) {
+        $activities = Roster::with('activities')->findOrFail($roster)->activities->each(function ($item, $key) {
+            $item['quiz'] = url("/api/quizzes/{$item['quiz_id']}");
+            $item['roster'] = url("/api/rosters/{$item['roster_id']}");
+            $item['questions'] = url("/api/quizzes/{$item['quiz_id']}/questions");
+        });
+        return [
+            'count' => count($activities),
+            'roster' => $roster,
+            'activities' => $activities
+        ];
     }
 
-    function getQuestion($activity_id, $num) {
-        $user_id = Auth::user()->id;
-        $user_id = 2; //Todo(tmz) Debug
-        $student = Student::where('user_id', '=', $user_id)->first();
-
-        $act = Activity::find($activity_id);
-        if(!$act->roster->students->contains('id', $student->id)){
-            return;
+    function start($id) {
+        $activity = Activity::findOrFail($id);
+        if ($activity->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the owner of an activity start it",
+                'error' => "Unauthorized"
+            ], 403);
         }
 
-        if($student && $act->state != 'in_progress'){
-            return;
+        if ($activity->hidden) {
+            return response([
+                'message' => "Cannot start an hidden activity",
+                'error' => "Bad Request"
+            ], 400);
         }
 
-        $nbr_question = $act->quiz->question->count();
-        $question_id = $num < $nbr_question ? $num + 1 : 1;
+        if ($activity->completed) {
+            return response([
+                'message' => "Cannot restart an activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
 
-        $ans = Answer::where('activity_id', $activity_id)->
-                    where('question_id', $question_id)->
-                    where('student_id', $student->id)->
-                    first();
+        if ($activity->started) {
+            return response([
+                'message' => "Activity activity started",
+                'error' => "Bad Request"
+            ], 400);
+        }
 
-        $quest = Question::find($question_id)->toArray();
-        $quest['current_answer'] = $ans ? $ans->answer : '';
-        return $quest;
+        $activity->started_at = Carbon::now();
+        $activity->save();
     }
 
-    function getMyActivities() {
-        $user_id = Auth::user()->id;
-        $user_id = 1; //Todo(tmz) Debug
-        $student = Student::where('user_id', '=', $user_id)->first();
-        $act = [];
-        if($student) {
-            $classes = $student->rosters;
-        }
-        else {
-            $classes = Roster::all();
+    function set_hidden($id) {
+        $activity = Activity::findOrFail($id);
+        if ($activity->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the owner of an activity can change the visibility",
+                'error' => "Unauthorized"
+            ], 403);
         }
 
-        foreach($classes as $cl) {
-            $activities = Activity::with(['quiz','roster','teacher'])->
-                where('roster_id', '=', $cl->id)->get()->all();
-            foreach($activities as $a) {
-                array_push($act, $a);
-            }
+        if ($activity->hidden) {
+            return response([
+                'message' => "Activity already hidden",
+                'error' => "Bad Request"
+            ], 400);
         }
-        return $act;
+
+        if ($activity->started) {
+            return response([
+                'message' => "Cannot hide an on going activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $activity->hidden = true;
+        $activity->save();
+    }
+
+    function set_visible($id) {
+        $activity = Activity::findOrFail($id);
+        if ($activity->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the owner of an activity can change the visibility",
+                'error' => "Unauthorized"
+            ], 403);
+        }
+
+        if (!$activity->hidden) {
+            return response([
+                'message' => "Activity already visible",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $activity->hidden = false;
+        $activity->save();
+    }
+
+    function create(Request $request, $quiz_id) {
+        $data = $request->validate([
+            'duration' => 'min:10',
+            'roster_id' => 'required|exists:rosters,id',
+            'shuffle_questions' => 'boolean',
+            'shuffle_propositions' => 'boolean',
+            'seed' => 'numeric',
+        ]);
+
+        if (Roster::findOrFail($request->input('roster_id'))->teacher_id != Auth::id()) {
+            return response([
+                'message' => "Only the roster's teacher can create an activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        if (Roster::findOrFail($request->input('roster_id'))->teacher_id != Auth::id()) {
+            return response([
+                'message' => "Only the roster's teacher can create an activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        Quiz::findOrFail($quiz_id)->activities()->create([
+            'user_id' => Auth::id(),
+            'roster_id' => $request->roster_id,
+            'duration' => $request->input('duration', 600),
+            'shuffle_questions' => $request->input('shuffle_questions', false),
+            'shuffle_propositions' => $request->input('shuffle_propositions', false),
+            'seed' => input('seed', random_int(0, 4294967295))
+        ]);
+    }
+
+    function get_random_question($activity, $id) {
+        $questions = $activity->quiz->questions()->orderBy('id')->get();
+        return Arr::shuffle($questions, $activity->seed + Auth::id() + $activity->quiz_id)[$id];
+    }
+
+    function question(Request $request, $id, $question_id) {
+        $activity = Activity::findOrFail($id);
+        $question = null;
+        return [
+            'question' => $question,
+            'remaining_seconds' => $activity->duration - $activity->elapsed,
+            'next' => url("/api/activities/{$id}/questions/{$next_question_id}"),
+            'previous' => url("/api/activities/{$id}/questions/{$previous_question_id}")
+        ];
     }
 }

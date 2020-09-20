@@ -17,4 +17,8 @@ class CourseController extends Controller
             ]
         ];
     }
+
+    function show($id) {
+        return Course::findOrFail($id);
+    }
 }

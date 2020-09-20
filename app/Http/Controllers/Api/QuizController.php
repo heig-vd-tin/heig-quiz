@@ -26,6 +26,8 @@ class QuizController extends Controller
         $quiz = Quiz::withCount('questions')->find($id);
         $quiz['questions'] = url("/api/quizzes/{$quiz['id']}/questions");
         $quiz['activities'] = url("/api/quizzes/{$quiz['id']}/activities");
+
+        $quiz['@create_activity'] = url("/api/activities/create");
         return $quiz;
     }
 
@@ -47,13 +49,5 @@ class QuizController extends Controller
             'quiz_id' => $id,
             'activities' => $activities
         ];
-    }
-
-    function getQuiz($id) {
-        return Quiz::with('question')->find(1);
-    }
-
-    function getKeywords() {
-        return Keyword::orderBy('name')->get();
     }
 }

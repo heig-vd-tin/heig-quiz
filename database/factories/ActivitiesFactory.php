@@ -20,7 +20,7 @@ $factory->define(Activity::class, function (Faker $faker) {
         'roster_id' => $roster_id,
         'user_id' => $teacher_id,
         'duration' => Arr::random([20, 60, 600, 600, 600, 600, 600, 600, 1000 ]),
-        'state' => 'ready',
+        'hidden' => false,
         'shuffle_questions' => Arr::random([0, 1]),
         'shuffle_propositions' => Arr::random([0, 1]),
         'seed' => $faker->randomNumber()
