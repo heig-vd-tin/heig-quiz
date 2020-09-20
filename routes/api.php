@@ -66,19 +66,25 @@ Route::namespace('Api')->group(function () {
         Route::get('quizzes/{id}', 'QuizController@show');
         Route::get('quizzes/{id}/questions', 'QuizController@questions');
         Route::get('quizzes/{id}/activities', 'QuizController@activities');
+
+        Route::get('activities', 'ActivityController@index');
+        Route::get('activities/{id}', 'ActivityController@show');
+        Route::get('activities/{id}/roster', 'ActivityController@roster');
+        Route::get('activities/{id}/quiz', 'ActivityController@quiz');
     });
 
     // Student
     Route::group(['middleware' => 'role:student'], function() {
-
+        Route::get('activities/{activity}/questions/{question}');
+        Route::post('activities/{activity}/questions/{question}'); // New answer
     });
 
 
-    Route::get('question/{id}', 'QuizController@index')->name('question');
-    Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
+    // Route::get('question/{id}', 'QuizController@index')->name('question');
+    // Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
 
-    Route::get('activities/answer/{id}', 'ActivityController@getActivityAnswer');
-    Route::get('activities/{activity_id}/{num}', 'ActivityController@getQuestion');
-    Route::get('activities', 'ActivityController@getMyActivities');
-    Route::get('activities/{id}', 'ActivityController@getActivity');
+    // Route::get('activities/answer/{id}', 'ActivityController@getActivityAnswer');
+    // Route::get('activities/{activity_id}/{num}', 'ActivityController@getQuestion');
+    // Route::get('activities', 'ActivityController@getMyActivities');
+    // Route::get('activities/{id}', 'ActivityController@getActivity');
 });
