@@ -93,7 +93,7 @@
                     <a href="https://heig-tin-info.github.io/handout/">Cours</a>
                     <a href="https://github.com/heig-vd-tin/refcard/releases/latest/download/refcard.pdf">Référence C</a>
                     <a href="http://gaps.heig-vd.ch/">Gaps</a>
-                    <a href="/quiz">Quiz</a>
+                    <a href="/quiz/home">Quiz</a>
                     <a href="https://github.com/heig-tin-info">GitHub</a>
                 </div>
             </div>
