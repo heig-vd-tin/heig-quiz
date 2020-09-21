@@ -33,6 +33,8 @@
 - [ ] laravel-websockets to use on deployment
 - [ ] Deploy on chevallier.io
 
+- [ ] Dynamic Breadcrumb Home > Quiz 23
+
 ## Open questions
 
 - [ ] Singular or Plural for api routes?

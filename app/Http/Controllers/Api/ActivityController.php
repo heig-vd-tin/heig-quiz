@@ -19,8 +19,13 @@ use Auth;
 
 class ActivityController extends Controller
 {
-    function index() {
-        $activities = Activity::all()->each(function ($item, $key) {
+    function index($me = false) {
+        if ($me)
+            $activities = Activity::where('user_id', Auth::id())->get();
+        else
+            $activities = Activity::all();
+
+        $activities = $activities->each(function ($item, $key) {
             $item['activity'] = url("/api/activities/{$item['id']}");
             $item['quiz'] = url("/api/quizzes/{$item['quiz_id']}");
             $item['roster'] = url("/api/rosters/{$item['roster_id']}");
@@ -30,6 +35,10 @@ class ActivityController extends Controller
             'count' => count($activities),
             'activities' => $activities
         ];
+    }
+
+    function myActivities() {
+        return $this->index(true);
     }
 
     function show($id) {

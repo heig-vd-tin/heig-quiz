@@ -49,6 +49,10 @@ Route::namespace('Api')->group(function () {
     Route::group(['middleware' => 'role:teacher'], function() {
         Route::get('students', 'StudentController@index');
 
+        Route::get('user', 'UserController@me');
+        Route::get('user/activities', 'ActivityController@myActivities');
+        Route::get('user/rosters', 'RosterController@myRosters');
+
         Route::get('users', 'UserController@index');
         Route::get('users/{id}', 'UserController@show');
         Route::get('users/{id}/activities', 'UserController@activities');
