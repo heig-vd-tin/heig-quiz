@@ -35,7 +35,6 @@
         "laravel-echo": "^1.8.1",
         "markdown-it": "^11.0.1",
         "pusher-js": "^7.0.0",
-        "vue-markdown": "^2.2.4",
         "vuetify": "^2.3.10"
     }
 }

@@ -28,7 +28,13 @@
     import axios from 'axios'
     var md = require('markdown-it')();
     var mk = require('@iktakahiro/markdown-it-katex');
+    var mkit = require('markdown-it');
+
+    import Renderer from 'markdown-it/lib/renderer'
+
     md.use(mk);
+    window.md = md
+    window.Renderer = Renderer
 
     export default {
 
@@ -46,7 +52,7 @@
         methods: {
             getQuestion: function(num){
                 axios
-                    .get('http://127.0.0.1:8000/api/quizzes/1/questions/4')
+                    .get('/api/quizzes/1/questions/4')
                     .then((rep) => {
                         this.question = rep.data
                         this.question.content = md.render(this.question.content)
@@ -65,7 +71,7 @@
         },
 
         mounted() {
-                this.getQuestion(1)
+            this.getQuestion(1)
         }
     }
 </script>

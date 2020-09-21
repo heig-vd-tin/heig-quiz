@@ -26,7 +26,7 @@
         </b-table>
 
         <h2>Tous les quiz</h2>
-        <b-table v-if="quizzes.loaded" striped hover :items="quizzes.data" :fields="quizzes.fields" @row-clicked="activityClickHandler"></b-table>
+        <!-- <b-table v-if="quizzes.loaded" striped hover :items="quizzes.data" :fields="quizzes.fields" @row-clicked="activityClickHandler"></b-table> -->
 
     </div>
 </template>
@@ -117,7 +117,8 @@
                 axios
                     .get('api/activities')
                     .then((rep) => {
-                        this.activities.data = rep.data
+                        this.activities.data = rep.data.activities
+                        this.activities.count = rep.data.count
                         this.activities.loaded = true
                     })
             },
@@ -125,7 +126,8 @@
                 axios
                     .get('api/quizzes')
                     .then((rep) => {
-                        this.quizzes.data = rep.data
+                        this.quizzes.data = rep.data.quizzes
+                        this.quizzes.count = rep.data.count
                         this.quizzes.loaded = true
                     })
             },
