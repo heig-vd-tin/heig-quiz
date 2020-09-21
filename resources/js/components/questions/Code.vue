@@ -6,6 +6,9 @@ transformed into a textfield. The student have additional buttons:
 - Build (To only build)
 -->
 <template>
+<div>
+  TODO: Code type question
+</div>
 </template>
 
 <script>

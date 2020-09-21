@@ -18,7 +18,8 @@ class CreateQuestionsTable extends Migration
             // {'contains' : 'string'}
             // {'expression' : '$_ > 23 && $_ < 42'}
             $table->json('answer');
-
+            $table->enum('type', ['short-answer', 'multiple-choice', 'code', 'fill-in-the-gaps'])->default('short-answer');
+            $table->json('options');
             $table->enum('difficulty', ['easy', 'medium', 'hard', 'insane'])->default('easy');
             $table->text('explanation')->nullable()->default(null); // Markdown
             $table->timestamps();

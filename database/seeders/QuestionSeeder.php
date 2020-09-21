@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -37,6 +38,7 @@ class QuestionSeeder extends Seeder
         // Exemple de question avec des choix multiples
         Question::create([
             'name' => 'Complément à deux',
+            'type' => 'multiple-choice',
             'content' => "
 Le complément à deux c'est...
 
@@ -70,6 +72,7 @@ Ajouter 1 puis inverer tous les bits
         // @...@ pour les champs libres
         Question::create([
             'name' => 'Shunting Yard',
+            'type' => 'multiple-choice',
             'content' => "
 
 Dans l'algorithme de Shunting-yard dont l'image suitante résume le principe, plusieurs structures de données sont utilisées.
@@ -81,6 +84,103 @@ Dans l'algorithme de Shunting-yard dont l'image suitante résume le principe, pl
             'answer' => '["Une file d\'attente", "une file d\'attente", "une pile"]',
             'difficulty' => 'insane',
             'explanation' => ""
+        ]);
+
+        Question::create([
+            'name' => 'Boucle',
+            'content' => "Comment déclarer une variable nommée `i`, un entier 32-bits non signé égal à la valeur `42` ?",
+            'answer' => json_encode([
+                'pattern' => '\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;\b'
+            ]),
+            'options' => json_encode([
+                "lines" => 1,
+                'chars' => 40
+            ]),
+            'difficulty' => 'insane',
+            'explanation' => ""
+        ]);
+
+        Question::create([
+            'name' => 'Philostrate',
+            'type' => 'multiple-choice',
+            'content' => "
+Témoin de la chute de [Jérusalem](https://en.wikipedia.org/wiki/Jerusalem), **Philostrate** n’hésite pas à écrire
+que :
+
+>Ce peuple s’était dès longtemps insurgé non contre les Romains, mais contre l’humanité en général. Des hommes qui ont imaginé une vie insociable, qui ne partagent avec leurs semblables ni la table, ni les libations, ni les prières, ni les sacrifices, sont plus éloignés de nous que Suse ou Bactres ou que l’Inde plus reculée encore...
+
+Quelle eut été la portée de son argument sur **Dion Cassius** ?
+
+## A
+Dion Cassius chante avec René
+## B
+Dion Cassius n'affiche aucune sérénité
+## C
+Dion Cassius adhère pleinement
+## D
+La quatrième proposition est certainement la bonne
+",
+            'answer' => json_encode(["C"]),
+            'options' => json_encode([]),
+            'difficulty' => 'hard',
+            'explanation' => 'Aucune idée de pourquoi... Cette question ne semble pas avoir de sens'
+        ]);
+
+        Question::create([
+            'name' => 'Montage électronique',
+            'type' => 'fill-in-the-gaps',
+            'content' => "
+
+Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un `circuit_type`. Les deux `semiconductors` d'entrée forme un `montage`. Les deux `semi2` de sortie forment un montage de type `sortie`
+
+![circuit](https://en.wikipedia.org/wiki/Amplifier#/media/File:Amplifier_Circuit_Small.svg)
+
+",
+            'answer' => json_encode([
+                "une paire différentielle",
+                "transistors bipolaires",
+                "amplificateur de signal",
+                "push-pull"
+            ]),
+            'options' => json_encode([
+                'gaps' => [
+                    'circuit_type' => [
+                        'une paire croisée',
+                        'un gain semi-relatif',
+                        'une paire différentielle',
+                        'une source de courant',
+                    ],
+                    'semiconductors' => [
+                        'transistors à effet de champ',
+                        'mosfets',
+                        'transistors bipolaires',
+                        'résistances',
+                        'IGBT',
+                    ],
+                    'montage' => [
+                        'amplificateur de signal',
+                        'atténuateur de bruit',
+                        'intégrateur',
+                        'un étage de transconductance'
+                    ],
+                    'semi2' => [
+                        'transistors bipolaires',
+                        'transistors à effet de champ',
+                        'mosfets',
+                        'IGBT',
+                        'résistances'
+                    ],
+                    'sortie' => [
+                        'push-pull',
+                        'différentiel',
+                        'à collecteur ouvert',
+                        'à descendance neutre',
+                        'de Schottky'
+                    ]
+                ]
+            ]),
+            'difficulty' => 'medium',
+            'explanation' => 'Explication'
         ]);
     }
 }

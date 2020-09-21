@@ -4,6 +4,9 @@ menu with propositions. It the option.gaps is not a list, the gap is transformed
 into a textfield.
 -->
 <template>
+<div>
+  TODO: Fill In The Gaps type question
+</div>
 </template>
 
 <script>

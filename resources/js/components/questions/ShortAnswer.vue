@@ -2,6 +2,9 @@
 Allow to give a short answer (one line of text)
 -->
 <template>
+<div>
+  TODO: Short Answer type question
+</div>
 </template>
 
 <script>

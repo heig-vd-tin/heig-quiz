@@ -1,77 +1,129 @@
 <template>
-    <div>
-        <div v-if="loaded" class="row justify-content-center">
-            <b-card :title="question.name" class="m-4 p-2">
-                <b-card-text>
-                    <span v-html="question.content"></span>
-                </b-card-text>
-                <b-card-text>
-                    Réponse en cours : {{ question.current_answer }}
-                        <b-form-checkbox
-      id="checkbox-1"
-      v-model="status"
-      name="checkbox-1"
-      value="accepted"
-      unchecked-value="not_accepted"
-    >
-      I accept the terms and use
-    </b-form-checkbox>
-                </b-card-text>
-                <b-button v-if="questionNumber > 1" variant="primary" @click="getPrevious">Previous</b-button>
-                <b-button v-if="questionNumber < TotalQuestion" variant="primary" @click="getNext">Next</b-button>
-            </b-card>
-        </div>
+  <div>
+    <div class="progress mb-2">
+      <div
+        class="progress-bar bg-dark progress-bar"
+        role="progressbar"
+        :style="'width: '+ percent +'%'"
+        :aria-valuenow="percent"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >{{question_id}}/{{total}}</div>
     </div>
+    <b-card v-if="loaded" border-variant="dark" :title="question_id + '. ' + question.title" align="left">
+      <q-short-answer
+        :content="question.content"
+        :options="question.options"
+        v-if="question.type === 'short-answer'"
+      ></q-short-answer>
+      <q-fill-in-the-gaps
+        :content="question.content"
+        :options="question.options"
+        v-if="question.type === 'fill-in-the-gaps'"
+      ></q-fill-in-the-gaps>
+      <q-code
+        :content="question.content"
+        :options="question.options"
+        v-if="question.type === 'short-answer'"
+      ></q-code>
+      <q-multiple-choice
+        :content="question.content"
+        :options="question.options"
+        v-if="question.type === 'multiple-choice'"
+      ></q-multiple-choice>
+      <b-container>
+        <b-row class="text-center align-middle">
+          <b-col>
+            <b-button pill variant="outline-secondary">Précédent</b-button>
+          </b-col>
+          <b-col cols="5">
+            <h2 class="display-3 time" v-bind:class="{'text-danger' : timer < 30}">{{countdown}}</h2>
+          </b-col>
+          <b-col>
+            <b-button pill variant="outline-secondary">Suivant</b-button>
+          </b-col>
+        </b-row>
+      </b-container>
+    </b-card>
+  </div>
 </template>
 
 <script>
-    import axios from 'axios'
-    var md = require('markdown-it')();
-    var mk = require('@iktakahiro/markdown-it-katex');
-    var mkit = require('markdown-it');
+import axios from "axios";
 
-    import Renderer from 'markdown-it/lib/renderer'
+import Code from "./questions/Code";
+import FillInTheGaps from "./questions/FillInTheGaps";
+import MultipleChoice from "./questions/MultipleChoice";
+import ShortAnswer from "./questions/ShortAnswer";
 
-    md.use(mk);
-    window.md = md
-    window.Renderer = Renderer
+export default {
+  components: {
+    "q-code": Code,
+    "q-fill-in-the-gaps": FillInTheGaps,
+    "q-multiple-choice": MultipleChoice,
+    "q-short-answer": ShortAnswer,
+  },
+  data() {
+    return {
+      loaded: false,
+      total: 1,
+      question_id: 7,
+      duration: 0,
+      question: {
+        id: 1,
+        title: "",
+        content: "",
+        options: {},
+      },
+      activity_id: 1,
+      countdown: "- : -",
+      timer: 20,
+    };
+  },
+  computed: {
+    percent() {
+      return (this.question_id / this.total) * 100;
+    },
+  },
+  methods: {
+    /**
+     * Start countdown timer from the received duration
+     */
+    startTimer(duration) {
+      this.timer = duration;
+      let timer = setInterval(() => {
+        let minutes = parseInt(this.timer / 60, 10);
+        let seconds = parseInt(this.timer % 60, 10);
 
-    export default {
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        data() {
-            return {
-                title: "Question",
-                loaded: false,
-                question: null,
-                questionNumber: 1,
-                TotalQuestion: 3, //Todo(tmz) from activity
-                activity_id: 1 //Todo(tmz) from activity
-            }
-        },
+        this.countdown = minutes + ":" + seconds;
 
-        methods: {
-            getQuestion: function(num){
-                axios
-                    .get('/api/quizzes/1/questions/4')
-                    .then((rep) => {
-                        this.question = rep.data
-                        this.question.content = md.render(this.question.content)
-                        this.loaded = true
-                        this.questionNumber = num
-                    })
-            },
-
-            getNext(){
-                this.getQuestion(this.questionNumber + 1)
-            },
-
-            getPrevious(){
-                this.getQuestion(this.questionNumber - 1)
-            }
-        },
-
-        mounted() {
-            this.getQuestion(1)
-        }
-    }
+        if (--this.timer <= 0) clearInterval(timer);
+      }, 1000);
+    },
+  },
+  mounted() {
+    axios.get(`/api/activities/${this.activity_id}`).then((rep) => {
+      let question = rep.data.quiz.questions[this.question_id];
+      this.duration = rep.data.duration;
+      this.activity_id = rep.data.id;
+      this.started_at = rep.data.started_at;
+      this.total = rep.data.quiz.questions_count;
+      this.question = {
+        title: question.name,
+        type: question.type,
+        content: question.content,
+      };
+      this.loaded = true;
+      this.startTimer(this.duration);
+    });
+  },
+};
 </script>
+<style scoped>
+.time {
+  font-size: 2.5rem;
+}
+</style>
