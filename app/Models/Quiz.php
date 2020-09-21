@@ -53,4 +53,8 @@ class Quiz extends Model
         sort($keywords);
         return $keywords;
     }
+
+    function owner() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

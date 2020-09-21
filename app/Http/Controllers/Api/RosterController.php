@@ -5,22 +5,28 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Transformer\RosterTransformer;
+
 use App\Models\Roster;
 use App\Models\Course;
 use App\Models\User;
+use Auth;
 
 class RosterController extends Controller
 {
-    function index() {
-        $rosters = Roster::all()->each(function ($item, $key) {
-            $item['course'] = url("/api/rosters/{$item['id']}/course");
-            $item['students'] = url("/api/rosters/{$item['id']}/students");
-            $item['activities'] = url("/api/rosters/{$item['id']}/activities");
-        });
-        return [
-            'count' => count($rosters),
-            'rosters' => $rosters
-        ];
+    function index(Request $request) {
+        if ($request->owned)
+            $rosters = Roster::where('teacher_id', Auth::id())->get();
+        else
+            $rosters = Roster::all();
+
+        return fractal($rosters, new RosterTransformer(true))->toArray();
+    }
+
+    function owned() {
+        $request = request();
+        $request->owned = true;
+        return $this->index($request);
     }
 
     function show($id) {

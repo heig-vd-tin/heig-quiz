@@ -7,38 +7,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 use App\Models\Activity;
-use App\Models\Student;
 use App\Models\Roster;
-use App\Models\Question;
 use App\Models\Answer;
-use App\Models\User;
 use App\Models\Quiz;
 use Validator;
 use Arr;
 use Auth;
 
+use App\Transformer\ActivityTransformer;
+
 class ActivityController extends Controller
 {
-    function index($me = false) {
-        if ($me)
+    function index(Request $request) {
+        if ($request->owned)
             $activities = Activity::where('user_id', Auth::id())->get();
         else
             $activities = Activity::all();
 
-        $activities = $activities->each(function ($item, $key) {
-            $item['activity'] = url("/api/activities/{$item['id']}");
-            $item['quiz'] = url("/api/quizzes/{$item['quiz_id']}");
-            $item['roster'] = url("/api/rosters/{$item['roster_id']}");
-            $item['questions'] = url("/api/activities/{$item['id']}/questions");
-        });
-        return [
-            'count' => count($activities),
-            'activities' => $activities
-        ];
+        return fractal($activities, new ActivityTransformer())->toArray();
+
     }
 
-    function myActivities() {
-        return $this->index(true);
+    function owned() {
+        $request = request();
+        $request->owned = true;
+        return $this->index($request);
     }
 
     function show($id) {
@@ -159,6 +152,33 @@ class ActivityController extends Controller
 
         $activity->hidden = false;
         $activity->save();
+    }
+
+    function delete($id) {
+        $activity = Activity::findOrFail($id);
+
+        if ($activity->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the owner can delete this activity",
+                'error' => "Unauthorized"
+            ], 403);
+        }
+
+        if ($activity->completed) {
+            return response([
+                'message' => "Cannot delete a completed activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        if ($activity->started) {
+            return response([
+                'message' => "Cannot delete an on going activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $activity->delete();
     }
 
     function create(Request $request) {

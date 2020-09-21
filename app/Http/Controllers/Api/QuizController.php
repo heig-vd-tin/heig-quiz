@@ -5,22 +5,19 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Question;
-use App\Models\Keyword;
+use App\Transformer\QuizTransformer;
 use App\Models\Quiz;
 
 class QuizController extends Controller
 {
-    function index() {
-        $quiz = Quiz::withCount('questions')->get()->each(function ($item, $key) {
-            $item['quiz'] = url("/api/quizzes/{$item['id']}");
-            $item['questions'] = url("/api/quizzes/{$item['id']}/questions");
-            $item['activities'] = url("/api/quizzes/{$item['id']}/activities");
-        });
-        return [
-            'count' => count($quiz),
-            'quizzes' => $quiz
-        ];
+    function index(Request $request) {
+        if ($request->owned)
+            $quiz = Quiz::where('user_id', Auth::id())->get();
+        else
+            $quiz = Quiz::all();
+
+        return fractal($quiz, new QuizTransformer())->toArray();
+
     }
 
     function show($id) {

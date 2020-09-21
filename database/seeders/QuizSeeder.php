@@ -12,7 +12,8 @@ class QuizSeeder extends Seeder
     public function run()
     {
         $quiz = Quiz::create([
-            'name' => 'Quiz-00 Mes Débuts'
+            'name' => 'Quiz-00 Mes Débuts',
+            'user_id' => 1
         ]);
 
         $quiz->questions()->attach([1,2,3,4,5]);

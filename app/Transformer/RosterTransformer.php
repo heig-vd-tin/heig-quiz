@@ -1,0 +1,49 @@
+<?php
+namespace App\Transformer;
+
+use League\Fractal;
+use App\Models\Roster;
+use Carbon\Carbon;
+
+class RosterTransformer extends Fractal\TransformerAbstract
+{
+    protected $links;
+
+    public function __construct($links = false) {
+        $this->links = $links;
+    }
+
+    protected function fullname(Roster $roster) {
+        return $roster->course->name . '-'.
+        $roster->course->department . '-' .
+        $roster->name;
+    }
+
+	public function transform(Roster $roster, $links = false)
+	{
+	    $data = [
+            'id' => $roster->id,
+            'year' => $roster->year,
+            'name' => $this->fullname($roster),
+            'semester' => $roster->semester ? 'spring' : 'fall',
+            'students' => $roster->students_count,
+            'orientations' => $roster->orientations(),
+            'teacher' => [
+                'id' => $roster->teacher->id,
+                'name' => $roster->teacher->name
+            ],
+            'created_at' => $roster->created_at->timestamp,
+        ];
+
+        if ($this->links) {
+            $data = array_merge($data, [
+            // Links
+            'course_url' => url("api/rosters/$roster->id/course"),
+            'students_url' => url("api/rosters/$roster->id/students"),
+            'activities_url' => url("api/rosters/$roster->id/activities"),
+            ]);
+        }
+
+        return $data;
+	}
+}

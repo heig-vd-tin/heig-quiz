@@ -17,7 +17,10 @@ class ActivityFactory extends Factory
     {
         $teacher_id = User::where('affiliation', 'member;staff')->inRandomOrder()->limit(1)->get()[0]->id;
         $quiz_id = Quiz::inRandomOrder()->limit(1)->get()[0]->id;
-        $roster_id = Roster::inRandomOrder()->limit(1)->get()[0]->id;
+        $roster = Roster::inRandomOrder()->limit(1)->get()[0];
+        $roster_id = $roster->id;
+        $teacher_id = $roster->teacher_id;
+
         return [
             'quiz_id' => $quiz_id,
             'roster_id' => $roster_id,

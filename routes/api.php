@@ -50,13 +50,13 @@ Route::namespace('Api')->group(function () {
         Route::get('students', 'StudentController@index');
 
         Route::get('user', 'UserController@me');
-        Route::get('user/activities', 'ActivityController@myActivities');
-        Route::get('user/rosters', 'RosterController@myRosters');
+        Route::get('user/activities', 'ActivityController@owned');
+        Route::get('user/rosters', 'RosterController@owned');
 
         Route::get('users', 'UserController@index');
         Route::get('users/{id}', 'UserController@show');
         Route::get('users/{id}/activities', 'UserController@activities');
-        Route::get('users/{id}/rosters', 'RosterController@teacher_rosters');
+        Route::get('users/{id}/rosters', 'RosterController@owned');
 
         Route::get('courses', 'CourseController@index');
         Route::get('courses/{id}', 'CourseController@show');
@@ -83,6 +83,7 @@ Route::namespace('Api')->group(function () {
         Route::post('activities/{id}/start', 'ActivityController@start');
         Route::post('activities/{id}/hide', 'ActivityController@set_hidden');
         Route::post('activities/{id}/show', 'ActivityController@set_visible');
+        Route::post('activities/{id}/delete', 'ActivityController@delete');
     });
 
     // Student

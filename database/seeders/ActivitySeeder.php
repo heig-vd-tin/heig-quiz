@@ -13,8 +13,9 @@ class ActivitySeeder extends Seeder
         Activity::create([
             'quiz_id' => 1,
             'roster_id' => 1,
-            'duration' => 60,
-            'user_id' => 1
+            'duration' => 120,
+            'user_id' => 1,
+            'started_at' => '2020-09-01T14:58:05',
         ]);
 
         Answer::create([
