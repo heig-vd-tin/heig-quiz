@@ -35,7 +35,7 @@ class ActivityController extends Controller
     }
 
     function show($id) {
-        $activity = Activity::findOrFail($id);
+        $activity = Activity::with('roster.students')->with('quiz.questions')->with('roster.students.user')->findOrFail($id);
         $activity['students'] = $activity->roster->students_count;
         $activity['quiz'] = url("/api/quizzes/{$activity['quiz_id']}");
         $activity['roster'] = url("/api/rosters/{$activity['roster_id']}");
@@ -105,6 +105,43 @@ class ActivityController extends Controller
 
         $activity->started_at = Carbon::now();
         $activity->save();
+    }
+
+    /**
+     * Progression matrix (students / questions).
+     */
+    function progression($id) {
+        $activity = Activity::findOrFail($id);
+        $students = $activity->roster->students()->with('user')->get();
+        $questions = $activity->quiz->questions()->get();
+        $answers = $activity->answers()->get();
+
+        $q = [];
+        foreach ($questions as $k => $question) {
+            $q[$k] = [
+                'answer' => null,
+                'is_correct' => false
+            ];
+        }
+
+        $matrix = [];
+        foreach ($students as $student) {
+            $matrix[$student->id] = $q;
+            foreach ($questions as $k => $question) {
+                $answer = Answer::where('student_id', $student->id)
+                ->where('activity_id', $activity->id)
+                ->where('question_id', $questions[$k]->id)->first();
+                if ($answer) {
+                    $question['answer'] = $answer->answer;
+                    $question['is_correct'] = $answer->is_correct;
+                }
+            }
+        }
+        return [
+            'students' => $students,
+            'quesions' => $questions,
+            'matrix' => $matrix
+        ];
     }
 
     function set_hidden($id) {
