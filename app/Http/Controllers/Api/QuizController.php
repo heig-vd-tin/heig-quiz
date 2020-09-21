@@ -32,6 +32,10 @@ class QuizController extends Controller
         return $quiz;
     }
 
+    function question($id, $question_id) {
+        return Quiz::find($id)->questions()->findOrFail($question_id);
+    }
+
     function questions($id) {
         $questions = Quiz::find($id)->questions()->get()->each(function ($item, $key) {
         });

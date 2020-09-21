@@ -9,17 +9,17 @@ import Progress from "./components/ProgressComponent.vue"
 
 const routes = [
   {
-    path: "/",
+    path: "/quiz/home",
     name: "Activities",
     component: Activities
   },
   {
-    path: "/quiz",
+    path: "/quiz/questions",
     name: "Quiz",
     component: Quiz
   },
   {
-    path: "/progress",
+    path: "/quiz/progress",
     name: "Progression",
     component: Progress
   }

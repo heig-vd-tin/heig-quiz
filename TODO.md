@@ -3,8 +3,8 @@
 - [x] Tables
 - [x] Migrations
 - [x] Seeds
-- [x] Factories  
-- [x] Models 
+- [x] Factories
+- [x] Models
 - [x] Base API
 - [x] Base Controller to get data
 - [ ] Get student questions in order
@@ -29,8 +29,9 @@
   - [ ] Activity started
   - [ ] New answer given
 - [ ] View Correction
-
 - [ ] Git Sync
+- [ ] laravel-websockets to use on deployment
+- [ ] Deploy on chevallier.io
 
 ## Open questions
 

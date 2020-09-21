@@ -66,6 +66,7 @@ Route::namespace('Api')->group(function () {
         Route::get('quizzes', 'QuizController@index');
         Route::get('quizzes/{id}', 'QuizController@show');
         Route::get('quizzes/{id}/questions', 'QuizController@questions');
+        Route::get('quizzes/{id}/questions/{q}', 'QuizController@question');
         Route::get('quizzes/{id}/activities', 'QuizController@activities');
 
         Route::get('activities', 'ActivityController@index');

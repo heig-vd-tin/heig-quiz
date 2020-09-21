@@ -30,9 +30,12 @@
         "@fortawesome/fontawesome-svg-core": "^1.2.30",
         "@fortawesome/free-solid-svg-icons": "^5.14.0",
         "@fortawesome/vue-fontawesome": "^2.0.0",
+        "@iktakahiro/markdown-it-katex": "^4.0.0",
         "@popperjs/core": "^2.4.4",
         "laravel-echo": "^1.8.1",
+        "markdown-it": "^11.0.1",
         "pusher-js": "^7.0.0",
+        "vue-markdown": "^2.2.4",
         "vuetify": "^2.3.10"
     }
 }
