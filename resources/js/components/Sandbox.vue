@@ -11,7 +11,7 @@
         >{{data.id}}/{{data.total}}</div>
       </div>
     <b-card border-variant="dark" :title="data.id + '. ' + data.title" align="left">
-      <b-card-text v-html="content"></b-card-text>
+      <b-card-text v-html="htmlContent"></b-card-text>
 
       <b-list-group class="mt-3 mb-4">
         <b-list-group-item v-for="(proposition, index) in propositions" :key="index">
@@ -19,7 +19,7 @@
             <b-col cols="1">
               <b-button :pressed.sync="myToggle[index]" variant="outline-secondary" class="btn-circle">{{letter(index)}}</b-button>
             </b-col>
-            <b-col class="text-left align-middle">{{proposition}}</b-col>
+            <b-col class="text-left align-middle" v-html="proposition"></b-col>
           </b-row>
         </b-list-group-item>
       </b-list-group>
@@ -47,31 +47,7 @@
 import axios from "axios";
 var md = require("markdown-it")();
 var mk = require("@iktakahiro/markdown-it-katex");
-var mkit = require("markdown-it");
-
-import Renderer from "markdown-it/lib/renderer";
-
 md.use(mk);
-window.md = md;
-
-var u = `
-# Title
-
-Some text...
-
-## A
-
-An answer
-
-## B
-
-Another answer
-
-## C
-
-The last answer
-
-`
 
 export default {
   data() {
@@ -92,6 +68,7 @@ export default {
       activity_id: 1, //Todo(tmz) from activity
       countdown: "- : -",
       timer: 20,
+      htmlContent: '',
       data: {
         id: 3,
         total: 10,
@@ -187,24 +164,11 @@ La quatrième proposition est certainement la bonn
         }
       };
 
-
-md.parse(u) // Dummy Parse
-console.log(tokens)
-tokens = Array.from(output())
-
-console.log(tokens)
-
-
-
-      let renderer = new Renderer()
-
-      let v = renderer.render(tokens)
-console.log(v)
-      // Array.from(output())
-      //content2 = renderer.render(tokens)
-
-      //console.log(content2)
-      console.log(Array.from(output()), proposition)
+      this.htmlContent = md.renderer.render(Array.from(output()), md.options)
+      console.log(propositions)
+      for (const [key, value] of Object.entries(propositions)) {
+          this.propositions[key] = md.renderer.render(value, md.options)
+      }
 
     },
     /**
