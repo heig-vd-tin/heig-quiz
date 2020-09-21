@@ -67,7 +67,7 @@ export default {
     return {
       loaded: false,
       total: 1,
-      question_id: 7,
+      question_id: 3,
       duration: 0,
       question: {
         id: 1,
