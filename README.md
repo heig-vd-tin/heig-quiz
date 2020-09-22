@@ -60,5 +60,5 @@ npm run watch
 ### Reset all the migrations
 
 ```
-php artisan migrate:freah --seed
+php artisan migrate:fresh --seed
 ```
