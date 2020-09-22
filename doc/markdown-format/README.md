@@ -18,8 +18,8 @@ Une table de synchronisation avec GitHub permet de lier des questions écrites e
 À chaque évènement de push sur le référentiel Git, un trigger démarre une synchronisation.
 
 1. Tous les `blobs` du `tree` qui n'existent pas dans dans la base
-de données sont importés.
-2. Les `blobs` qui qui ont été modifiés sont modifiés.
+de données sont importés,
+2. Les `blobs` qui ont été modifiés sont mis à jour.
 
 ## Format Markdown
 
