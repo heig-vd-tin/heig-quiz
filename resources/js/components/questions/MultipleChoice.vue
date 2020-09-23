@@ -11,10 +11,11 @@ propositions.
         <b-row class="text-center align-middle">
           <b-col cols="1">
             <b-button
-              :pressed.sync="myToggle[index]"
+            :pressed.sync="selected[index]"
               variant="outline-secondary"
               class="btn-circle"
-            >{{letter(index)}}</b-button>
+              @click="onClick(index, proposition, $event)"
+            >{{index+1}}</b-button>
           </b-col>
           <b-col class="text-left align-middle" v-html="proposition"></b-col>
         </b-row>
@@ -30,26 +31,31 @@ md.use(mk);
 
 export default {
   props: {
-    content: String, // Markdown content
-    multipleAnswers: Boolean, // Allow multiple answers
     values: Array, // Validated answers
+    question: null
   },
   data() {
     return {
-      myToggle: [false, false, false, false],
-
-      loaded: false,
+      selected: [],
       propositions: [],
-      question: null,
       questionNumber: 1,
-      TotalQuestion: 3, //Todo(tmz) from activity
-      activity_id: 1, //Todo(tmz) from activity
       countdown: "- : -",
       timer: 20,
       htmlContent: '',
     }
   },
   methods: {
+    onClick(index, proposition, $event){
+      if(!this.question.multipleAnswers) {
+        var i
+        for(i=0; i<this.selected.length; i++){
+          if(i != index) {
+            this.selected[i] = false
+          }
+        }
+      }
+      //this.selected[index] = !this.selected[index]
+    },
     /**
      * Extract the propositions in a multiple choice Markdown content.
      */
@@ -57,7 +63,7 @@ export default {
       let state = ''
       let ignore = []
       let propositions = {}
-      let proposition = 0
+      let proposition = -1
       let level = 0
       let tokens = md.parse(markdown)
       // Parse tokens
@@ -109,25 +115,16 @@ export default {
       };
 
       this.htmlContent = md.renderer.render(Array.from(output()), md.options)
-      console.log(propositions)
       for (const [key, value] of Object.entries(propositions)) {
           this.propositions[key] = md.renderer.render(value, md.options)
+          this.selected[key] = false
       }
 
-    },
-    /**
-     * Get the proposition number from the proposition id.
-     * 0 -> A, 1 -> B...
-     */
-    letter(i) {
-      let letter = String.fromCharCode("A".charCodeAt(0) + i);
-      return i < 26 ? letter : 'A' + letter;
-    },
-
+    }
   },
   mounted() {
     console.log('multiple-choice')
-    this.extractPropositions(this.content);
+    this.extractPropositions(this.question.content);
   }
 };
 </script>

@@ -27,8 +27,7 @@
         v-if="question.type === 'short-answer'"
       ></q-code>
       <q-multiple-choice
-        :content="question.content"
-        :options="question.options"
+        :question="question"
         v-if="question.type === 'multiple-choice'"
       ></q-multiple-choice>
       <b-container>
@@ -115,6 +114,7 @@ export default {
         title: question.name,
         type: question.type,
         content: question.content,
+        multipleAnswers: false
       };
       this.loaded = true;
       this.startTimer(this.duration);
