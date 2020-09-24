@@ -366,7 +366,7 @@ class ActivityController extends Controller
             'name' => $question['name'],
             'content' => $question['content'],
             'type' => $question['type'],
-            'options' => $question['options'],
+            'options' => json_decode($question['options']),
             'answer' => count($question['answers']) > 0 ? $question['answers'][0]->answer : null
         ];
 

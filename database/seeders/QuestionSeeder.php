@@ -39,6 +39,9 @@ class QuestionSeeder extends Seeder
         Question::create([
             'name' => 'Complément à deux',
             'type' => 'multiple-choice',
+            'options' => json_encode([
+                "multipleAnswers" => true
+            ]),
             'content' => "
 Le complément à deux c'est...
 
