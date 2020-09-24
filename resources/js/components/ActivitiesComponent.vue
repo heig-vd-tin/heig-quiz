@@ -1,6 +1,7 @@
 <template>
   <div>
   <b-tabs content-class="mt-3">
+    <b-tab title="Toutes les classes" v-bind:class="{ active : null == rosters.active }"></b-tab>
     <b-tab v-for="roster in rosters.data" :key="roster.id" :title="roster.name" v-bind:class="{ active : rosters.active == roster.id }"></b-tab>
   </b-tabs>
 
@@ -61,7 +62,6 @@
           <b-icon-trash></b-icon-trash>
         </b-button>
 
-        <b-popover target="link-button" title="Popover title" triggers="focus">Popover content</b-popover>
       </template>
     </b-table>
 
@@ -114,6 +114,8 @@
         </b-form>
       </div>
     </b-sidebar>
+
+
   </div>
 </template>
 
@@ -278,6 +280,12 @@ export default {
     this.loadRosters();
     this.loadActivities();
     this.loadQuizzes();
+
+    window.Echo.private('activity')
+        .listen('ActivityCreated', (e) => {
+            console.log("Activity Created", e);
+        }
+    );
   },
 };
 </script>

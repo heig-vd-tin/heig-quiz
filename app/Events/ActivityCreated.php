@@ -14,14 +14,16 @@ class ActivityCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $activity_id;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($activity_id)
     {
-        //
+        $this->activity_id = $activity_id;
     }
 
     /**

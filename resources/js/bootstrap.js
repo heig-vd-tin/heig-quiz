@@ -42,8 +42,3 @@ window.Echo = new Echo({
     forceTLS: true
 });
 
-window.Echo.private('activity')
-    .listen('ActivityCreated', (e) => {
-        console.log("Activity Created", e);
-    }
-);
