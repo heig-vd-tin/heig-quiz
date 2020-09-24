@@ -109,8 +109,22 @@ export default {
     },
 
     submitAnswer() {
-      console.log("Anser : " + this.values)
-      this.values.splice(0, this.values.length)
+      // Todo(tmz): Check if request not working
+      if( this.values.length > 0 ) {
+        let obj = { answer: [...this.values] }
+        axios({
+            method: 'post',
+            url: `/api/activities/${this.activity_id}/questions/${this.question_id-1}`,
+            data: obj
+          })
+          .then(function (reponse) { 
+            //console.log(reponse);
+          })
+          .catch(function (erreur) {
+            //console.log(erreur);
+        })
+        this.values.splice(0, this.values.length)
+      }
     },
     /**
      * Start countdown timer from the received duration
@@ -139,7 +153,7 @@ export default {
       this.started_at = rep.data.started_at;
       this.total = rep.data.quiz.questions_count;
       this.loaded = true;
-      this.setComponent()
+      this.loadQuestion()
       this.startTimer(this.duration);
     });
   },

@@ -58,6 +58,13 @@ export default {
         }
       }
     },
+    loadAnswer() {
+      if( this.question.answer ){
+        this.question.answer.forEach(ans => {
+          this.selected[ans] = true
+        })
+      }
+    },
     /**
      * Extract the propositions in a multiple choice Markdown content.
      */
@@ -126,7 +133,8 @@ export default {
   },
   mounted() {
     console.log('multiple-choice')
-    this.extractPropositions(this.question.content);
+    this.extractPropositions(this.question.content)
+    this.loadAnswer()
   }
 };
 </script>

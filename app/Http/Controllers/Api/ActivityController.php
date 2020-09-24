@@ -367,7 +367,7 @@ class ActivityController extends Controller
             'content' => $question['content'],
             'type' => $question['type'],
             'options' => json_decode($question['options']),
-            'answer' => count($question['answers']) > 0 ? $question['answers'][0]->answer : null
+            'answer' => count($question['answers']) > 0 ? json_decode($question['answers'][0]->answer) : null
         ];
 
         if ($request->isMethod('post')) {
@@ -386,7 +386,7 @@ class ActivityController extends Controller
                     'question_id' => $question->id,
                 ],
                 [
-                    'answer' => $request->answer,
+                    'answer' => json_encode($request->answer),
                     'is_correct' => $this->validate_answer($request->answer, $question->answer)
                 ]
             );
