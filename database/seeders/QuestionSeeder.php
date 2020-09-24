@@ -13,7 +13,12 @@ class QuestionSeeder extends Seeder
     {
         $q = new Question;
         $q->name = 'Transformation binaire';
-        $q->content = 'Que vaut `0x7` en binaire ?';
+        $q->content = 
+'## Hello
+Combien font 2 ?
+
+*Tips : Ce n\'est pas une question à la con...*';
+
         $q->answer = '{"pattern" : "/\b(0b?)0*111\b"}';
         $q->difficulty = 'medium';
         $q->keywords()->attach(Keyword::where('name', 'binary')->get());
