@@ -46,15 +46,17 @@ export default {
   },
   methods: {
     onClick(index, proposition, $event){
-      if(!this.question.multipleAnswers) {
-        var i
-        for(i=0; i<this.selected.length; i++){
-          if(i != index) {
-            this.selected[i] = false
-          }
+      this.values.splice(0, this.values.length)
+      var i
+      for(i=0; i<this.selected.length; i++){
+        if(i != index && !this.question.multipleAnswers) {
+          this.selected[i] = false
+        }
+
+        if(this.selected[i]){
+          this.values.push(i)
         }
       }
-      //this.selected[index] = !this.selected[index]
     },
     /**
      * Extract the propositions in a multiple choice Markdown content.

@@ -11,35 +11,17 @@
       >{{question_id}}/{{total}}</div>
     </div>
     <b-card v-if="loaded" border-variant="dark" :title="question_id + '. ' + question.title" align="left">
-      <q-short-answer
-        :content="question.content"
-        :options="question.options"
-        v-if="question.type === 'short-answer'"
-      ></q-short-answer>
-      <q-fill-in-the-gaps
-        :content="question.content"
-        :options="question.options"
-        v-if="question.type === 'fill-in-the-gaps'"
-      ></q-fill-in-the-gaps>
-      <q-code
-        :content="question.content"
-        :options="question.options"
-        v-if="question.type === 'short-answer'"
-      ></q-code>
-      <q-multiple-choice
-        :question="question"
-        v-if="question.type === 'multiple-choice'"
-      ></q-multiple-choice>
+      <component :key="question_id" :is="compQuestion"  v-bind="compProp"></component>
       <b-container>
         <b-row class="text-center align-middle">
           <b-col>
-            <b-button pill variant="outline-secondary">Précédent</b-button>
+            <b-button v-if="question_id > 1" pill variant="outline-secondary" @click="prevQuestion">Précédent</b-button>
           </b-col>
           <b-col cols="5">
             <h2 class="display-3 time" v-bind:class="{'text-danger' : timer < 30}">{{countdown}}</h2>
           </b-col>
           <b-col>
-            <b-button pill variant="outline-secondary">Suivant</b-button>
+            <b-button v-if="question_id < total" pill variant="outline-secondary" @click="nextQuestion" >Suivant</b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -64,16 +46,14 @@ export default {
   },
   data() {
     return {
+      compQuestion: null,
+      compProp: {},
       loaded: false,
       total: 1,
-      question_id: 3,
+      question_id: 4,
       duration: 0,
-      question: {
-        id: 1,
-        title: "",
-        content: "",
-        options: {},
-      },
+      question: {},
+      values: [],
       activity_id: 1,
       countdown: "- : -",
       timer: 20,
@@ -85,6 +65,43 @@ export default {
     },
   },
   methods: {
+    setComponent(){
+      switch(this.question.type) {
+        case 'short-answer':
+          this.compQuestion = 'q-short-answer'
+          break
+        case 'fill-in-the-gaps':
+          this.compQuestion = 'q-fill-in-the-gaps'
+          break
+        case 'multiple-choice':
+          this.compQuestion = 'q-multiple-choice'
+          break
+      }
+      
+      this.compProp = {
+        question: this.question,
+        values: this.values
+      }
+    },
+
+    nextQuestion() {
+      this.submitAnswer()
+      this.question_id += 1
+      this.question = this.questions[this.question_id-1]
+      this.setComponent()
+    },
+
+    prevQuestion() {
+      this.submitAnswer()
+      this.question_id -= 1
+      this.question = this.questions[this.question_id-1]
+      this.setComponent()
+    },
+
+    submitAnswer() {
+      console.log("Anser : " + this.values)
+      this.values.splice(0, this.values.length)
+    },
     /**
      * Start countdown timer from the received duration
      */
@@ -105,18 +122,14 @@ export default {
   },
   mounted() {
     axios.get(`/api/activities/${this.activity_id}`).then((rep) => {
-      let question = rep.data.quiz.questions[this.question_id];
+      let question = rep.data.quiz.questions[this.question_id-1];
+      this.questions = rep.data.quiz.questions
       this.duration = rep.data.duration;
       this.activity_id = rep.data.id;
       this.started_at = rep.data.started_at;
       this.total = rep.data.quiz.questions_count;
-      this.question = {
-        title: question.name,
-        type: question.type,
-        content: question.content,
-        multipleAnswers: false
-      };
       this.loaded = true;
+      this.setComponent()
       this.startTimer(this.duration);
     });
   },
