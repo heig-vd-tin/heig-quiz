@@ -10,7 +10,7 @@
         aria-valuemax="100"
       >{{question_id}}/{{total}}</div>
     </div>
-    <b-card v-if="loaded" border-variant="dark" :title="question_id + '. ' + question.title" align="left">
+    <b-card v-if="loaded" border-variant="dark" :title="question_id + '. ' + question.name" align="left">
       <component :key="reloadComp" :is="compQuestion"  v-bind="compProp"></component>
       <b-container>
         <b-row class="text-center align-middle">
