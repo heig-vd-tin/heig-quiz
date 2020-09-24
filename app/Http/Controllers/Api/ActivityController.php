@@ -298,19 +298,19 @@ class ActivityController extends Controller
     function questions($id) {
         $activity = Activity::findOrFail($id);
 
-        if (!$activity->started) {
+        /*if (!$activity->started) {
             return response([
                 'message' => "Cannot access questions before the activity start",
                 'error' => "Unauthorized"
             ], 403);
-        }
+        }*/
 
-        if ($activity->completed) {
+        /*if ($activity->completed) {
             return response([
                 'message' => "One the quiz is finished, students won't have access to the questions",
                 'error' => "Unauthorized"
             ], 403);
-        }
+        }*/
 
         $questions = $this->get_ordered_questions($activity);
 
@@ -365,6 +365,8 @@ class ActivityController extends Controller
             'id' => $question_id,
             'name' => $question['name'],
             'content' => $question['content'],
+            'type' => $question['type'],
+            'options' => $question['options'],
             'answer' => count($question['answers']) > 0 ? $question['answers'][0]->answer : null
         ];
 

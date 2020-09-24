@@ -11,7 +11,7 @@
       >{{question_id}}/{{total}}</div>
     </div>
     <b-card v-if="loaded" border-variant="dark" :title="question_id + '. ' + question.title" align="left">
-      <component :key="question_id" :is="compQuestion"  v-bind="compProp"></component>
+      <component :key="reloadComp" :is="compQuestion"  v-bind="compProp"></component>
       <b-container>
         <b-row class="text-center align-middle">
           <b-col>
@@ -46,6 +46,7 @@ export default {
   },
   data() {
     return {
+      reloadComp: 0,
       compQuestion: null,
       compProp: {},
       loaded: false,
@@ -82,20 +83,29 @@ export default {
         question: this.question,
         values: this.values
       }
+
+      this.reloadComp += 1
     },
 
     nextQuestion() {
       this.submitAnswer()
       this.question_id += 1
-      this.question = this.questions[this.question_id-1]
-      this.setComponent()
+      this.loadQuestion()
     },
 
     prevQuestion() {
       this.submitAnswer()
       this.question_id -= 1
-      this.question = this.questions[this.question_id-1]
-      this.setComponent()
+      this.loadQuestion() 
+    },
+
+    loadQuestion() {
+      axios
+        .get(`/api/activities/${this.activity_id}/questions/${this.question_id-1}`)
+        .then((rep) => {
+          this.question = rep.data
+          this.setComponent()
+      });
     },
 
     submitAnswer() {
@@ -122,7 +132,7 @@ export default {
   },
   mounted() {
     axios.get(`/api/activities/${this.activity_id}`).then((rep) => {
-      let question = rep.data.quiz.questions[this.question_id-1];
+      //let question = rep.data.quiz.questions[this.question_id-1];
       this.questions = rep.data.quiz.questions
       this.duration = rep.data.duration;
       this.activity_id = rep.data.id;
