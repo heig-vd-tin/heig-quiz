@@ -4,6 +4,12 @@ Allow to give a short answer (one line of text)
 <template>
   <div>
     <b-card-text v-html="htmlContent"></b-card-text>
+    <b-form-input
+          id="input-answer"
+          v-model="values[0]"
+          required
+          placeholder="Enter answer"
+        ></b-form-input>
   </div>
 </template>
 
@@ -26,12 +32,16 @@ export default {
   data() {
     return {
       htmlContent: '',
+      answer: null
     }
   },
 
   mounted() {
     this.htmlContent = md.render(this.question.content)
-    //this.loadAnswer()
+
+    if( this.question.answer && this.question.answer.length > 0 ) {
+      this.values[0] = this.question.answer[0]
+    }
   }
 }
 </script>

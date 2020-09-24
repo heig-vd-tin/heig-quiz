@@ -11,7 +11,7 @@
       >{{question_id}}/{{total}}</div>
     </div>
     <b-card v-if="loaded" border-variant="dark" :title="question_id + '. ' + question.name" align="left">
-      <component :key="reloadComp" :is="compQuestion"  v-bind="compProp"></component>
+      <component class="mb-4" :key="reloadComp" :is="compQuestion"  v-bind="compProp"></component>
       <b-container>
         <b-row class="text-center align-middle">
           <b-col>
@@ -51,7 +51,7 @@ export default {
       compProp: {},
       loaded: false,
       total: 1,
-      question_id: 4,
+      question_id: 1,
       duration: 0,
       question: {},
       values: [],
