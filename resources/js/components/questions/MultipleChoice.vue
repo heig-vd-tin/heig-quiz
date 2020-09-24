@@ -49,7 +49,7 @@ export default {
       this.values.splice(0, this.values.length)
       var i
       for(i=0; i<this.selected.length; i++){
-        if(i != index && !this.question.multipleAnswers) {
+        if(i != index && !this.question.options.multipleAnswers) {
           this.selected[i] = false
         }
 
