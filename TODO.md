@@ -15,24 +15,24 @@
   - [x] Answer Question
 - [x] Setup Event System (with Pusher?)
 - [ ] View Home Teacher
-  - [ ] Show Rosters Tabs
+  - [x] Show Rosters Tabs
   - [ ] Create Activity from Quiz
 - [ ] View Home Student
 - [ ] View Progress
-- [ ] View Question
-  - [ ] Short Answer
+- [x] View Question
+  - [x] Short Answer
   - [ ] Fill-In-The-Gaps
-  - [ ] Multiple Choices
-- [ ] Redis/Pusher Events
+  - [x] Multiple Choices
+- [x] Redis/Pusher Events
   - [ ] New activity
   - [ ] Activity finished
   - [ ] Activity started
   - [ ] New answer given
 - [ ] View Correction
 - [ ] Git Sync
-- [ ] laravel-websockets to use on deployment
-- [ ] Generate api_token on Shibboleth auth
-- [ ] Deploy on chevallier.io
+- [x] laravel-websockets to use on deployment
+- [x] Generate api_token on Shibboleth auth
+- [x] Deploy on chevallier.io
 
 - [ ] Dynamic Breadcrumb Home > Quiz 23
 
