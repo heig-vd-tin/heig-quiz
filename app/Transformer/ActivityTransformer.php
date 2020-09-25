@@ -23,7 +23,8 @@ class ActivityTransformer extends Fractal\TransformerAbstract
                 'questions' => $activity->quiz->questions_count,
                 'keywords' => $activity->quiz->keywords
             ],
-            'roster' => fractal($activity->roster, new RosterTransformer())->toArray()
+            'roster' => fractal($activity->roster, new RosterTransformer())->toArray(),
+            'created_at' => $activity->created_at,
 	    ];
 	}
 }

@@ -32,6 +32,7 @@
         "@fortawesome/vue-fontawesome": "^2.0.0",
         "@iktakahiro/markdown-it-katex": "^4.0.0",
         "@popperjs/core": "^2.4.4",
+        "javascript-time-ago": "^2.0.13",
         "laravel-echo": "^1.8.1",
         "markdown-it": "^11.0.1",
         "pusher-js": "^7.0.0",

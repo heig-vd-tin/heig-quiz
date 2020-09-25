@@ -10,6 +10,10 @@ class Roster extends Model
 {
     use HasFactory;
 
+    protected $appends = [
+        'has_running_activities'
+    ];
+
     protected $withCount = [
         'students'
     ];
@@ -38,5 +42,14 @@ class Roster extends Model
             $orientations[$orientation->orientation] = $orientation->count;
         }
         return $orientations;
+    }
+
+    function getHasRunningActivitiesAttribute() {
+        $has_running_activites = false;
+        foreach($this->activities()->get() as $activity) {
+            if ($activity->started && !$activity->completed)
+                $has_running_activites = true;
+        }
+        return $has_running_activites;
     }
 }

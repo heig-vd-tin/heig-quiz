@@ -14,12 +14,11 @@ class CreateActivitiesTable extends Migration
             $table->foreignId('roster_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->integer('duration')->comment('In seconds');
-            $table->dateTime('started_at')->nullable()->comment('Activity start time');
             $table->boolean('shuffle_questions')->default(false);
             $table->boolean('shuffle_propositions')->default(false);
             $table->bigInteger('seed')->default(0)->comment('For random generator');
             $table->boolean('hidden')->default(false);
-
+            $table->dateTime('started_at')->nullable()->comment('Activity start time');
             $table->timestamps();
         });
     }

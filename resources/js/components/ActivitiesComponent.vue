@@ -1,8 +1,12 @@
 <template>
   <div>
   <b-tabs content-class="mt-3">
-    <b-tab title="Toutes les classes" v-bind:class="{ active : null == rosters.active }"></b-tab>
-    <b-tab v-for="roster in rosters.data" :key="roster.id" :title="roster.name" v-bind:class="{ active : rosters.active == roster.id }"></b-tab>
+    <b-tab @click="rosterChange(null)" title="Toutes les classes"></b-tab>
+    <b-tab @click="rosterChange(roster.id)" v-for="roster in rosters.data" v-model="roster_id" :key="roster.id">
+      <template v-slot:title>
+        <b-spinner v-if="roster.has_running_activities" type="grow" small></b-spinner> {{roster.name}}
+      </template>
+    </b-tab>
   </b-tabs>
 
     <h2>Activités</h2>
@@ -36,7 +40,7 @@
         </b-button>
 
         <b-button
-          v-if="!data.item.completed && !data.item.started_at"
+          v-if="roster_id && !data.item.completed && !data.item.started_at"
           v-on:click="startActivity(data.item.id)"
           variant="outline-success"
           class="btn-circle"
@@ -121,6 +125,10 @@
 
 <script>
 import axios from "axios";
+import TimeAgo from 'javascript-time-ago'
+import fr from 'javascript-time-ago/locale/fr'
+TimeAgo.addLocale(fr)
+const timeAgo = new TimeAgo('fr-CH')
 
 export default {
   data() {
@@ -131,6 +139,7 @@ export default {
         roster_id: null,
         duration: 600,
       },
+      roster_id: null,
       rosters: {
         data: [],
         active: 0,
@@ -138,11 +147,11 @@ export default {
       },
       activities: {
         fields: [
-          {
-            key: "id",
-            label: "#",
-            sortable: true,
-          },
+          // {
+          //   key: "id",
+          //   label: "#",
+          //   sortable: true,
+          // },
           {
             key: "quiz.name",
             label: "Quiz",
@@ -159,16 +168,22 @@ export default {
             sortable: true,
           },
           {
-            key: "roster.teacher.name",
-            label: "Enseignant",
-            sortable: true,
-          },
-          {
             key: "duration",
             label: "Durée",
             sortable: true,
             formatter: "humanDuration",
           },
+          {
+            key: "created_at",
+            label: "Créé le",
+            sortable: true,
+            formatter: "timeAgo"
+          },
+          // {
+          //   key: "roster.teacher.name",
+          //   label: "Enseignant",
+          //   sortable: true,
+          // },
           {
             label: "Actions",
             key: "actions",
@@ -214,8 +229,18 @@ export default {
       },
     };
   },
-
+  watch: {
+    roster_id(roster_id) {
+      this.loadActivities(roster_id);
+    }
+  },
   methods: {
+    rosterChange(roster_id) {
+      this.roster_id = roster_id
+    },
+    timeAgo(date) {
+      return timeAgo.format(Date.parse(date));
+    },
     /**
      * Convert a duration in seconds into a human value
      */
@@ -260,8 +285,12 @@ export default {
         this.rosters.loaded = true;
       });
     },
-    loadActivities() {
-      axios.get("/api/user/activities").then((rep) => {
+    loadActivities(roster_id) {
+      axios.get("/api/user/activities", {
+        params: {
+          roster_id: roster_id
+        }
+      }).then((rep) => {
         this.activities.data = rep.data.data;
         this.activities.count = rep.data.count;
         this.activities.loaded = true;

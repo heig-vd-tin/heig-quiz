@@ -20,12 +20,15 @@ class ActivityController extends Controller
 {
     function index(Request $request) {
         if ($request->owned)
-            $activities = Activity::where('user_id', Auth::id())->get();
+            $activities = Activity::where('user_id', Auth::id());
         else
-            $activities = Activity::all();
+            $activities = Activity::query();
 
-        return fractal($activities, new ActivityTransformer())->toArray();
+        if (($roster_id = $request->input('roster_id'))) {
+            $activities->where('roster_id', $roster_id);
+        }
 
+        return fractal($activities->get(), new ActivityTransformer())->toArray();
     }
 
     function owned() {

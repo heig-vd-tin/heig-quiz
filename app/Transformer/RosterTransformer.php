@@ -28,6 +28,7 @@ class RosterTransformer extends Fractal\TransformerAbstract
             'semester' => $roster->semester ? 'spring' : 'fall',
             'students' => $roster->students_count,
             'orientations' => $roster->orientations(),
+            'has_running_activities' => $roster->has_running_activities,
             'teacher' => [
                 'id' => $roster->teacher->id,
                 'name' => $roster->teacher->name
