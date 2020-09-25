@@ -4,11 +4,18 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Request;
-
+use Auth;
 class CheckRole
 {
 	public function handle($request, Closure $next, $role)
 	{
+		if(!$request->user()) {
+			return response()->json([
+				'error' => 'Not logged in',
+				'documentation_url' => url('docs')
+			], 403);
+		}
+
 		if($request->user()->hasRole($role) || !$role)
 			return $next($request);
 

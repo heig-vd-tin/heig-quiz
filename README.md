@@ -62,3 +62,14 @@ npm run watch
 ```
 php artisan migrate:fresh --seed
 ```
+
+
+### Deployment
+
+Still have some issues on `npm` on the server side...
+
+```
+npm run production
+tar cvzf dist.tar.gz public/css/app.css public/css/app.css.map public/js/app.js public/js/app.js.LICENSE.txt public/js/app.js.map
+scp dist.tar.gz ...
+```
