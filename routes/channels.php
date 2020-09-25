@@ -19,3 +19,9 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('activity', ActivityChannel::class);
+
+Broadcast::channel('activity.{activity_id}', function ($user, $activity_id) {
+    if ($user->canJoinActivity($activity_id)) {
+        return ['id' => $user->id, 'name' => $user->name];
+    }
+});

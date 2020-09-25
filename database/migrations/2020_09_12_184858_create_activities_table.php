@@ -18,7 +18,16 @@ class CreateActivitiesTable extends Migration
             $table->boolean('shuffle_propositions')->default(false);
             $table->bigInteger('seed')->default(0)->comment('For random generator');
             $table->boolean('hidden')->default(false);
+            // $table->enum('state', [
+            //     'idle',
+            //     'openned',
+            //     'started',
+            //     'stopped',
+            //     'ended'
+            // ]);
+            $table->dateTime('opened_at')->nullable()->comment('Activity opening time');
             $table->dateTime('started_at')->nullable()->comment('Activity start time');
+            $table->dateTime('ended_at')->nullable()->comment('Activity end time');
             $table->timestamps();
         });
     }

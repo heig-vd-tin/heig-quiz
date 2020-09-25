@@ -38,19 +38,11 @@ class ActivityController extends Controller
     }
 
     function show($id) {
-        $activity = Activity::with('roster.students')->with('quiz.questions')->with('roster.students.user')->findOrFail($id);
-        $activity['students'] = $activity->roster->students_count;
-        $activity['quiz'] = url("/api/quizzes/{$activity['quiz_id']}");
-        $activity['roster'] = url("/api/rosters/{$activity['roster_id']}");
-        $activity['questions'] = url("/api/activities/{$activity['id']}/questions");
+        $activity = Activity::findOrFail($id);
+        return fractal($activity, new ActivityTransformer())->toArray();
 
-        if ($activity->hidden)
-            $activity['@show'] = url("/api/activities/{$activity['id']}/show");
-        else
-            $activity['@hide'] = url("/api/activities/{$activity['id']}/hide");
-
-        if (!$activity->started && !$activity->completed)
-            $activity['@start'] = url("/api/activities/{$activity['id']}/start");
+        // $activity = Activity::with('roster.students')->with('quiz.questions')->with('roster.students.user')->findOrFail($id);
+        // $activity['students'] = $activity->roster->students_count;
 
         return $activity;
     }

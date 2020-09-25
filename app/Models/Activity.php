@@ -15,9 +15,9 @@ class Activity extends Model
     ];
 
     protected $appends = [
+        'state',     // Current state of the activity
         'elapsed',   // Number of seconds elapsed since the beginning
-        'started',   // The activity has started and isn't yet finished
-        'completed'  // The activity is finished
+        'running',   // The activity has started and isn't yet finished
     ];
 
     function quiz() {
@@ -49,11 +49,44 @@ class Activity extends Model
         return min($elapsed, $this->duration);
     }
 
-    function getStartedAttribute() {
+    /**
+     * Current activity is being running.
+     */
+    function getRunningAttribute() {
         return $this->elapsed > 0 && $this->elapsed < $this->duration;
     }
 
     function getCompletedAttribute() {
         return $this->elapsed >= $this->duration;
+    }
+
+    function getStateAttribute() {
+        if ($this->finished_at || $this->elapsed >= $this->duration)
+            return 'finished';
+        if ($this->started_at)
+            return 'started';
+        if ($this->opended_at)
+            return 'opened';
+        return 'idle';
+    }
+
+    /**
+     * For the current activity, returns the question order in
+     * which they will be generated for the given student_id.
+     */
+    function getQuestionsOrder($student_id) {
+        $hash = hash('sha1', "$this->id $this->quiz_id $student_id");
+        $seed = unpack("L", substr($hash, 0, 4))[1];
+        $count = $this->quiz->questions_count;
+
+        mt_srand($seed , MT_RAND_MT19937);
+
+        $array = range(0, $count - 1);
+        for ($i = 0; $i < $count; ++$i) {
+            list($chunk) = array_splice($array, mt_rand(0, $count - 1), 1);
+            array_push($array, $chunk);
+        }
+
+        return $array;
     }
 }

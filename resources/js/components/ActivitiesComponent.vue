@@ -20,6 +20,12 @@
       :fields="activities.fields"
       @row-clicked="activityClickHandler"
     >
+      <template v-slot:cell(status)="data">
+        <b-badge v-if="data.item.state == 'opened'" variant="info">Ouverte <b-badge variant="light">4/{{data.item.roster.students}}</b-badge></b-badge>
+        <b-badge v-if="data.item.state == 'started'" variant="success">En cours <b-badge variant="light">14/{{data.item.roster.students}}</b-badge></b-badge>
+        <b-badge v-if="data.item.state == 'finished'" variant="secondary">Terminée <b-badge variant="light">14/{{data.item.roster.students}}</b-badge></b-badge>
+      </template>
+
       <template v-slot:cell(actions)="data">
         <b-button
           v-if="data.item.hidden"
@@ -184,6 +190,10 @@ export default {
           //   label: "Enseignant",
           //   sortable: true,
           // },
+          {
+            label: "Status",
+            key: "status"
+          },
           {
             label: "Actions",
             key: "actions",

@@ -7,6 +7,8 @@ import Activities from "./components/ActivitiesComponent.vue"
 import Quiz from "./components/QuizComponent.vue"
 import Progress from "./components/ProgressComponent.vue"
 import Sandbox from "./components/Sandbox.vue"
+import Activity from "./components/ActivityComponent.vue"
+
 
 const routes = [
   {
@@ -15,8 +17,13 @@ const routes = [
     component: Activities
   },
   {
-    path: "/quiz/questions",
+    path: "/quiz/quiz",
     name: "Quiz",
+    component: Activity
+  },
+  {
+    path: "/quiz/questions",
+    name: "Question",
     component: Quiz
   },
   {
