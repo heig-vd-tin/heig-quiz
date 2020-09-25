@@ -63,7 +63,6 @@ npm run watch
 php artisan migrate:fresh --seed
 ```
 
-
 ### Deployment
 
 Still have some issues on `npm` on the server side...

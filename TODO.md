@@ -31,6 +31,7 @@
 - [ ] View Correction
 - [ ] Git Sync
 - [ ] laravel-websockets to use on deployment
+- [ ] Generate api_token on Shibboleth auth
 - [ ] Deploy on chevallier.io
 
 - [ ] Dynamic Breadcrumb Home > Quiz 23

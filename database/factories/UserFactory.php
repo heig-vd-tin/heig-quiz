@@ -28,6 +28,7 @@ class UserFactory extends Factory
             'gender' => $gender,
             'affiliation' => 'member;student',
             'remember_token' => Str::random(10),
+            'api_token' => Str::random(60),
         ];
     }
 }

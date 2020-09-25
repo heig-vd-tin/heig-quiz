@@ -4,6 +4,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Student;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -17,7 +18,8 @@ class UserSeeder extends Seeder
             'name' => 'Tony Maulaz',
             'password' => 'shibboleth',
             'gender' => '1',
-            'affiliation' => 'member;staff'
+            'affiliation' => 'member;staff',
+            'api_token' => Str::random(60),
         ]);
 
         User::create([
@@ -28,7 +30,8 @@ class UserSeeder extends Seeder
             'name' => 'Yves Chevallier',
             'password' => 'shibboleth',
             'gender' => '1',
-            'affiliation' => 'member;staff'
+            'affiliation' => 'member;staff',
+            'api_token' => Str::random(60),
         ]);
 
         User::factory()->count(50)->create()->each(function ($user) {
