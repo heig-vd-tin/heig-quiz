@@ -3,16 +3,23 @@ import VueRouter from "vue-router"
 
 Vue.use(VueRouter)
 
-import Activities from "./components/ActivitiesComponent.vue"
-import Quiz from "./components/QuizComponent.vue"
-import Progress from "./components/ProgressComponent.vue"
-import Sandbox from "./components/Sandbox.vue"
+import Activities from "./components/Activities"
+import Quizzes from "./components/Quizzes"
+
+import Quiz from "./components/QuizComponent"
+import Progress from "./components/ProgressComponent"
+import Sandbox from "./components/Sandbox"
 
 const routes = [
   {
     path: "/quiz/home",
     name: "Activities",
     component: Activities
+  },
+  {
+    path: "/quiz/quizzes",
+    name: "Quizzes",
+    component: Quizzes
   },
   {
     path: "/quiz/questions/:id",

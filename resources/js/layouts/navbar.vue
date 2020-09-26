@@ -8,8 +8,6 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="/quiz/activities">Activités</b-nav-item>
-        <b-nav-item href="/quiz/sandbox">Bac à sable</b-nav-item>
         <slot></slot>
       </b-navbar-nav>
 
@@ -18,7 +16,7 @@
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
-            {{ username }}
+            <b-icon-person-circle/> {{ username }}
           </template>
           <b-dropdown-item href="/logout">Déconnexion</b-dropdown-item>
         </b-nav-item-dropdown>

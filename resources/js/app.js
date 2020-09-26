@@ -22,16 +22,24 @@ require('./fontawesome');
 /**
  * Vue components
  */
-Vue.component('app', require('./layouts/dashboard.vue').default);
+Vue.component('app', require('./App').default);
 
 Vue.prototype.$user = JSON.parse(document.querySelector("meta[name='user']").getAttribute('content'));
 
 /**
- * Sidebar
+ * Global components
  */
-import VueSidebarMenu from 'vue-sidebar-menu'
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
-Vue.use(VueSidebarMenu)
+import NavBar from './layouts/navbar'
+Vue.component('navbar', NavBar)
+
+/**
+ * Filters
+ */
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -40,6 +48,7 @@ Vue.use(VueSidebarMenu)
  */
 
 const app = new Vue({
+
     router,
     el: '#app',
 });
