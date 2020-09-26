@@ -14,6 +14,13 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown right>
+          <template v-slot:button-content>
+            <b-icon-bell/><sup><b-badge pill class="blob" variant="danger">3<span class="sr-only">unread notifications</span></b-badge></sup>
+          </template>
+          <b-dropdown-item href="#">Notification...</b-dropdown-item>
+        </b-nav-item-dropdown>
+
+        <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
             <b-icon-person-circle/> {{ username }}
@@ -68,5 +75,26 @@ export default {
   width: 1.3rem;
   height: 1.3rem;
   vertical-align: text-top;
+}
+
+.blob {
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.925);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 15px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
 }
 </style>

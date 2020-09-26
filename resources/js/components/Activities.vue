@@ -77,7 +77,7 @@
           <b-button
             v-on:click="openActivity(data.item.id)"
             variant="outline-success"
-            class="btn-circle"
+            class="btn-circle running"
           >
             <b-icon-broadcast></b-icon-broadcast>
           </b-button>
@@ -252,3 +252,25 @@ export default {
   },
 };
 </script>
+<style scoped>
+.running {
+  animation: running 2s infinite;
+}
+
+@keyframes running {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(57, 150, 20, 0.925);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 15px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
+</style>
