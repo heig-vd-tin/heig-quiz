@@ -15,9 +15,10 @@ const routes = [
     component: Activities
   },
   {
-    path: "/quiz/questions",
+    path: "/quiz/questions/:id",
     name: "Quiz",
-    component: Quiz
+    component: Quiz,
+    props: true
   },
   {
     path: "/quiz/progress",

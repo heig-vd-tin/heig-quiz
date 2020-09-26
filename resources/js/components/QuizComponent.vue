@@ -44,6 +44,12 @@ export default {
     "q-multiple-choice": MultipleChoice,
     "q-short-answer": ShortAnswer,
   },
+  props: {
+    id: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       reloadComp: 0,
@@ -78,7 +84,7 @@ export default {
           this.compQuestion = 'q-multiple-choice'
           break
       }
-      
+
       this.compProp = {
         question: this.question,
         values: this.values
@@ -96,7 +102,7 @@ export default {
     prevQuestion() {
       this.submitAnswer()
       this.question_id -= 1
-      this.loadQuestion() 
+      this.loadQuestion()
     },
 
     loadQuestion() {
@@ -117,7 +123,7 @@ export default {
             url: `/api/activities/${this.activity_id}/questions/${this.question_id-1}`,
             data: obj
           })
-          .then(function (reponse) { 
+          .then(function (reponse) {
             //console.log(reponse);
           })
           .catch(function (erreur) {
@@ -145,6 +151,7 @@ export default {
     },
   },
   mounted() {
+    this.activity_id = this.id
     axios.get(`/api/activities/${this.activity_id}`).then((rep) => {
       //let question = rep.data.quiz.questions[this.question_id-1];
       this.questions = rep.data.quiz.questions

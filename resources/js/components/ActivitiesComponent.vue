@@ -56,7 +56,13 @@
         >
           <b-icon-trophy-fill></b-icon-trophy-fill>
         </b-button>
-
+        <b-button
+          v-on:click="openActivity(data.item.id)"
+          variant="outline-success"
+          class="btn-circle"
+        >
+          <b-icon-broadcast></b-icon-broadcast>
+        </b-button>
         <b-button
           v-if="!data.item.started_at"
           v-on:click="deleteActivity(data.item.id)"
