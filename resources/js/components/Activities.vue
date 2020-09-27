@@ -51,6 +51,7 @@
             v-on:click="showActivity(data.item.id)"
             variant="outline-primary"
             class="btn-circle"
+            v-b-popover.hover.top="'Rendre visible l\'activité'"
           >
             <b-icon-eye-slash></b-icon-eye-slash>
           </b-button>
@@ -59,6 +60,7 @@
             v-on:click="hideActivity(data.item.id)"
             variant="outline-secondary"
             class="btn-circle"
+            v-b-popover.hover.top="'Cacher l\'activité aux étudiants'"
           >
             <b-icon-eye-fill></b-icon-eye-fill>
           </b-button>
@@ -68,6 +70,7 @@
             v-on:click="startActivity(data.item.id)"
             variant="outline-success"
             class="btn-circle"
+            v-b-popover.hover.top="'Démarrer l\'activité'"
           >
             <b-icon-play-fill></b-icon-play-fill>
           </b-button>
@@ -77,6 +80,7 @@
             v-on:click="viewResults(data.item.id)"
             variant="outline-primary"
             class="btn-circle"
+            v-b-popover.hover.top="'Voir les résultats'"
           >
             <b-icon-trophy-fill></b-icon-trophy-fill>
           </b-button>
@@ -84,14 +88,18 @@
             v-on:click="openActivity(data.item.id)"
             variant="outline-success"
             class="btn-circle running"
+            v-b-popover.hover.top="'Ouvrir l\'activité pour participation'"
           >
             <b-icon-broadcast></b-icon-broadcast>
           </b-button>
+
+          <!-- Delete an activity -->
           <b-button
-            v-if="!data.item.started_at"
-            v-on:click="deleteActivity(data.item.id)"
+            v-if="data.item.status == 'idle'"
+            v-b-popover.hover.top="'Supprimer l\'activité'"
             variant="outline-danger"
             class="btn-circle"
+            @click="deleteActivity(data.item.id)"
           >
             <b-icon-trash></b-icon-trash>
           </b-button>
@@ -222,9 +230,18 @@ export default {
       });
     },
     deleteActivity(activity_id) {
-      axios.post(`/api/activities/${activity_id}/delete`).then((rep) => {
-        this.loadActivities();
-      });
+      this.$bvModal.msgBoxConfirm('Voulez-vous vraiment supprimer cette activité ?', {
+        title: 'Supprimer ?',
+        okTitle: 'Supprimer',
+        cancelTitle: 'Annuler',
+        okVariant: 'danger'
+      })
+        .then(value => {
+          if (value)
+            axios.post(`/api/activities/${activity_id}/delete`).then((rep) => {
+              this.loadActivities();
+            });
+        })
     },
     loadRosters() {
       axios.get("/api/user/rosters").then((rep) => {

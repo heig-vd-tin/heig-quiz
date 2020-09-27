@@ -29,7 +29,6 @@ class ActivityFactory extends Factory
             'hidden' => false,
             'shuffle_questions' => Arr::random([0, 1]),
             'shuffle_propositions' => Arr::random([0, 1]),
-            'seed' => $this->faker->randomNumber()
         ];
     }
 };

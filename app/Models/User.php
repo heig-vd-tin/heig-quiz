@@ -67,4 +67,8 @@ class User extends Authenticatable
     function rosters() {
         return $this->hasMany(Roster::class, 'teacher_id');
     }
+
+    function canJoinActivity($activity_id) {
+        return $this->activities()->find($activity_id);
+    }
 }

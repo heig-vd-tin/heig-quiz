@@ -34,6 +34,18 @@ class UserSeeder extends Seeder
             'api_token' => Str::random(60),
         ]);
 
+        User::create([
+            'unique_id' => '666',
+            'firstname' => 'Sponge',
+            'lastname' => 'Bob',
+            'email' => 'sponge.bob@heig-vd.ch',
+            'name' => 'Sponge Bob',
+            'password' => 'shibboleth',
+            'gender' => '1',
+            'affiliation' => 'member;student',
+            'api_token' => Str::random(60),
+        ]);
+
         User::factory()->count(50)->create()->each(function ($user) {
             if ($user->affiliation == 'member;student') {
                 $user->studentDetails()->save(Student::factory()->make());
