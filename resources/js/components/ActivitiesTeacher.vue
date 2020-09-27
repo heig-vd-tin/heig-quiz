@@ -96,8 +96,19 @@
             v-if="data.item.status == 'idle'"
             @click="openActivity(data.item.id)"
             variant="outline-success"
-            class="btn-circle running"
+            class="btn-circle"
             v-b-popover.hover.top="'Ouvrir l\'activité pour participation'"
+          >
+            <b-icon-broadcast></b-icon-broadcast>
+          </b-button>
+
+          <!-- Open an activity -->
+          <b-button
+            v-if="data.item.status == 'opened'"
+            @click="closeActivity(data.item.id)"
+            variant="success"
+            class="btn-circle running"
+            v-b-popover.hover.top="'Activité disponible pour les étudiants. Cliquez pour interrompre.'"
           >
             <b-icon-broadcast></b-icon-broadcast>
           </b-button>
@@ -170,16 +181,11 @@ export default {
             formatter: "humanDuration",
           },
           {
-            key: "created_at",
-            label: "Créé le",
+            key: "updated_at",
+            label: "Modifié",
             sortable: true,
             formatter: "timeAgo",
           },
-          // {
-          //   key: "roster.teacher.name",
-          //   label: "Enseignant",
-          //   sortable: true,
-          // },
           {
             label: "Actions",
             key: "actions",
@@ -227,15 +233,20 @@ export default {
     activityClickHandler(record, index) {
       this.$router.push({ name: "quiz", params: { activity_id: record.id } });
     },
-
+    openActivity(activity_id) {
+      axios.post(`/api/activities/${activity_id}/open`).then((rep) => {
+      });
+    },
+    closeActivity(activity_id) {
+      axios.post(`/api/activities/${activity_id}/close`).then((rep) => {
+      });
+    },
     hideActivity(activity_id) {
       axios.post(`/api/activities/${activity_id}/hide`).then((rep) => {
-        this.loadActivities();
       });
     },
     showActivity(activity_id) {
       axios.post(`/api/activities/${activity_id}/show`).then((rep) => {
-        this.loadActivities();
       });
     },
     deleteActivity(activity_id) {
@@ -248,7 +259,7 @@ export default {
         .then(value => {
           if (value)
             axios.post(`/api/activities/${activity_id}/delete`).then((rep) => {
-              this.loadActivities();
+
             });
         })
     },
@@ -278,31 +289,9 @@ export default {
     this.loadRosters();
     this.loadActivities();
 
-    window.Echo.private("activity").listen("ActivityCreated", (e) => {
-      console.log("Activity Created", e);
+    window.Echo.private("activity").listen("ActivityUpdated", (e) => {
+      this.loadActivities();
     });
   },
 };
 </script>
-<style scoped>
-.running {
-  animation: running 2s infinite;
-}
-
-@keyframes running {
-	0% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(57, 150, 20, 0.925);
-	}
-
-	70% {
-		transform: scale(1);
-		box-shadow: 0 0 0 15px rgba(0, 0, 0, 0);
-	}
-
-	100% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-	}
-}
-</style>

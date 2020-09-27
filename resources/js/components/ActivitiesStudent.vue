@@ -15,7 +15,6 @@
         hover
         :items="activities.data"
         :fields="activities.fields"
-        @row-clicked="activityClickHandler"
       >
 
         <template v-slot:cell(status)="data">
@@ -94,8 +93,8 @@ export default {
           //   formatter: "humanDuration",
           // },
           {
-            key: "created_at",
-            label: "Créé le",
+            key: "updated_at",
+            label: "Modifié",
             sortable: true,
             formatter: "timeAgo",
           },
@@ -120,10 +119,6 @@ export default {
     };
   },
   methods: {
-    rosterChange(roster) {
-      console.log("RosterChange")
-      this.current_roster = roster;
-    },
     timeAgo(date) {
       return timeAgo.format(Date.parse(date));
     },
@@ -141,9 +136,6 @@ export default {
       if (seconds > 1) text += "s";
 
       return text;
-    },
-    activityClickHandler(record, index) {
-      this.$router.push({ name: "quiz", params: { activity_id: record.id } });
     },
     loadActivities(roster_id) {
       axios
@@ -166,25 +158,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.running {
-  animation: running 2s infinite;
-}
-
-@keyframes running {
-	0% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(57, 150, 20, 0.925);
-	}
-
-	70% {
-		transform: scale(1);
-		box-shadow: 0 0 0 15px rgba(0, 0, 0, 0);
-	}
-
-	100% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-	}
-}
-</style>

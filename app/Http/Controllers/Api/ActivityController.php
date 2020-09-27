@@ -20,20 +20,29 @@ use App\Transformer\ActivityTransformer;
 class ActivityController extends Controller
 {
     function index(Request $request) {
-        if ($request->owned) {
-            $user = Auth::user();
+        $user = Auth::user();
 
+        if ($user->isStudent()) {
+            $request->owned = true;
+        }
+
+        if ($request->owned) {
             if ($user->isStudent()) {
                 $activities = $user->student->activities();
             } else {
                 $activities = Activity::where('user_id', $user->id);
             }
         }
-        else
+        else {
             $activities = Activity::query();
+        }
 
         if (($roster_id = $request->input('roster_id'))) {
             $activities->where('roster_id', $roster_id);
+        }
+
+        if ($user->isStudent()) {
+            $activities->where('hidden', false);
         }
 
         $activities->orderBy('updated_at', 'desc');
@@ -171,8 +180,8 @@ class ActivityController extends Controller
             ], 400);
         }
 
-        $activity->hidden = true;
-        $activity->save();
+        $activity->update(['hidden' => true]);
+        broadcast(new \App\Events\ActivityUpdated(null));
     }
 
     function set_visible($id) {
@@ -192,8 +201,59 @@ class ActivityController extends Controller
             ], 400);
         }
 
-        $activity->hidden = false;
+        $activity->update(['hidden' => false]);
+        broadcast(new \App\Events\ActivityUpdated(null));
+    }
+
+    function open($id) {
+        $activity = Activity::findOrFail($id);
+
+        if ($activity->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the owner of an activity can open an activity",
+                'error' => "Unauthorized"
+            ], 403);
+        }
+
+        if ($activity->hidden) {
+            return response([
+                'message' => "Cannot open a hidden activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        if ($activity->status != 'idle') {
+            return response([
+                'message' => "Only idle activities can be opened",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $activity->update(['opened_at' => Carbon::now()]);
+        broadcast(new \App\Events\ActivityUpdated(null));
+    }
+
+    function close($id) {
+        $activity = Activity::findOrFail($id);
+
+        if ($activity->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the owner of an activity can close an activity",
+                'error' => "Unauthorized"
+            ], 403);
+        }
+
+        if ($activity->status != 'opened') {
+            return response([
+                'message' => "Only opened activities can be closed",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $activity->update(['opened_at' => null]);
         $activity->save();
+
+        broadcast(new \App\Events\ActivityUpdated(null));
     }
 
     function delete($id) {

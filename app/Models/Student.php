@@ -16,10 +16,12 @@ class Student extends Model
     }
 
     function activities() {
-        $activities = Activity::query();
-        foreach ($this->rosters as $roster) {
-            $activities->orWhere('roster_id', $roster->id);
-        }
+        $rosters = $this->rosters;
+        $activities = Activity::where(function ($query) use ($rosters) {;
+            foreach ($rosters as $roster) {
+                $query->orWhere('roster_id', $roster->id);
+            }
+        });
         return $activities;
     }
 

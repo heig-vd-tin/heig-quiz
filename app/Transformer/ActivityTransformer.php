@@ -34,6 +34,7 @@ class ActivityTransformer extends Fractal\TransformerAbstract
             ],
             'roster' => fractal($activity->roster, new RosterTransformer())->toArray(),
 
+            'updated_at' => $activity->updated_at,
             'created_at' => $activity->created_at,
             'started_at' => $activity->started_at,
             'ended_at' => $activity->ended_at,
