@@ -63,6 +63,30 @@ class ActivitySeeder extends Seeder
             'is_correct' => false
         ]);
 
+        Answer::create([
+            'activity_id' => $activity->id,
+            'student_id' => $student->id,
+            'question_id' => 6,
+            'answer' => '42',
+            'is_correct' => true
+        ]);
+
+        Answer::create([
+            'activity_id' => $activity->id,
+            'student_id' => $student->id,
+            'question_id' => 7,
+            'answer' => '42',
+            'is_correct' => true
+        ]);
+
+        Answer::create([
+            'activity_id' => $activity->id,
+            'student_id' => $student->id,
+            'question_id' => 8,
+            'answer' => '42',
+            'is_correct' => true
+        ]);
+
         Activity::factory()->count(20)->create();
     }
 }

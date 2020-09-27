@@ -61,6 +61,12 @@ class ActivityTransformer extends Fractal\TransformerAbstract
                 $data['@start_url'] = url("/api/activities/{$activity['id']}/start");
         }
 
+        if (Auth::user()->isStudent()) {
+            if ($activity->status == 'finished') {
+                $data['mark'] = $activity->getRank();
+            }
+        }
+
         /**
          * Navigation urls
          */

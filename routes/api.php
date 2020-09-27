@@ -49,6 +49,9 @@ Route::namespace('Api')->group(function () {
     Route::get('user/activities', 'ActivityController@owned');
     Route::get('user/rosters', 'RosterController@owned');
 
+    Route::get('activities', 'ActivityController@index');
+    Route::get('activities/{id}', 'ActivityController@show');
+
     // Teacher
     Route::group(['middleware' => 'role:teacher'], function() {
         Route::get('students', 'StudentController@index');
@@ -73,8 +76,6 @@ Route::namespace('Api')->group(function () {
         Route::get('quizzes/{id}/questions/{q}', 'QuizController@question');
         Route::get('quizzes/{id}/activities', 'QuizController@activities');
 
-        Route::get('activities', 'ActivityController@index');
-        Route::get('activities/{id}', 'ActivityController@show');
         Route::get('activities/{id}/roster', 'ActivityController@roster');
         Route::get('activities/{id}/quiz', 'ActivityController@quiz');
         Route::get('activities/{id}/progression', 'ActivityController@progression');

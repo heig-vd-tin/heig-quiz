@@ -87,17 +87,22 @@ export default {
           //   label: "Questions",
           //   sortable: true,
           // },
-          {
-            key: "duration",
-            label: "Durée",
-            sortable: true,
-            formatter: "humanDuration",
-          },
+          // {
+          //   key: "duration",
+          //   label: "Durée",
+          //   sortable: true,
+          //   formatter: "humanDuration",
+          // },
           {
             key: "created_at",
             label: "Créé le",
             sortable: true,
             formatter: "timeAgo",
+          },
+          {
+            key: "mark",
+            label: "Note",
+            sortable: true,
           },
           {
             key: "status",

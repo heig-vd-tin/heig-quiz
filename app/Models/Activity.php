@@ -118,4 +118,18 @@ class Activity extends Model
         });
         return $questions;
     }
+
+    /**
+     * Get the final rank
+     */
+    public function getRank() {
+        $sum = 0;
+        $questions = $this->getQuestions();
+        foreach ($this->getQuestions() as $question) {
+            if ($question->answered_at && $question->is_correct) {
+                $sum++;
+            }
+        }
+        return round($sum / count($questions) * 5 + 1, 1);
+    }
 }
