@@ -226,28 +226,32 @@ export default {
       }, 1000);
     },
     loadActivity() {
-    axios
-      .get(`/api/activities/${this.activity_id}`)
-      .then(({ data: activity }) => {
-        this.activity = activity;
-        this.students.total = activity.roster.students;
-        // this.loadQuestion();
-        // this.startTimer(this.duration);
-      });
-    }
+      axios
+        .get(`/api/activities/${this.activity_id}`)
+        .then(({ data: activity }) => {
+          this.activity = activity;
+          this.students.total = activity.roster.students;
+          // this.loadQuestion();
+          // this.startTimer(this.duration);
+        });
+    },
   },
   mounted() {
     window.Echo.join(`activity.${this.activity_id}`)
       .here((users) => {
-        this.students.here = users.length;
+        let students = 0;
+        users.forEach((student) => {
+          if (student.type == "student") students++;
+        });
+        this.students.here = students;
         console.log(users);
       })
       .joining((user) => {
-        this.students.here++;
+        if (user.type == "student") this.students.here++;
         console.log(user.name);
       })
       .leaving((user) => {
-        this.students.here--;
+        if (user.type == "student") this.students.here--;
         console.log(user.name);
       })
       .listen("ActivityUpdated", (e) => {

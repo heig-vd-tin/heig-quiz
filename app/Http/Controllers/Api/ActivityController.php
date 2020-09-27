@@ -115,7 +115,6 @@ class ActivityController extends Controller
 
         $activity->started_at = Carbon::now();
         $activity->save();
-
         broadcast(new \App\Events\ActivityUpdated($activity));
     }
 

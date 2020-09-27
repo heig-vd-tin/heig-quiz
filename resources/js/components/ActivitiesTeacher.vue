@@ -38,7 +38,6 @@
       </p>
 
       <b-table
-        v-if="activities.loaded"
         striped
         hover
         :items="activities.data"
@@ -69,17 +68,6 @@
             <b-icon-eye-fill></b-icon-eye-fill>
           </b-button>
 
-          <!-- Start the activity -->
-          <b-button
-            v-if="data.item.status == 'opened'"
-            @click="startActivity(data.item.id)"
-            variant="outline-success"
-            class="btn-circle"
-            v-b-popover.hover.top="'Démarrer l\'activité'"
-          >
-            <b-icon-play-fill></b-icon-play-fill>
-          </b-button>
-
           <!-- View results -->
           <b-button
             v-if="data.item.status == 'finished'"
@@ -90,7 +78,16 @@
           >
             <b-icon-trophy-fill></b-icon-trophy-fill>
           </b-button>
-
+          <!-- Delete an activity -->
+          <b-button
+            v-if="data.item.status == 'idle'"
+            v-b-popover.hover.top="'Supprimer l\'activité'"
+            variant="outline-danger"
+            class="btn-circle"
+            @click="deleteActivity(data.item.id)"
+          >
+            <b-icon-trash></b-icon-trash>
+          </b-button>
           <!-- Open an activity -->
           <b-button
             v-if="data.item.status == 'idle'"
@@ -100,6 +97,17 @@
             v-b-popover.hover.top="'Ouvrir l\'activité pour participation'"
           >
             <b-icon-broadcast></b-icon-broadcast>
+          </b-button>
+
+          <!-- Start the activity -->
+          <b-button
+            v-if="data.item.status == 'opened'"
+            @click="startActivity(data.item.id)"
+            variant="outline-success"
+            class="btn-circle"
+            v-b-popover.hover.top="'Démarrer l\'activité'"
+          >
+            <b-icon-play-fill></b-icon-play-fill>
           </b-button>
 
           <!-- Open an activity -->
@@ -113,16 +121,9 @@
             <b-icon-broadcast></b-icon-broadcast>
           </b-button>
 
-          <!-- Delete an activity -->
-          <b-button
-            v-if="data.item.status == 'idle' || data.item.status == 'opened'"
-            v-b-popover.hover.top="'Supprimer l\'activité'"
-            variant="outline-danger"
-            class="btn-circle"
-            @click="deleteActivity(data.item.id)"
-          >
-            <b-icon-trash></b-icon-trash>
-          </b-button>
+          <span v-if="data.item.status == 'opened'">
+          {{ activities.presence.here }} / {{ data.item.roster.students }}
+          </span>
         </template>
       </b-table>
     </div>
@@ -139,7 +140,6 @@ const timeAgo = new TimeAgo("fr-CH");
 export default {
   data() {
     return {
-      loaded: false,
       activity: {
         quiz_id: null,
         roster_id: null,
@@ -192,7 +192,10 @@ export default {
           },
         ],
         data: [],
-        loaded: false,
+        presence: {
+          here: 0,
+          users: []
+        }
       }
     };
   },
@@ -236,10 +239,12 @@ export default {
     openActivity(activity_id) {
       axios.post(`/api/activities/${activity_id}/open`).then((rep) => {
       });
+      this.listenActivity(activity_id)
     },
     closeActivity(activity_id) {
       axios.post(`/api/activities/${activity_id}/close`).then((rep) => {
       });
+      this.leaveActivity(activity_id);
     },
     hideActivity(activity_id) {
       axios.post(`/api/activities/${activity_id}/hide`).then((rep) => {
@@ -248,6 +253,39 @@ export default {
     showActivity(activity_id) {
       axios.post(`/api/activities/${activity_id}/show`).then((rep) => {
       });
+    },
+    startActivity(activity_id) {
+      axios.post(`/api/activities/${activity_id}/start`).then((rep) => {
+      });
+    },
+    leaveActivity(activity_id) {
+      window.Echo.leave(`activity.${activity_id}`);
+    },
+    listenActivity(activity_id) {
+      console.log("Activity Listen ", activity_id)
+      this.leaveActivity(activity_id);
+      window.Echo.join(`activity.${activity_id}`)
+      .here((users) => {
+        this.activities.presence.users = users;
+        let students = 0;
+        users.forEach(student => {
+          if (student.type == 'student')
+            students++;
+        })
+
+        this.activities.presence.here = students;
+        console.log("Here: ", users);
+      })
+      .joining((user) => {
+        if (user.type == 'student')
+          this.activities.presence.here++;
+        console.log(user);
+      })
+      .leaving((user) => {
+        if (user.type == 'student')
+          this.activities.presence.here--;
+        console.log(user);
+      })
     },
     deleteActivity(activity_id) {
       this.$bvModal.msgBoxConfirm('Voulez-vous vraiment supprimer cette activité ?', {
@@ -264,10 +302,9 @@ export default {
         })
     },
     loadRosters() {
-      axios.get("/api/user/rosters").then((rep) => {
-        this.rosters.data = rep.data.data;
-        this.rosters.count = rep.data.count;
-        this.rosters.loaded = true;
+      axios.get("/api/user/rosters").then(({data : rosters}) => {
+        this.rosters.data = rosters.data;
+        this.rosters.count = rosters.count;
       });
     },
     loadActivities(roster_id) {
@@ -277,10 +314,13 @@ export default {
             roster_id: roster_id,
           },
         })
-        .then((rep) => {
-          this.activities.data = rep.data.data;
-          this.activities.count = rep.data.count;
-          this.activities.loaded = true;
+        .then(({data : activities}) => {
+          this.activities.data = activities.data;
+          this.activities.count = activities.count;
+          this.activities.data.forEach(activity => {
+            if (activity.status == 'opened')
+              this.listenActivity(activity.id)
+          })
         });
     },
 

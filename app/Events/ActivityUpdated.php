@@ -20,6 +20,11 @@ class ActivityUpdated implements ShouldBroadcastNow
         $this->activity = $activity;
     }
 
+    public function broadcastWith()
+    {
+        return ['id' => $this->activity->id];
+    }
+
     public function broadcastOn()
     {
         $channels = [new PrivateChannel('activity')];
