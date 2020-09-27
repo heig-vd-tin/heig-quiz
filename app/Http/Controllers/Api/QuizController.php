@@ -16,7 +16,7 @@ class QuizController extends Controller
         else
             $quiz = Quiz::all();
 
-        return $quiz->fractal();
+        return fractal($quiz, new QuizTransformer())->toArray();
     }
 
     function show($id) {

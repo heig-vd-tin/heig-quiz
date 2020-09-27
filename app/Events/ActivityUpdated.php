@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ActivityCreated implements ShouldBroadcast
+class ActivityUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -21,7 +21,7 @@ class ActivityCreated implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($activity_id)
+    public function __construct($activity_id = null)
     {
         $this->activity_id = $activity_id;
     }

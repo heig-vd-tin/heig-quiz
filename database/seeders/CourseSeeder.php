@@ -9,6 +9,11 @@ class CourseSeeder extends Seeder
 {
     public function run()
     {
+        Course::create([
+            'name' => 'PlayGround',
+            'department' => 'TIN'
+        ]);
+
         Course::factory()->count(10)->create();
     }
 }

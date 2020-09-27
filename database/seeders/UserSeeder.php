@@ -36,10 +36,22 @@ class UserSeeder extends Seeder
 
         $bob = User::create([
             'unique_id' => '666',
-            'firstname' => 'Sponge',
-            'lastname' => 'Bob',
-            'email' => 'sponge.bob@heig-vd.ch',
-            'name' => 'Sponge Bob',
+            'firstname' => 'Bob',
+            'lastname' => 'Sponge',
+            'email' => 'bob.sponge@heig-vd.ch',
+            'name' => 'Bob',
+            'password' => 'shibboleth',
+            'gender' => '1',
+            'affiliation' => 'member;student',
+            'api_token' => Str::random(60),
+        ]);
+
+        $alice = User::create([
+            'unique_id' => '666',
+            'firstname' => 'Alice',
+            'lastname' => 'Carrolls',
+            'email' => 'alice.carrolls@heig-vd.ch',
+            'name' => 'Alice',
             'password' => 'shibboleth',
             'gender' => '1',
             'affiliation' => 'member;student',
@@ -50,6 +62,12 @@ class UserSeeder extends Seeder
             'orientation' => 'EAI',
             'type' => 'TP',
             'user_id' => $bob->id
+        ]);
+
+        Student::create([
+            'orientation' => 'EAI',
+            'type' => 'TP',
+            'user_id' => $alice->id
         ]);
 
         User::factory()->count(50)->create()->each(function ($user) {

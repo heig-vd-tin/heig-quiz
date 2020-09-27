@@ -15,6 +15,14 @@ class Student extends Model
         return $this->belongsToMany(Roster::class);
     }
 
+    function activities() {
+        $activities = Activity::query();
+        foreach ($this->rosters as $roster) {
+            $activities->orWhere('roster_id', $roster->id);
+        }
+        return $activities;
+    }
+
     function user() {
         return $this->belongsTo(User::class);
     }

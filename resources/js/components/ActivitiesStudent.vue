@@ -6,9 +6,9 @@
       </template>
     </navbar>
     <div class="mt-4 container">
-      <div v-if="!activities.count">
-        Aucune activités
-      </div>
+      <b-jumbotron v-if="!activities.count" header="Aucune Activité" lead="Aucune activité n'est actuellement disponible.">
+        <p>Revenez plus tard ou patientez...</p>
+      </b-jumbotron>
       <b-table
         v-else
         striped
@@ -17,6 +17,14 @@
         :fields="activities.fields"
         @row-clicked="activityClickHandler"
       >
+
+        <template v-slot:cell(status)="data">
+          <b-badge class="p-1" v-if="data.item.status == 'idle'" variant="info">En Attente</b-badge>
+          <b-badge class="p-1" v-else-if="data.item.status == 'opened'" variant="primary">Ouvert</b-badge>
+          <b-badge class="p-1" v-else-if="data.item.status == 'finished'" variant="success">Terminé</b-badge>
+          <b-badge class="p-1" v-else-if="data.item.status == 'started'" variant="warning">Démarré</b-badge>
+        </template>
+
         <template v-slot:cell(actions)="data">
 
           <!-- Go to the activity -->
@@ -56,41 +64,29 @@ const timeAgo = new TimeAgo("fr-CH");
 export default {
   data() {
     return {
-      loaded: false,
-      activity: {
-        quiz_id: null,
-        roster_id: null,
-        duration: 600,
-      },
-      current_roster: null,
-      rosters: {
-        data: [],
-        active: 0,
-        count: 0,
-      },
       activities: {
         fields: [
-          // {
-          //   key: "id",
-          //   label: "#",
-          //   sortable: true,
-          // },
-          {
-            key: "quiz.name",
-            label: "Quiz",
-            sortable: true,
-          },
-          {
-            key: "quiz.questions",
-            label: "Questions",
-            sortable: true,
-          },
           {
             key: "roster.name",
             label: "Classe",
             sortable: true,
             class: "d-none d-md-table-cell"
           },
+          {
+            key: "roster.teacher.name",
+            label: "Enseignant",
+            sortable: true,
+          },
+          {
+            key: "quiz.name",
+            label: "Quiz",
+            sortable: true,
+          },
+          // {
+          //   key: "quiz.questions",
+          //   label: "Questions",
+          //   sortable: true,
+          // },
           {
             key: "duration",
             label: "Durée",
@@ -103,18 +99,18 @@ export default {
             sortable: true,
             formatter: "timeAgo",
           },
-          // {
-          //   key: "roster.teacher.name",
-          //   label: "Enseignant",
-          //   sortable: true,
-          // },
+          {
+            key: "status",
+            label: "Status",
+            sortable: true
+          },
           {
             label: "Actions",
             key: "actions",
           },
         ],
         data: [],
-        loaded: false,
+        count: 0
       }
     };
   },
@@ -144,29 +140,17 @@ export default {
     activityClickHandler(record, index) {
       this.$router.push({ name: "quiz", params: { activity_id: record.id } });
     },
-    loadRosters() {
-      axios.get("/api/user/rosters").then((rep) => {
-        this.rosters.data = rep.data.data;
-        this.rosters.count = rep.data.count;
-        this.rosters.loaded = true;
-      });
-    },
     loadActivities(roster_id) {
       axios
-        .get("/api/user/activities", {
-          params: {
-            roster_id: roster_id,
-          },
-        })
+        .get("/api/user/activities")
         .then((rep) => {
           this.activities.data = rep.data.data;
           this.activities.count = rep.data.count;
-          this.activities.loaded = true;
+          console.log("Activities loaded")
         });
     },
   },
   mounted() {
-    this.loadRosters();
     this.loadActivities();
 
     window.Echo.private("activity")

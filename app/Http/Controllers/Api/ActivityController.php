@@ -20,8 +20,15 @@ use App\Transformer\ActivityTransformer;
 class ActivityController extends Controller
 {
     function index(Request $request) {
-        if ($request->owned)
-            $activities = Activity::where('user_id', Auth::id());
+        if ($request->owned) {
+            $user = Auth::user();
+
+            if ($user->isStudent()) {
+                $activities = $user->student->activities();
+            } else {
+                $activities = Activity::where('user_id', $user->id);
+            }
+        }
         else
             $activities = Activity::query();
 
@@ -99,6 +106,8 @@ class ActivityController extends Controller
 
         $activity->started_at = Carbon::now();
         $activity->save();
+
+        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     /**
@@ -205,6 +214,8 @@ class ActivityController extends Controller
         }
 
         $activity->delete();
+
+        broadcast(new \App\Events\ActivityUpdated(null));
     }
 
     function create(Request $request) {
@@ -250,6 +261,8 @@ class ActivityController extends Controller
             'shuffle_propositions' => $request->input('shuffle_propositions', false),
             'seed' => $request->input('seed', random_int(0, 4294967295))
         ]);
+
+        broadcast(new \App\Events\ActivityUpdated($activity));
 
         return response([
             'message' => 'New activity created',
