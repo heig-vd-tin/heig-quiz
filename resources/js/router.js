@@ -6,8 +6,8 @@ Vue.use(VueRouter)
 import Activities from "./components/Activities"
 import Quizzes from "./components/Quizzes"
 import Results from "./components/Results"
+import Quiz from "./components/Quiz"
 
-import Quiz from "./components/QuizComponent"
 import Progress from "./components/ProgressComponent"
 import Sandbox from "./components/Sandbox"
 
