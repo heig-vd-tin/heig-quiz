@@ -1,6 +1,9 @@
 <template>
   <div>
     <navbar>
+      <template v-slot:title>
+        Activités
+      </template>
       <b-nav-item-dropdown :text="roster_name | capitalize">
         <b-dropdown-item @click="rosterChange(null)">Toutes les classes</b-dropdown-item>
         <div class="dropdown-divider"></div>

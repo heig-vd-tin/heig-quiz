@@ -6,6 +6,8 @@
     </navbar>
     <div class="mt-2 container">
       <h2>Tous les quiz</h2>
+
+      <!-- Quizzes list -->
       <b-table
         v-if="quizzes.loaded"
         striped
@@ -13,15 +15,44 @@
         :items="quizzes.data"
         :fields="quizzes.fields"
       >
+
+        <template v-slot:cell(name)="data">
+          {{ data.item.name }}<br />
+          <b-badge
+            class="mr-1 keyword"
+            v-for="keyword in data.item.keywords"
+            v-bind:key="keyword"
+            variant="secondary"
+            >{{ keyword }}</b-badge
+          >
+        </template>
+
+        <template v-slot:cell(difficulty)="data">
+          <b-badge v-if="data.item.difficulty <= 1" variant="success"
+            ><div class="difficulty-easy"
+          /></b-badge>
+          <b-badge v-else-if="data.item.difficulty <= 2" variant="warning"
+            ><div class="difficulty-medium"
+          /></b-badge>
+          <b-badge v-else-if="data.item.difficulty <= 3" variant="danger"
+            ><div class="difficulty-hard"
+          /></b-badge>
+          <b-badge v-else-if="data.item.difficulty <= 4" variant="dark"
+            ><div class="difficulty-insane"
+          /></b-badge>
+        </template>
+
         <template v-slot:cell(actions)="data">
           <b-button
             v-on:click="createActivity(data.index)"
-            variant="outline-success"
-            class="btn-circle"
+            variant="outline-primary"
+            class="btn-circle pulse-primary"
+            v-b-popover.hover.left="'Créer une activité à partir de ce quiz'"
           >
-            <b-icon-play-fill></b-icon-play-fill>
+          <b-icon-plus/>
           </b-button>
         </template>
+
       </b-table>
 
       <!-- New Activity from Quiz -->
@@ -34,7 +65,7 @@
               variant="success"
               class="btn-circle btn-xl"
             >
-              <b-icon-plus></b-icon-plus>
+              <b-icon-plus/>
             </b-button>
           </div>
         </template>
@@ -52,7 +83,7 @@
             >
               <b-form-input
                 id="input-duration"
-                v-model="activity.duration"
+                v-model="duration"
                 type="number"
                 required
                 placeholder="Entrer durée"
@@ -62,12 +93,14 @@
         </div>
       </b-sidebar>
     </div>
+</div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      duration: 500,
       quizzes: {
         fields: [
           {
@@ -83,6 +116,11 @@ export default {
           {
             key: "questions",
             label: "Questions",
+            sortable: true,
+          },
+          {
+            key: "taken_times",
+            label: "Utilisé",
             sortable: true,
           },
           {
@@ -120,6 +158,13 @@ export default {
   },
   mounted() {
     this.loadQuizzes();
-  }
+  },
 };
 </script>
+<style scoped>
+.keyword {
+  font-size: 70%;
+  padding: 4px;
+  text-transform: lowercase;
+}
+</style>

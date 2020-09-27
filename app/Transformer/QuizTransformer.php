@@ -14,6 +14,7 @@ class QuizTransformer extends Fractal\TransformerAbstract
             'name'       => $quiz->name,
             'questions' => $quiz->questions_count,
             'difficulty' => $quiz->difficulty,
+            'taken_times' => $quiz->taken,
             'owner' => [
                 'id' => $quiz->owner->id,
                 'name' => $quiz->owner->name

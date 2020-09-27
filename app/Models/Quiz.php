@@ -15,7 +15,9 @@ class Quiz extends Model
     ];
 
     protected $appends = [
-        'difficulty', 'keywords'
+        'difficulty',
+        'keywords',
+        'taken'
     ];
 
     function questions() {
@@ -42,6 +44,9 @@ class Quiz extends Model
         return $difficulty;
     }
 
+    /**
+     * Returns the keywords associated to this quiz.
+     */
     function getKeywordsAttribute() {
         $keywords = [];
         foreach ($this->questions()->with('keywords')->get() as $question) {
@@ -54,6 +59,16 @@ class Quiz extends Model
         return $keywords;
     }
 
+    /**
+     * How many times this quiz was taken.
+     */
+    function getTakenAttribute() {
+        return $this->activities()->whereNotNull('started_at')->count();
+    }
+
+    /**
+     * Returns the owner of the quiz.
+     */
     function owner() {
         return $this->belongsTo(User::class, 'user_id');
     }

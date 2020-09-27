@@ -3,7 +3,9 @@
     <b-navbar-brand href="#">
       <div class="logo-quiz d-inline-block align-top" alt="Kitten"></div>
     </b-navbar-brand>
-
+    <b-navbar-brand>
+      <slot name="title"></slot>
+    </b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
@@ -49,6 +51,9 @@
 
 <script>
 export default {
+  props: {
+    title : String
+  },
   data() {
     return {
       username: {},
