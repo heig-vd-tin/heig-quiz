@@ -28,4 +28,13 @@ class Student extends Model
     function user() {
         return $this->belongsTo(User::class);
     }
+
+    function canJoinActivity($activity_id) {
+        $activity = $this->activities()->find($activity_id);
+
+        return $activity && (
+            $activity->status == 'opened' ||
+            $activity->status == 'started'
+        );
+    }
 }

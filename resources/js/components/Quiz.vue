@@ -4,61 +4,88 @@
       <template v-slot:title> {{ name }} </template>
     </navbar>
     <div class="mt-4 container">
-      <div class="progress mb-2">
-        <div
-          class="progress-bar bg-dark progress-bar"
-          role="progressbar"
-          :style="'width: ' + percent + '%'"
-          :aria-valuenow="percent"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        >
-          {{ question_id }}/{{ total }}
+      <!-- Activity Finished -->
+      <b-jumbotron v-if="activity.status == 'finished'" header="Erreur !">
+        <template v-slot:lead>
+          L'activité n'est plus disponible pour édition.
+        </template>
+      </b-jumbotron>
+      <!-- Activity Idle -->
+      <b-jumbotron v-if="activity.status == 'idle'" header="Fermé">
+        <template v-slot:lead>
+          L'activité n'est pas disponible, revenez plus tard.
+        </template>
+      </b-jumbotron>
+      <!-- Activity Opened -->
+      <b-jumbotron v-if="activity.status == 'opened'" header="Salle d'attente">
+        <template v-slot:lead>
+          {{ students.here }} / {{ students.total }} étudiant{{
+            students.total > 1 ? "s" : ""
+          }}
+          connectés. Attente d'encore
+          {{ students.total - students.here }} étudiant{{
+            students.total - students.here > 1 ? "s" : ""
+          }}.
+          <b-spinner label="Spinning"></b-spinner>
+        </template>
+      </b-jumbotron>
+      <!-- Quiz started -->
+      <div v-else-if="activity.status == 'started'">
+        <div class="progress mb-2">
+          <div
+            class="progress-bar bg-dark progress-bar"
+            role="progressbar"
+            :style="'width: ' + percent + '%'"
+            :aria-valuenow="percent"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            {{ question_id }}/{{ total }}
+          </div>
         </div>
+        <b-card
+          border-variant="dark"
+          :title="question_id + '. ' + question.name"
+          align="left"
+        >
+          <component
+            class="mb-4"
+            :key="reloadComp"
+            :is="compQuestion"
+            v-bind="compProp"
+          ></component>
+          <b-container>
+            <b-row class="text-center align-middle">
+              <b-col>
+                <b-button
+                  v-if="question_id > 1"
+                  pill
+                  variant="outline-secondary"
+                  @click="previousQuestion"
+                  >Précédent</b-button
+                >
+              </b-col>
+              <b-col cols="5">
+                <h2
+                  class="display-3 time"
+                  v-bind:class="{ 'text-danger': timer < 30 }"
+                >
+                  {{ countdown }}
+                </h2>
+              </b-col>
+              <b-col>
+                <b-button
+                  v-if="question_id < total"
+                  pill
+                  variant="outline-secondary"
+                  @click="nextQuestion"
+                  >Suivant</b-button
+                >
+              </b-col>
+            </b-row>
+          </b-container>
+        </b-card>
       </div>
-      <b-card
-        v-if="loaded"
-        border-variant="dark"
-        :title="question_id + '. ' + question.name"
-        align="left"
-      >
-        <component
-          class="mb-4"
-          :key="reloadComp"
-          :is="compQuestion"
-          v-bind="compProp"
-        ></component>
-        <b-container>
-          <b-row class="text-center align-middle">
-            <b-col>
-              <b-button
-                v-if="question_id > 1"
-                pill
-                variant="outline-secondary"
-                @click="previousQuestion"
-                >Précédent</b-button
-              >
-            </b-col>
-            <b-col cols="5">
-              <h2
-                class="display-3 time"
-                v-bind:class="{ 'text-danger': timer < 30 }"
-              >
-                {{ countdown }}
-              </h2>
-            </b-col>
-            <b-col>
-              <b-button
-                v-if="question_id < total"
-                pill
-                variant="outline-secondary"
-                @click="nextQuestion"
-                >Suivant</b-button
-              >
-            </b-col>
-          </b-row>
-        </b-container>
-      </b-card>
     </div>
   </div>
 </template>
@@ -85,22 +112,28 @@ export default {
     },
     activity_id: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      name: '',
+      name: "",
+      activity: {
+        duration: 0,
+      },
       reloadComp: 0,
       compQuestion: null,
       compProp: {},
-      loaded: false,
       total: 1,
-      duration: 0,
       question: {},
       values: [],
       countdown: "- : -",
       timer: 20,
+
+      students: {
+        here: 0,
+        total: 0,
+      },
     };
   },
   computed: {
@@ -192,20 +225,37 @@ export default {
         if (--this.timer <= 0) clearInterval(timer);
       }, 1000);
     },
+    loadActivity() {
+    axios
+      .get(`/api/activities/${this.activity_id}`)
+      .then(({ data: activity }) => {
+        this.activity = activity;
+        this.students.total = activity.roster.students;
+        // this.loadQuestion();
+        // this.startTimer(this.duration);
+      });
+    }
   },
   mounted() {
-    axios.get(`/api/activities/${this.activity_id}`).then(({data: activity}) => {
-      //let question = rep.data.quiz.questions[this.question_id-1];
-      this.name = activity.quiz.name;
-      this.questions = activity.quiz.questions;
-      this.duration = activity.duration;
-      this.activity_id = activity.id;
-      this.started_at = activity.started_at;
-      this.total = activity.quiz.questions;
-      this.loaded = true;
-      this.loadQuestion();
-      this.startTimer(this.duration);
-    });
+    window.Echo.join(`activity.${this.activity_id}`)
+      .here((users) => {
+        this.students.here = users.length;
+        console.log(users);
+      })
+      .joining((user) => {
+        this.students.here++;
+        console.log(user.name);
+      })
+      .leaving((user) => {
+        this.students.here--;
+        console.log(user.name);
+      })
+      .listen("ActivityUpdated", (e) => {
+        this.loadActivity();
+        console.log("Activity Updated", e);
+      });
+
+    this.loadActivity();
   },
 };
 </script>

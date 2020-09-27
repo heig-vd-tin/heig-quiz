@@ -30,3 +30,12 @@ Broadcast::channel('quiz', function ($user) {
         return false;
     }
 });
+
+Broadcast::channel('activity.{activity_id}', function ($user, $activity_id) {
+    if ($user->isStudent() && $user->student->canJoinActivity($activity_id)) {
+        return ['id' => $user->id, 'name' => $user->name, 'type' => 'student'];
+    }
+    if ($user->isTeacher()) {
+        return ['id' => $user->id, 'name' => $user->name, 'type' => 'teacher'];
+    }
+});

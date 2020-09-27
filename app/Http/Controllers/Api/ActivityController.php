@@ -181,7 +181,7 @@ class ActivityController extends Controller
         }
 
         $activity->update(['hidden' => true]);
-        broadcast(new \App\Events\ActivityUpdated(null));
+        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function set_visible($id) {
@@ -202,7 +202,7 @@ class ActivityController extends Controller
         }
 
         $activity->update(['hidden' => false]);
-        broadcast(new \App\Events\ActivityUpdated(null));
+        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function open($id) {
@@ -230,7 +230,7 @@ class ActivityController extends Controller
         }
 
         $activity->update(['opened_at' => Carbon::now()]);
-        broadcast(new \App\Events\ActivityUpdated(null));
+        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function close($id) {
@@ -253,7 +253,7 @@ class ActivityController extends Controller
         $activity->update(['opened_at' => null]);
         $activity->save();
 
-        broadcast(new \App\Events\ActivityUpdated(null));
+        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function delete($id) {

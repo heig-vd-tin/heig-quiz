@@ -2,37 +2,31 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ActivityUpdated implements ShouldBroadcast
+class ActivityUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $activity_id;
+    public $activity;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct($activity_id = null)
+    public function __construct($activity = null)
     {
-        $this->activity_id = $activity_id;
+        $this->activity = $activity;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
-        return new PrivateChannel('activity');
+        $channels = [new PrivateChannel('activity')];
+
+        if ($this->activity != null)
+            $channels[] = new PresenceChannel("activity.{$this->activity->id}");
+
+        return $channels;
     }
 }
