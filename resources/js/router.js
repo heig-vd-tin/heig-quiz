@@ -13,7 +13,12 @@ import Sandbox from "./components/Sandbox"
 const routes = [
   {
     path: "/quiz/home",
-    name: "Activities",
+    name: "Activités",
+    component: Activities
+  },
+  {
+    path: "/quiz/activities",
+    name: "Activités",
     component: Activities
   },
   {

@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Question;
 
+use App\Transformer\HasTransform;
+
 class Quiz extends Model
 {
     use HasFactory;
+    use HasTransform;
 
     protected $withCount = [
         'questions'

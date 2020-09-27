@@ -4,17 +4,21 @@
       <template v-slot:title>
         Activités
       </template>
-      <b-nav-item-dropdown :text="roster_name | capitalize">
-        <b-dropdown-item @click="rosterChange(null)">Toutes les classes</b-dropdown-item>
+      <b-nav-item to="quizzes"><b-icon-dice-5/> Quizzes</b-nav-item>
+      <b-nav-item to="sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
+      <b-nav-text>|</b-nav-text>
+
+      <!-- Select roster -->
+      <b-nav-item-dropdown :text="current_roster != null ? current_roster.name : 'Toutes les classes'">
+        <b-dropdown-item @click="rosterChange(null)" :active="current_roster == null">Toutes les classes</b-dropdown-item>
         <div class="dropdown-divider"></div>
         <b-dropdown-item
-          @click="rosterChange(roster.id)"
+          @click="rosterChange(roster)"
           v-for="roster in rosters.data"
-          v-model="roster_id"
+          v-model="current_roster"
           :key="roster.id"
-          :active="roster.id == roster_id"
+          :active="current_roster != null && roster.id == current_roster.id"
           ><b-icon-people />
-
           {{ roster.name }}
           <b-spinner
             v-if="roster.has_running_activities"
@@ -23,11 +27,10 @@
           ></b-spinner>
         </b-dropdown-item>
       </b-nav-item-dropdown>
-      <b-nav-item href="/quiz/sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
-      <b-nav-item href="/quiz/quizzes"><b-icon-dice-5/> Quizzes</b-nav-item>
+
     </navbar>
     <div class="mt-4 container">
-      <h2>Activités de {{ roster_name}}</h2>
+      <h2>Activités de {{ current_roster != null ? current_roster.name : 'toutes les classes' }}</h2>
       <p>
         Les activités en cours et passées sont accessibles des étudiants
         concernés. En cachant une activité, les étudiants ne pourront plus y
@@ -61,7 +64,7 @@
           </b-button>
 
           <b-button
-            v-if="roster_id && !data.item.completed && !data.item.started_at"
+            v-if="current_roster != null && !data.item.completed && !data.item.started_at"
             v-on:click="startActivity(data.item.id)"
             variant="outline-success"
             class="btn-circle"
@@ -114,7 +117,7 @@ export default {
         roster_id: null,
         duration: 600,
       },
-      roster_id: null,
+      current_roster: null,
       rosters: {
         data: [],
         active: 0,
@@ -141,6 +144,7 @@ export default {
             key: "roster.name",
             label: "Classe",
             sortable: true,
+            class: "d-none d-md-table-cell"
           },
           {
             key: "duration",
@@ -170,21 +174,20 @@ export default {
     };
   },
   watch: {
-    roster_id(roster_id) {
-      this.loadActivities(roster_id);
+    current_roster(roster) {
+      let id = roster != null ? roster.id : null;
+
+      // Hide roster column if one is selected
+      let field = this.activities.fields.find(field => field.key == 'roster.name')
+      field.class = id ? "d-none" : "";
+
+      this.loadActivities(id);
     },
   },
-  computed: {
-    roster_name() {
-      if (this.roster_id === null)
-        return "toutes les classes"
-      else
-        return this.rosters.data[this.roster_id].name;
-    }
-  },
   methods: {
-    rosterChange(roster_id) {
-      this.roster_id = roster_id;
+    rosterChange(roster) {
+      console.log("RosterChange")
+      this.current_roster = roster;
     },
     timeAgo(date) {
       return timeAgo.format(Date.parse(date));

@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+use App\Transformer\HasTransform;
+
 class Activity extends Model
 {
     use HasFactory;
+    use HasTransform;
 
     protected $guarded = [
         'id'

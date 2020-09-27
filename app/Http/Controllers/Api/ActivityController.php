@@ -13,6 +13,7 @@ use App\Models\Quiz;
 use Validator;
 use Arr;
 use Auth;
+use Log;
 
 use App\Transformer\ActivityTransformer;
 
@@ -28,7 +29,9 @@ class ActivityController extends Controller
             $activities->where('roster_id', $roster_id);
         }
 
-        return fractal($activities->get(), new ActivityTransformer())->toArray();
+        $activities->orderBy('updated_at', 'desc');
+
+        return $activities->get()->fractal();
     }
 
     function owned() {
@@ -222,14 +225,13 @@ class ActivityController extends Controller
     }
 
     function create(Request $request) {
-
+        Log::debug('Create Activity Request');
         $validator = Validator::make($request->all(), [
-            'duration' => 'min:10',
+            'duration' => 'required|integer|min:10',
             'quiz_id' => 'required|exists:quizzes,id',
             'roster_id' => 'required|exists:rosters,id',
             'shuffle_questions' => 'boolean',
             'shuffle_propositions' => 'boolean',
-            'seed' => 'numeric',
         ]);
 
         if ($validator->fails()) {
