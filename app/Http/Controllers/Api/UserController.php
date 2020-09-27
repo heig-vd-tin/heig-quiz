@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 
 use App\Models\User;
+use Auth;
 
 class UserController extends Controller
 {
@@ -21,6 +22,10 @@ class UserController extends Controller
 
     function show($id) {
         return User::findOrFail($id);
+    }
+
+    function me() {
+        return $this->show(Auth::id());
     }
 
     function activities($id) {

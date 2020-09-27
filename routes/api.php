@@ -45,13 +45,13 @@ Route::namespace('Api')->group(function () {
     Route::get('keywords', 'KeywordController@index');
     Route::get('keywords/{category}', 'KeywordController@with_category');
 
+    Route::get('user', 'UserController@me');
+    Route::get('user/activities', 'ActivityController@owned');
+    Route::get('user/rosters', 'RosterController@owned');
+
     // Teacher
     Route::group(['middleware' => 'role:teacher'], function() {
         Route::get('students', 'StudentController@index');
-
-        Route::get('user', 'UserController@me');
-        Route::get('user/activities', 'ActivityController@owned');
-        Route::get('user/rosters', 'RosterController@owned');
 
         Route::get('users', 'UserController@index');
         Route::get('users/{id}', 'UserController@show');
