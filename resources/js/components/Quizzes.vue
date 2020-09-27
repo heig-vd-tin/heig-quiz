@@ -158,6 +158,10 @@ export default {
   },
   mounted() {
     this.loadQuizzes();
+
+    Echo.private('quiz').listen('QuizCreated', (e) => {
+        this.loadQuizzes();
+    });
   },
 };
 </script>

@@ -19,3 +19,14 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('activity', ActivityChannel::class);
+
+
+Broadcast::channel('quiz', function ($user) {
+    if ($user->isTeacher()) {
+        Log::debug('Request to access quiz-channel approved for ' . $user->name);
+        return true;
+    } else {
+        Log::debug('Request denied to access quiz-channel for ' . $user->name);
+        return false;
+    }
+});

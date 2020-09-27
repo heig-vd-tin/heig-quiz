@@ -52,6 +52,10 @@ class User extends Authenticatable
         return false;
     }
 
+    function isTeacher() {
+        return $this->hasRole('teacher');
+    }
+
     function studentDetails() {
         return $this->hasOne(Student::class);
     }
