@@ -2,19 +2,27 @@
 namespace App\Transformer;
 
 use League\Fractal;
-use Illuminate\Support\Arr;
 use App\Models\Activity;
+use Auth;
 
 class ActivityTransformer extends Fractal\TransformerAbstract
 {
+    protected $details = false;
+
+    public function __construct($details = false)
+    {
+        $this->details = $details;
+    }
+
 	public function transform(Activity $activity)
 	{
-
+        /**
+         * Common attributes
+         */
 	    $data = [
             'id'         => (int)$activity->id,
             'user_id'    => $activity->user_id,
             'duration'   => $activity->duration,
-            'started_at' => $activity->started_at,
             'completed'  => $activity->completed,
             'hidden'    => (int) $activity->hidden,
             'status' => $activity->status,
@@ -25,20 +33,40 @@ class ActivityTransformer extends Fractal\TransformerAbstract
                 'keywords' => $activity->quiz->keywords
             ],
             'roster' => fractal($activity->roster, new RosterTransformer())->toArray(),
-            'created_at' => $activity->created_at,
 
-            'quiz_url' => url("/api/quizzes/{$activity['quiz_id']}"),
-            'roster_url' => url("/api/rosters/{$activity['roster_id']}"),
-            'questions_url' => url("/api/activities/{$activity['id']}/questions"),
+            'created_at' => $activity->created_at,
+            'started_at' => $activity->started_at,
+            'ended_at' => $activity->ended_at,
         ];
 
-        if ($activity->hidden)
-            $data['@show_url'] = url("/api/activities/{$activity['id']}/show");
-        else
-            $data['@hide_url'] = url("/api/activities/{$activity['id']}/hide");
+        /**
+         * Teacher's only attributes
+         */
+        if (Auth::user()->isTeacher()) {
+            $data['shuffle_questions'] = $activity->shuffle_questions;
+            $data['shuffle_propositions'] = $activity->shuffle_propositions;
 
-        if (!$activity->started && !$activity->completed)
-            $data['@start_url'] = url("/api/activities/{$activity['id']}/start");
+            if ($activity->status == 'finished')
+            {
+                if ($activity->hidden)
+                    $data['@show_url'] = url("/api/activities/{$activity['id']}/show");
+                else
+                    $data['@hide_url'] = url("/api/activities/{$activity['id']}/hide");
+            }
+
+            if ($activity->status == 'idle')
+                $data['@open_url'] = url("/api/activities/{$activity['id']}/open");
+
+            if ($activity->status == 'opened')
+                $data['@start_url'] = url("/api/activities/{$activity['id']}/start");
+        }
+
+        /**
+         * Navigation urls
+         */
+        $data['quiz_url'] = url("/api/quizzes/{$activity['quiz_id']}");
+        $data['roster_url'] = url("/api/rosters/{$activity['roster_id']}");
+        $data['questions_url'] = url("/api/activities/{$activity['id']}/questions");
 
         return $data;
 	}

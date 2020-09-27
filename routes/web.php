@@ -9,3 +9,9 @@ Route::get('/quiz/{any}', function () {return view('vue');})->where('any', '.*')
 Auth::routes(['register' => false]);
 
 Route::get('/shibboleth-data', function () {});
+
+if (config('app.debug')) {
+    Route::get('/debug/login/{id}', function ($id) {
+        Auth::loginUsingId($id);
+    });
+}

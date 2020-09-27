@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 use App\Transformer\HasTransform;
+use Auth;
 
 class Activity extends Model
 {
@@ -38,6 +39,14 @@ class Activity extends Model
 
     function answers() {
         return $this->hasMany(Answer::class);
+    }
+
+    function getOwnedAnswers() {
+        $user = Auth::user();
+        if ($user->isTeacher()) {
+            return null;
+        };
+        return $this->answers->where('student_id', $user->student->id);
     }
 
     function getElapsedAttribute() {
@@ -89,5 +98,26 @@ class Activity extends Model
         }
 
         return $array;
+    }
+
+    /**
+     * Get the questions with the student's answers only if the activity
+     * is finished.
+     */
+    public function getQuestions() {
+        $answers = $this->status == 'finished' ? $this->getOwnedAnswers() : null;
+        $questions = $this->quiz->questions->each(function ($question) use ($answers) {
+            if ($answers) {
+                foreach ($answers as $answer) {
+                    if ($answer->question_id == $question->id) {
+                        $question['answered_at'] = $answer->created_at;
+                        $question['answered'] = $answer->answer;
+                        $question['is_correct'] = $answer->is_correct;
+                        continue;
+                    }
+                }
+            }
+        });
+        return $questions;
     }
 }

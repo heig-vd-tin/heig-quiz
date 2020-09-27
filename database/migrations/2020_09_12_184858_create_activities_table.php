@@ -18,6 +18,7 @@ class CreateActivitiesTable extends Migration
             $table->boolean('shuffle_propositions')->default(false);
             $table->bigInteger('seed')->default(0)->comment('For random generator');
             $table->boolean('hidden')->default(false);
+
             $table->dateTime('started_at')->nullable()->comment('Activity start time');
             $table->dateTime('opened_at')->nullable()->comment('When the activity was called to be joined');
             $table->dateTime('ended_at')->nullable()->comment('When the activity was finished');

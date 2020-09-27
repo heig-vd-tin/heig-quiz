@@ -31,31 +31,19 @@ class ActivityController extends Controller
 
         $activities->orderBy('updated_at', 'desc');
 
-        return $activities->get()->fractal();
+        return fractal($activities->get(), new ActivityTransformer)->toArray();
     }
 
     function owned() {
         $request = request();
         $request->owned = true;
+
         return $this->index($request);
     }
 
     function show($id) {
-        $activity = Activity::with('roster.students')->with('quiz.questions')->with('roster.students.user')->findOrFail($id);
-        $activity['students'] = $activity->roster->students_count;
-        $activity['quiz'] = url("/api/quizzes/{$activity['quiz_id']}");
-        $activity['roster'] = url("/api/rosters/{$activity['roster_id']}");
-        $activity['questions'] = url("/api/activities/{$activity['id']}/questions");
-
-        if ($activity->hidden)
-            $activity['@show'] = url("/api/activities/{$activity['id']}/show");
-        else
-            $activity['@hide'] = url("/api/activities/{$activity['id']}/hide");
-
-        if (!$activity->started && !$activity->completed)
-            $activity['@start'] = url("/api/activities/{$activity['id']}/start");
-
-        return $activity;
+        $activity = Activity::findOrFail($id);
+        return fractal($activity, new ActivityTransformer)->toArray();
     }
 
     function roster($id) {
@@ -152,6 +140,14 @@ class ActivityController extends Controller
 
     function set_hidden($id) {
         $activity = Activity::findOrFail($id);
+
+        if ($activity->status != 'finished') {
+            return response([
+                'message' => "Only ended activities can be hidden",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
         if ($activity->user_id != Auth::id()) {
             return response([
                 'message' => "Only the owner of an activity can change the visibility",
@@ -166,19 +162,13 @@ class ActivityController extends Controller
             ], 400);
         }
 
-        if ($activity->started) {
-            return response([
-                'message' => "Cannot hide an on going activity",
-                'error' => "Bad Request"
-            ], 400);
-        }
-
         $activity->hidden = true;
         $activity->save();
     }
 
     function set_visible($id) {
         $activity = Activity::findOrFail($id);
+
         if ($activity->user_id != Auth::id()) {
             return response([
                 'message' => "Only the owner of an activity can change the visibility",
@@ -207,16 +197,9 @@ class ActivityController extends Controller
             ], 403);
         }
 
-        if ($activity->completed) {
+        if ($activity->status != 'idle') {
             return response([
                 'message' => "Cannot delete a completed activity",
-                'error' => "Bad Request"
-            ], 400);
-        }
-
-        if ($activity->started) {
-            return response([
-                'message' => "Cannot delete an on going activity",
                 'error' => "Bad Request"
             ], 400);
         }
@@ -300,22 +283,17 @@ class ActivityController extends Controller
     /**
      * Return the answered and the current question for the current activity.
      */
-    function questions($id) {
+    public function questions($id) {
         $activity = Activity::findOrFail($id);
 
-        /*if (!$activity->started) {
+        if ($activity->status != 'started' && $activity->status != 'finished') {
             return response([
-                'message' => "Cannot access questions before the activity start",
+                'message' => "Cannot access questions before the beginning of the activity",
                 'error' => "Unauthorized"
             ], 403);
-        }*/
+        }
 
-        /*if ($activity->completed) {
-            return response([
-                'message' => "One the quiz is finished, students won't have access to the questions",
-                'error' => "Unauthorized"
-            ], 403);
-        }*/
+        return $activity->getQuestions();
 
         $questions = $this->get_ordered_questions($activity);
 
@@ -408,5 +386,21 @@ class ActivityController extends Controller
      */
     protected function validate_answer($given, $wanted) {
         return true;
+    }
+
+    /**
+     * Get the results if the activity is finished
+     */
+    public function results($activity_id) {
+        $activity = Activity::findOrFail($activity_id);
+
+        if ($activity->status != 'finished' || $activity->hidden) {
+            return response([
+                'message' => "No accessible results for this activity",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        return $activity->ownedAnswers()->get();
     }
 }

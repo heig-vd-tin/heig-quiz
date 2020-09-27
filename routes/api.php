@@ -78,6 +78,7 @@ Route::namespace('Api')->group(function () {
         Route::get('activities/{id}/roster', 'ActivityController@roster');
         Route::get('activities/{id}/quiz', 'ActivityController@quiz');
         Route::get('activities/{id}/progression', 'ActivityController@progression');
+        Route::get('activities/{id}/results', 'ActivityController@results');
 
         Route::post('activities/create', 'ActivityController@create');
 

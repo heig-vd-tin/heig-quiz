@@ -56,7 +56,7 @@ class User extends Authenticatable
         return $this->hasRole('teacher');
     }
 
-    function studentDetails() {
+    function student() {
         return $this->hasOne(Student::class);
     }
 

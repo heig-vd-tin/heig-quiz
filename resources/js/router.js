@@ -5,6 +5,7 @@ Vue.use(VueRouter)
 
 import Activities from "./components/Activities"
 import Quizzes from "./components/Quizzes"
+import Results from "./components/Results"
 
 import Quiz from "./components/QuizComponent"
 import Progress from "./components/ProgressComponent"
@@ -13,33 +14,38 @@ import Sandbox from "./components/Sandbox"
 const routes = [
   {
     path: "/quiz/home",
-    name: "Activités",
+    name: "home",
     component: Activities
   },
   {
     path: "/quiz/activities",
-    name: "Activités",
+    name: "activities",
     component: Activities
   },
   {
     path: "/quiz/quizzes",
-    name: "Quizzes",
+    name: "quizzes",
     component: Quizzes
   },
   {
+    path: "/quiz/results",
+    name: "results",
+    component: Results
+  },
+  {
     path: "/quiz/questions/:id",
-    name: "Quiz",
+    name: "quiz",
     component: Quiz,
     props: true
   },
   {
     path: "/quiz/progress",
-    name: "Progression",
+    name: "progress",
     component: Progress
   },
   {
     path: "/quiz/sandbox",
-    name: "Sandbox",
+    name: "sandbox",
     component: Sandbox
   }
 ];

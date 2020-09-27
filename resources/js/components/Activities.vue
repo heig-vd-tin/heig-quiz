@@ -46,18 +46,22 @@
         @row-clicked="activityClickHandler"
       >
         <template v-slot:cell(actions)="data">
+
+          <!-- Show the activity -->
           <b-button
-            v-if="data.item.hidden"
-            v-on:click="showActivity(data.item.id)"
+            v-if="data.item.status == 'finished' && data.item.hidden"
+            @click="showActivity(data.item.id)"
             variant="outline-primary"
             class="btn-circle"
             v-b-popover.hover.top="'Rendre visible l\'activité'"
           >
             <b-icon-eye-slash></b-icon-eye-slash>
           </b-button>
+
+          <!-- Hide the activity -->
           <b-button
-            v-if="!data.item.hidden"
-            v-on:click="hideActivity(data.item.id)"
+            v-if="data.item.status == 'finished' && !data.item.hidden"
+            @click="hideActivity(data.item.id)"
             variant="outline-secondary"
             class="btn-circle"
             v-b-popover.hover.top="'Cacher l\'activité aux étudiants'"
@@ -65,9 +69,10 @@
             <b-icon-eye-fill></b-icon-eye-fill>
           </b-button>
 
+          <!-- Start the activity -->
           <b-button
-            v-if="current_roster != null && !data.item.completed && !data.item.started_at"
-            v-on:click="startActivity(data.item.id)"
+            v-if="data.item.status == 'opened'"
+            @click="startActivity(data.item.id)"
             variant="outline-success"
             class="btn-circle"
             v-b-popover.hover.top="'Démarrer l\'activité'"
@@ -75,17 +80,21 @@
             <b-icon-play-fill></b-icon-play-fill>
           </b-button>
 
+          <!-- View results -->
           <b-button
-            v-if="data.item.completed"
-            v-on:click="viewResults(data.item.id)"
+            v-if="data.item.status == 'finished'"
+            :to="{name: 'results', params: { activity_id: data.item.id }}"
             variant="outline-primary"
             class="btn-circle"
             v-b-popover.hover.top="'Voir les résultats'"
           >
             <b-icon-trophy-fill></b-icon-trophy-fill>
           </b-button>
+
+          <!-- Open an activity -->
           <b-button
-            v-on:click="openActivity(data.item.id)"
+            v-if="data.item.status == 'idle'"
+            @click="openActivity(data.item.id)"
             variant="outline-success"
             class="btn-circle running"
             v-b-popover.hover.top="'Ouvrir l\'activité pour participation'"
@@ -95,7 +104,7 @@
 
           <!-- Delete an activity -->
           <b-button
-            v-if="data.item.status == 'idle'"
+            v-if="data.item.status == 'idle' || data.item.status == 'opened'"
             v-b-popover.hover.top="'Supprimer l\'activité'"
             variant="outline-danger"
             class="btn-circle"
@@ -216,7 +225,7 @@ export default {
       return text;
     },
     activityClickHandler(record, index) {
-      this.$router.push({ name: "Quiz", params: { activity_id: record.id } });
+      this.$router.push({ name: "quiz", params: { activity_id: record.id } });
     },
 
     hideActivity(activity_id) {
