@@ -29,7 +29,7 @@
           <!-- Go to the activity -->
           <b-button
             v-if="data.item.status == 'opened'"
-            to='/quiz/questions/:id'
+            :to="`/quiz/activities/${data.item.id}/questions/1`"
             variant="outline-success"
             class="btn-circle"
             v-b-popover.hover.top="'Démarrer l\'activité'"

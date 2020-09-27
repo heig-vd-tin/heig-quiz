@@ -35,7 +35,7 @@
                 v-if="question_id > 1"
                 pill
                 variant="outline-secondary"
-                @click="prevQuestion"
+                @click="previousQuestion"
                 >Précédent</b-button
               >
             </b-col>
@@ -79,10 +79,14 @@ export default {
     "q-short-answer": ShortAnswer,
   },
   props: {
-    id: {
+    question_id: {
       type: Number,
       required: true,
     },
+    activity_id: {
+      type: Number,
+      required: true
+    }
   },
   data() {
     return {
@@ -92,11 +96,9 @@ export default {
       compProp: {},
       loaded: false,
       total: 1,
-      question_id: 1,
       duration: 0,
       question: {},
       values: [],
-      activity_id: 1,
       countdown: "- : -",
       timer: 20,
     };
@@ -134,7 +136,7 @@ export default {
       this.loadQuestion();
     },
 
-    prevQuestion() {
+    previousQuestion() {
       this.submitAnswer();
       this.question_id -= 1;
       this.loadQuestion();
@@ -192,15 +194,14 @@ export default {
     },
   },
   mounted() {
-    this.activity_id = this.id;
-    axios.get(`/api/activities/${this.activity_id}`).then((rep) => {
+    axios.get(`/api/activities/${this.activity_id}`).then(({data: activity}) => {
       //let question = rep.data.quiz.questions[this.question_id-1];
-      this.name = rep.data.quiz.name;
-      this.questions = rep.data.quiz.questions;
-      this.duration = rep.data.duration;
-      this.activity_id = rep.data.id;
-      this.started_at = rep.data.started_at;
-      this.total = rep.data.quiz.questions_count;
+      this.name = activity.quiz.name;
+      this.questions = activity.quiz.questions;
+      this.duration = activity.duration;
+      this.activity_id = activity.id;
+      this.started_at = activity.started_at;
+      this.total = activity.quiz.questions;
       this.loaded = true;
       this.loadQuestion();
       this.startTimer(this.duration);

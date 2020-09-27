@@ -7,8 +7,7 @@ import Activities from "./components/Activities"
 import Quizzes from "./components/Quizzes"
 import Results from "./components/Results"
 import Quiz from "./components/Quiz"
-
-import Progress from "./components/ProgressComponent"
+import Progress from "./components/Progress"
 import Sandbox from "./components/Sandbox"
 
 const routes = [
@@ -33,10 +32,13 @@ const routes = [
     component: Results
   },
   {
-    path: "/quiz/questions/:id",
+    path: "/quiz/activities/:activity_id/questions/:question_id",
     name: "quiz",
     component: Quiz,
-    props: true
+    props: route => ({
+      activity_id: parseInt(route.params.activity_id),
+      question_id: parseInt(route.params.question_id)
+    })
   },
   {
     path: "/quiz/progress",
