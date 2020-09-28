@@ -40,7 +40,7 @@
           <!-- View results -->
           <b-button
             v-if="data.item.status == 'finished'"
-            :to="{name: 'results', params: { activity_id: data.item.id }}"
+            :to="`/quiz/activities/${data.item.id}/results`"
             variant="outline-primary"
             class="btn-circle"
             v-b-popover.hover.top="'Voir les résultats'"

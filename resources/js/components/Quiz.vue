@@ -2,6 +2,9 @@
   <div>
     <navbar>
       <template v-slot:title> {{ name }} </template>
+      <b-nav-item to="activities"><b-icon-easel/> Activités</b-nav-item>
+      <b-nav-item v-if="this.isTeacher()" to="quizzes"><b-icon-dice-5/> Quizzes</b-nav-item>
+      <b-nav-item v-if="this.isTeacher()" to="sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
     </navbar>
     <div class="mt-4 container">
       <!-- Activity Finished -->

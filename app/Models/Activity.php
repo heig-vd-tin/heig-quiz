@@ -109,14 +109,29 @@ class Activity extends Model
      */
     public function getQuestions() {
         $answers = $this->status == 'finished' ? $this->getOwnedAnswers() : null;
-        $questions = $this->quiz->questions->each(function ($question) use ($answers) {
+        $activity = $this;
+        $questions = $this->quiz->questions->each(function ($question) use ($answers, $activity) {
+            $correct = Answer::where('question_id', $question->id)
+                ->where('activity_id', $activity->id)
+                ->where('is_correct', true)->count();
+            $incorrect = Answer::where('question_id', $question->id)
+                ->where('activity_id', $activity->id)
+                ->where('is_correct', false)->count();
+            $unanswered = $activity->roster->students_count - $correct - $incorrect;
             if ($answers) {
                 foreach ($answers as $answer) {
                     if ($answer->question_id == $question->id) {
                         $question['answered_at'] = $answer->created_at;
                         $question['answered'] = $answer->answer;
-                        $question['is_correct'] = $answer->is_correct;
                         continue;
+                    }
+                    if ($activity->status == 'finished') {
+                        $question['is_correct'] = $answer->is_correct != 0;
+                        $question['stats'] = [
+                            'correct' => $correct,
+                            'incorrect' => $incorrect,
+                            'unanswered' => $unanswered
+                        ];
                     }
                 }
             }

@@ -27,9 +27,12 @@ const routes = [
     component: Quizzes
   },
   {
-    path: "/quiz/results",
+    path: "/quiz/activities/:activity_id/results",
     name: "results",
-    component: Results
+    component: Results,
+    props: route => ({
+      activity_id: parseInt(route.params.activity_id)
+    })
   },
   {
     path: "/quiz/activities/:activity_id/questions/:question_id",
