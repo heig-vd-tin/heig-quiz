@@ -26,7 +26,7 @@
           {{ students.total - students.here }} étudiant{{
             students.total - students.here > 1 ? "s" : ""
           }}.
-          <b-spinner label="Spinning"></b-spinner>
+          <b-spinner v-if="students.total - students.here > 1" label="Spinning"></b-spinner>
         </template>
       </b-jumbotron>
       <!-- Quiz started -->

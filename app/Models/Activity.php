@@ -83,6 +83,11 @@ class Activity extends Model
      * which they will be generated for the given student_id.
      */
     function getQuestionsOrder($student_id) {
+        if (!$this->shuffle_questions) {
+            $count = $this->quiz->questions_count;
+            return range(0, $count - 1);
+        }
+
         $hash = hash('sha1', "$this->id $this->quiz_id $student_id");
         $seed = unpack("L", substr($hash, 0, 4))[1];
         $count = $this->quiz->questions_count;
