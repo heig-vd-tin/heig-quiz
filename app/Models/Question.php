@@ -10,6 +10,10 @@ class Question extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'answer' => 'array', // JSON
+        'options' => 'array' // JSON
+    ];
     protected $hidden = ['pivot'];
 
     function keywords() {
@@ -23,5 +27,4 @@ class Question extends Model
     function answers() {
         return $this->hasMany(Answer::class);
     }
-
 }

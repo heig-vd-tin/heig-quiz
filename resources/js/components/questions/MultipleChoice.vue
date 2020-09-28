@@ -4,20 +4,23 @@ propositions.
 -->
 <template>
   <div>
-    <b-card-text v-html="htmlContent"></b-card-text>
-
+    <b-card-text>
+      <markdown-it-vue :content="markdownContent" />
+    </b-card-text>
     <b-list-group class="mt-3 mb-4">
       <b-list-group-item v-for="(proposition, index) in propositions" :key="index">
         <b-row class="text-center align-middle">
           <b-col cols="1">
             <b-button
-            :pressed.sync="selected[index]"
+              :pressed.sync="selectedPropositions[index]"
               variant="outline-secondary"
               class="btn-circle"
-              @click="onClick(index, proposition, $event)"
+              @click="onClick(index)"
             >{{index+1}}</b-button>
           </b-col>
-          <b-col class="text-left align-middle" v-html="proposition"></b-col>
+          <b-col class="text-left align-middle">
+             <markdown-it-vue :content="proposition" />
+          </b-col>
         </b-row>
       </b-list-group-item>
     </b-list-group>
@@ -25,122 +28,67 @@ propositions.
 </template>
 
 <script>
-var md = require("markdown-it")();
-var mk = require("@iktakahiro/markdown-it-katex");
-md.use(mk);
+
+let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##)/mg;
 
 export default {
   props: {
-    values: Array, // Validated answers
-    question: null
+    content: String,
+    multipleAnswers: { type: Boolean, default: false},
+    answered: Array,
   },
   data() {
     return {
-      selected: [],
-      propositions: [],
-      questionNumber: 1,
-      countdown: "- : -",
-      timer: 20,
-      htmlContent: '',
+      selectedPropositions: new Proxy([], {
+        get(array, i) { return array[i] ? array[i] : false },
+      })
+    }
+  },
+  computed: {
+    markdownContent() {
+      return this.content.replace(re, '')
+    },
+    propositions() {
+      let matches;
+      let output = [];
+      while(matches = re.exec(this.content)) {
+        let [_ignore, index, content] = matches;
+        if (index = /[A-Z]/i.exec(index)) {
+          index = index.input.toUpperCase().charCodeAt(0) - 65;
+        }
+        output[parseInt(index)] = content;
+      }
+      return output;
     }
   },
   methods: {
-    onClick(index, proposition, $event){
-      this.values.splice(0, this.values.length)
-      var i
-      for(i=0; i<this.selected.length; i++){
-        if(i != index && !this.question.options.multipleAnswers) {
-          this.selected[i] = false
-        }
-
-        if(this.selected[i]){
-          this.values.push(i)
-        }
+    onClick(index) {
+      // Prevent multiple answers if not allowed
+      if (!this.multipleAnswers && this.selectedPropositions[index]) {
+         if (this.selectedPropositions.filter(v => v).length > 1) {
+           this.selectedPropositions = Array(this.selectedPropositions.length).fill(false)
+           this.selectedPropositions[index] = true;
+         }
       }
     },
-    loadAnswer() {
-      if( this.question.answer ){
-        this.question.answer.forEach(ans => {
-          this.selected[ans] = true
-        })
-      }
-    },
-    /**
-     * Extract the propositions in a multiple choice Markdown content.
-     */
-    extractPropositions(markdown) {
-      let state = ''
-      let ignore = []
-      let propositions = {}
-      let proposition = -1
-      let level = 0
-      let tokens = md.parse(markdown)
-      // Parse tokens
-      tokens.forEach((token, index) => {
-        // Looks for propositions
-        if (token.type == 'heading_open' && token.tag == 'h2') {
-          state = 'check-inline'
-          ignore.push(index)
-          return
-        }
-
-        // Capture proposition number
-        if (state == 'check-inline' && token.type == 'inline') {
-          if (/^[A-Z]$/.test(token.content)) {
-            ignore.push(index)
-            state = 'capture-content'
-            proposition++
-            propositions[proposition] = []
-          } else {
-            ignore.pop()
-            state = 'looking-for-proposition'
-          }
-          return
-        }
-
-        // Capture proposition content
-        if (state == 'capture-content') {
-          ignore.push(index)
-          propositions[proposition].push(token)
-
-          if (token.type == 'paragraph-open') {
-            level++
-          }
-
-          if (token.type == 'paragraph-close') {
-            level--
-            if (level == 0)
-              state == 'looking-for-proposition'
-              return
-          }
-        }
-      })
-
-      function* output() {
-        for (const [index, token] of tokens.entries()) {
-          if (ignore.includes(index)) continue;
-          yield token;
-        }
-      };
-
-      this.htmlContent = md.renderer.render(Array.from(output()), md.options)
-      for (const [key, value] of Object.entries(propositions)) {
-          this.propositions[key] = md.renderer.render(value, md.options)
-          this.selected[key] = false
-      }
-
-    }
   },
   mounted() {
-    console.log('multiple-choice')
-    this.extractPropositions(this.question.content)
-    this.loadAnswer()
+    this.selectedPropositions = Array(this.propositions.length).fill(false)
+    if(this.answered) {
+      this.answered.forEach(ans => this.selectedPropositions[ans] = true)
+    }
   }
 };
 </script>
 <style scoped>
 .time {
   font-size: 2.5rem;
+}
+
+.btn-circle:focus {
+  outline: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 .btn-circle {
@@ -151,5 +99,10 @@ export default {
   border-radius: 50%;
   font-size: 1.3rem;
   font-weight: 500;
+}
+
+.btn-circle:hover {
+  background-color: inherit;
+  color: inherit;
 }
 </style>

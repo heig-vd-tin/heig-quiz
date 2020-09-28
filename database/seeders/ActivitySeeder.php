@@ -25,114 +25,110 @@ class ActivitySeeder extends Seeder
         $alice = User::find(4)->student;
 
         Answer::create([
-            'activity_id' => $activity->id,
+            'activity_id' => 1,
             'student_id' => $alice->id,
             'question_id' => 1,
-            'answer' => '???',
-            'is_correct' => false
-        ]);
-
-        Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $alice->id,
-            'question_id' => 2,
-            'answer' => '???',
-            'is_correct' => false
-        ]);
-
-        Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $alice->id,
-            'question_id' => 3,
-            'answer' => '???',
+            'answer' => "0b111",
             'is_correct' => true
         ]);
 
         Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $alice->id,
-            'question_id' => 6,
-            'answer' => '42',
-            'is_correct' => true
-        ]);
-
-        Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $alice->id,
-            'question_id' => 7,
-            'answer' => '42',
-            'is_correct' => true
-        ]);
-
-        Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $bob->id,
-            'question_id' => 8,
-            'answer' => '42',
-            'is_correct' => true
-        ]);
-
-        Answer::create([
-            'activity_id' => $activity->id,
+            'activity_id' => 1,
             'student_id' => $bob->id,
             'question_id' => 1,
-            'answer' => '???',
+            'answer' => "0b101",
+            'is_correct' => false
+        ]);
+        Answer::create([
+            'activity_id' => 1,
+            'student_id' => $alice->id,
+            'question_id' => 2,
+            'answer' => "1000",
             'is_correct' => true
         ]);
 
         Answer::create([
-            'activity_id' => $activity->id,
+            'activity_id' => 1,
             'student_id' => $bob->id,
             'question_id' => 2,
-            'answer' => '???',
+            'answer' => "0b01000",
+            'is_correct' => true
+        ]);
+
+        Answer::create([
+            'activity_id' => 1,
+            'student_id' => $alice->id,
+            'question_id' => 3,
+            'answer' => "0",
+            'is_correct' => true
+        ]);
+
+        Answer::create([
+            'activity_id' => 1,
+            'student_id' => $bob->id,
+            'question_id' => 3,
+            'answer' => "zero",
             'is_correct' => false
         ]);
 
         Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $bob->id,
-            'question_id' => 3,
-            'answer' => '???',
+            'activity_id' => 1,
+            'student_id' => $alice->id,
+            'question_id' => 4,
+            'answer' => [2],
             'is_correct' => true
         ]);
 
         Answer::create([
-            'activity_id' => $activity->id,
+            'activity_id' => 1,
             'student_id' => $bob->id,
             'question_id' => 4,
-            'answer' => '???',
-            'is_correct' => true
+            'answer' => [1],
+            'is_correct' => false
         ]);
-
         Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $bob->id,
+            'activity_id' => 1,
+            'student_id' => $alice->id,
             'question_id' => 5,
-            'answer' => '???',
+            'answer' => ["Une file d'attente", "une file d'attente", "une file d'attente"],
             'is_correct' => false
         ]);
 
         Answer::create([
-            'activity_id' => $activity->id,
+            'activity_id' => 1,
+            'student_id' => $bob->id,
+            'question_id' => 5,
+            'answer' => ["Une file d'attente", "une file d'attente", "une pile"],
+            'is_correct' => true
+        ]);
+        Answer::create([
+            'activity_id' => 1,
+            'student_id' => $alice->id,
+            'question_id' => 6,
+            'answer' => "int i = 42;",
+            'is_correct' => true
+        ]);
+
+        Answer::create([
+            'activity_id' => 1,
             'student_id' => $bob->id,
             'question_id' => 6,
-            'answer' => '42',
+            'answer' => "int i = 42;",
             'is_correct' => true
+        ]);
+        Answer::create([
+            'activity_id' => 1,
+            'student_id' => $alice->id,
+            'question_id' => 7,
+            'answer' => [1, 2, 3],
+            'is_correct' => false
         ]);
 
         Answer::create([
-            'activity_id' => $activity->id,
+            'activity_id' => 1,
             'student_id' => $bob->id,
             'question_id' => 7,
-            'answer' => '42',
-            'is_correct' => true
-        ]);
-
-        Answer::create([
-            'activity_id' => $activity->id,
-            'student_id' => $bob->id,
-            'question_id' => 8,
-            'answer' => '42',
+            'answer' => [3, 4],
             'is_correct' => true
         ]);
 

@@ -25,5 +25,6 @@ class KeywordSeeder extends Seeder
         Keyword::create(['category' => 'programming', 'name' => 'recursion']);
         Keyword::create(['category' => 'programming', 'name' => 'unions']);
         Keyword::create(['category' => 'programming', 'name' => 'compiler']);
+        Keyword::create(['category' => 'programming', 'name' => 'bases']);
     }
 }

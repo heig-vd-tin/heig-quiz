@@ -6,109 +6,132 @@ use Illuminate\Database\Seeder;
 
 use App\Models\Keyword;
 use App\Models\Question;
+use App\Models\User;
+use App\Models\Answer;
 
 class QuestionSeeder extends Seeder
 {
     public function run()
     {
-        $q = new Question;
-        $q->name = 'Transformation binaire';
-        $q->content = 
-'## Hello
-Combien font 2 ?
 
-*Tips : Ce n\'est pas une question à la con...*';
+        // 1
+        $q1 = Question::create([
+          'name' => 'Transformation binaire',
+          'content' => 'Que vaut 7 en binaire ?',
+          'answer' => ['pattern' => '/\b(0b?)0*111\b'],
+          'options' => [
+              'length' => 10
+          ],
+          'difficulty' => 'medium'
+        ]);
+        $q1->keywords()->attach(Keyword::where('name', 'binary')->get());
 
-        $q->answer = '{"pattern" : "/\b(0b?)0*111\b"}';
-        $q->difficulty = 'medium';
-        $q->keywords()->attach(Keyword::where('name', 'binary')->get());
-        $q->save();
-
-        Question::create([
+        // 2
+        $q2 = Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0x8` en binaire ?',
-            'answer' => '{"pattern" : "\b(0b?)0*1000\b"}',
+            'answer' => ["pattern" => "\b(0b?)0*1000\b"],
             'difficulty' => 'medium',
             'explanation' => "`8` exprimé en hexadécimal correspond à $2^4$ soit le quatrième bit du nombre à un."
         ]);
+        $q2->keywords()->attach(Keyword::where('name', 'hexadecimal')->get());
 
-        Question::create([
+        // 3
+        $q3 = Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0` en binaire ?',
-            'answer' => '{"pattern" : "\b(0b?)0*0\b"}',
+            'answer' => ["pattern" => "\b(0b?)0*0\b"],
             'difficulty' => 'easy',
             'explanation' => ''
         ]);
 
-        // Exemple de question avec des choix multiples
-        Question::create([
+        // 4
+        $q4 = Question::create([
             'name' => 'Complément à deux',
             'type' => 'multiple-choice',
-            'options' => json_encode([
-                "multipleAnswers" => true
-            ]),
+            'options' => [
+                "multipleAnswers" => false
+            ],
             'content' => "
 Le complément à deux c'est...
 
-## A
+## 1
 
 Inverser tous les bits
 
-## B
+## 2
 
 Inverser tous les bits et ajouter 1
 
-## C
+## 3
 
 Inverser tous les bits et soustraire 1
 
-## D
+## 4
 
 Complémenter le nombre binaire pour avoir une somme de deux
 
-## E
+## 5
 
 Ajouter 1 puis inverer tous les bits
 ",
-            'answer' => '["B"]',
+            'answer' => [2],
             'difficulty' => 'easy',
             'explanation' => ''
         ]);
 
-        // Exemple de question avec des choix possibles
+        // 5. Exemple de question avec des choix possibles
         // @a,b,c@ pour les listes possibles et
         // @...@ pour les champs libres
-        Question::create([
+        $q5 = Question::create([
             'name' => 'Shunting Yard',
             'type' => 'multiple-choice',
             'content' => "
 
 Dans l'algorithme de Shunting-yard dont l'image suitante résume le principe, plusieurs structures de données sont utilisées.
 
-@Une pile,Une file d'attente@ est utilisé en entrée et @une pile,une file d'attente@ est utilisé en sortie. Les données intermédiaires sont stoquées sur @une pile,une file d'attente@.
+`first` est utilisé en entrée et `second` est utilisé en sortie. Les données intermédiaires sont stoquées sur `third`.
 
 ![algorithm](https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Shunting_yard.svg/440px-Shunting_yard.svg.png)
 ",
-            'answer' => '["Une file d\'attente", "une file d\'attente", "une pile"]',
+            'answer' => json_encode(["Une file d'attente", "une file d'attente", "une pile"]),
+            'options' => [
+                'gaps' => [
+                    'first' => [
+                        'Une pile',
+                        "Une file d'attente",
+                    ],
+                    'second' => [
+                        "une pile",
+                        "une file d'attente"
+                    ],
+                    'third' => [
+                        "une pile",
+                        "une file d'attente"
+                    ]
+                ]
+            ],
             'difficulty' => 'insane',
             'explanation' => ""
         ]);
 
-        Question::create([
+
+        $q6 = Question::create([
             'name' => 'Boucle',
             'content' => "Comment déclarer une variable nommée `i`, un entier 32-bits non signé égal à la valeur `42` ?",
-            'answer' => json_encode([
-                'pattern' => '\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;\b'
-            ]),
-            'options' => json_encode([
+            'answer' => [
+                'pattern' => '\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;?\b'
+            ],
+            'options' => [
                 "lines" => 1,
                 'chars' => 40
-            ]),
+            ],
             'difficulty' => 'insane',
             'explanation' => ""
         ]);
 
-        Question::create([
+
+        $q7 = Question::create([
             'name' => 'Philostrate',
             'type' => 'multiple-choice',
             'content' => "
@@ -119,20 +142,22 @@ que :
 
 Quelle eut été la portée de son argument sur **Dion Cassius** ?
 
-## A
+## 1
 Dion Cassius chante avec René
-## B
+## 2
 Dion Cassius n'affiche aucune sérénité
-## C
+## 3
 Dion Cassius adhère pleinement
-## D
+## 4
 La quatrième proposition est certainement la bonne
 ",
-            'answer' => json_encode(["C"]),
-            'options' => json_encode([]),
+            'answer' => [3, 4],
+            'options' => ['multipleChoices' => true],
             'difficulty' => 'hard',
             'explanation' => 'Aucune idée de pourquoi... Cette question ne semble pas avoir de sens'
         ]);
+
+
 
         Question::create([
             'name' => 'Montage électronique',
@@ -144,13 +169,13 @@ Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un `circuit_type`. Les 
 ![circuit](https://en.wikipedia.org/wiki/Amplifier#/media/File:Amplifier_Circuit_Small.svg)
 
 ",
-            'answer' => json_encode([
+            'answer' => [
                 "une paire différentielle",
                 "transistors bipolaires",
                 "amplificateur de signal",
                 "push-pull"
-            ]),
-            'options' => json_encode([
+            ],
+            'options' => [
                 'gaps' => [
                     'circuit_type' => [
                         'une paire croisée',
@@ -186,7 +211,7 @@ Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un `circuit_type`. Les 
                         'de Schottky'
                     ]
                 ]
-            ]),
+            ],
             'difficulty' => 'medium',
             'explanation' => 'Explication'
         ]);

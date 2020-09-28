@@ -48,6 +48,11 @@
     animation: pulse-primary 0.5s
 }
 
+.pulse-onclick-primary:active {
+    animation: pulse-primary 0.5s
+}
+
+
 @keyframes pulse-primary {
     0% {
         transform: scale(0.95);
