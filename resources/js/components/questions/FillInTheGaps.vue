@@ -1,20 +1,19 @@
-<!-- Fill in the gaps type question.
-Inline code that match a gap item in `gaps` are transformed into a
-menu with propositions. It the option.gaps is not a list, the gap is transformed
-into a textfield.
+<!-- Short Answer
+Allow to give a short answer (one line of text)
 -->
 <template>
-<div>
-  TODO: Fill In The Gaps type question
-</div>
-</template>
+  <div>
+    <markdown-it-vue :content="content" />
 
+  </div>
+</template>
 <script>
 export default {
   props: {
-    content: String, // Markdown content, each gap is defined like `foo`
-    gaps: Object, // Value type { foo: ['a', 'b', 'c'] }
-    values: Array // Values for each gap
-  }
-}
+    content: String, // Question Markdown content
+    gaps: Object, // Gaps type
+    answered: Object,
+    is_correct: { type: Boolean, default: null },
+  },
+};
 </script>
