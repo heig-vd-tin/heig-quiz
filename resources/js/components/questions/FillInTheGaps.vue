@@ -3,7 +3,7 @@ Allow to give a short answer (one line of text)
 -->
 <template>
   <b-form inline ref="content">
-      <markdown-it-vue :content="content" />
+      <markdown-it-vue :content="content"/>
   </b-form>
 </template>
 <script>
@@ -22,31 +22,31 @@ export default {
   },
   props: {
     content: String, // Question Markdown content
-    gaps: Object, // Gaps type
+    options: Object, // Gaps type
     answered: Object,
     is_correct: { type: Boolean, default: null },
   },
   mounted() {
-    let md = new MyMarkdownItVue({ propsData: { content: this.content } });
-    md.$mount();
     this.$nextTick().then(() => {
-      //console.log(md.$el);
-      //console.log(md.$el.querySelectorAll("code"));
-      this.$refs.content.querySelectorAll("code").forEach((code, index) => {
-        console.log(code);
+      this.$refs.content.querySelectorAll("em").forEach((em, index) => {
+        if (em.innerText != "-") return;
+
         let gap = new Gap({
           propsData: {
             name: "Foobar",
-            options: ["a", "b", "c"],
+            options: this.options.gaps[index].map((item, index) => { return {value: index, text: item}})
           },
+          listeners: {
+            updated() {
+              console.log("updated thing")
+            }
+          }
         });
         gap.$mount();
-        code.replaceWith(gap.$el);
+        em.replaceWith(gap.$el);
       });
-
     });
-  },
-  updated() {},
+  }
 };
 </script>
 <!--

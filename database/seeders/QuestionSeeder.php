@@ -164,7 +164,7 @@ La quatrième proposition est certainement la bonne
             'type' => 'fill-in-the-gaps',
             'content' => "
 
-Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un `circuit_type`. Les deux `semiconductors` d'entrée forme un `montage`. Les deux `semi2` de sortie forment un montage de type `sortie`
+Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un *-*. Les deux *-* d'entrée forment un *-*. Les deux *-* de sortie forment un montage de type *-*
 
 ![circuit](https://en.wikipedia.org/wiki/Amplifier#/media/File:Amplifier_Circuit_Small.svg)
 
@@ -177,33 +177,33 @@ Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un `circuit_type`. Les 
             ],
             'options' => [
                 'gaps' => [
-                    'circuit_type' => [
+                    [
                         'une paire croisée',
                         'un gain semi-relatif',
                         'une paire différentielle',
                         'une source de courant',
                     ],
-                    'semiconductors' => [
+                    [
                         'transistors à effet de champ',
                         'mosfets',
                         'transistors bipolaires',
                         'résistances',
                         'IGBT',
                     ],
-                    'montage' => [
+                    [
                         'amplificateur de signal',
                         'atténuateur de bruit',
                         'intégrateur',
                         'un étage de transconductance'
                     ],
-                    'semi2' => [
+                    [
                         'transistors bipolaires',
                         'transistors à effet de champ',
                         'mosfets',
                         'IGBT',
                         'résistances'
                     ],
-                    'sortie' => [
+                    [
                         'push-pull',
                         'différentiel',
                         'à collecteur ouvert',

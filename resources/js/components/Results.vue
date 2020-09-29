@@ -19,6 +19,8 @@
       >
         <template v-slot:header>
           <h2 class="mb-0">
+            <b-icon-check2 class="text-success" v-if="question.is_correct" />
+            <b-icon-x v-else class="text-danger" />
             <strong>Question {{ index + 1}}. </strong> {{ question.name }}
           </h2>
           <b-progress height="1.0rem"

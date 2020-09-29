@@ -1,11 +1,7 @@
 <template>
   <span>
-      <b-form-text class="display:inline;" v-if="options.length == 0"></b-form-text>
-      <b-form-select class="display:inline;"  v-else>
-        <b-form-select-option v-for="(option, index) in options" :key="index" :value="value">
-          {{ option }}
-        </b-form-select-option>
-      </b-form-select>
+      <b-form-text v-on:change="$emit('updated')" v-if="options.length == 0" :value="value"></b-form-text>
+      <b-form-select v-model="selected" v-on:change="$emit('updated')" v-else :options="options" size="sm"></b-form-select>
   </span>
 </template>
 <script>
@@ -19,7 +15,8 @@ export default {
     value: {
       type: String,
       default: ''
-    }
-  }
+    },
+    selected: Number
+  },
 }
 </script>

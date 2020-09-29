@@ -5,16 +5,16 @@ keywords:
   - bar
   - baz
 gaps:
-  spam:
+  -
     - cat
     - dog
     - girafe
-  eggs:
-    - Sunny side up
-    - Scramble
+  -
+    - sunny sided up
+    - scrambled
 ---
 # Fill In The Gaps
 
-Knowing the answer to this question, a `spam` would prefer its eggs `eggs`.
+Knowing the answer to this question, a *-* would prefer its eggs *-*.
 
 ![](https://travelbloggerz.files.wordpress.com/2013/11/4.jpg)

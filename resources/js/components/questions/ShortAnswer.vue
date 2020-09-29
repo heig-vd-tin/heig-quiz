@@ -5,7 +5,6 @@ Allow to give a short answer (one line of text)
   <div>
     <markdown-it-vue :content="content" />
     <b-form-input
-      id="input-answer"
       v-model="answered"
       placeholder="Réponse"
       :size="width"

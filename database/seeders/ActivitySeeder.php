@@ -51,8 +51,8 @@ class ActivitySeeder extends Seeder
             'activity_id' => 1,
             'student_id' => $bob->id,
             'question_id' => 2,
-            'answer' => "0b01000",
-            'is_correct' => true
+            'answer' => "0b01001",
+            'is_correct' => false
         ]);
 
         Answer::create([
