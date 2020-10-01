@@ -64,6 +64,7 @@
   - [ ] On chevallier.io
   - [ ] Register new Shibboleth service
   - [ ] Get VM and DNS from IT
+- [ ] Cross origin
 
 ## Open questions
 

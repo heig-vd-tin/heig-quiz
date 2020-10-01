@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://quiz.heig.ch/schemas/question",
+    "type": "object",
+    "title": "Frontmatter for questions",
+    "description": "Allowed options for a quiz question.",
+    "default": {},
+    "required": [
+    ],
+    "properties": {
+        "gaps": {
+            "$id": "#/properties/gaps",
+            "type": "array",
+            "title": "Gaps",
+            "description": "Propositions for missing values in each void",
+            "items": {
+                "$id": "#/properties/tags/gaps/gap",
+                "type": "array",
+                "title": "Gap",
+                "description": "List of proposition for each void",
+                "default": [],
+                "items": {
+                    "$id": "#/properties/tags/gap/propositions",
+                    "type": "string",
+                    "title": "Proposition"
+                }
+
+            }
+        },
+        "validation": {
+            "$id": "#/properties/validation",
+            "type": "array",
+            "title": "Validation",
+            "description": "Propositions in order",
+            "items": {
+                "$id": "#/properties/tags/validation/proposition",
+                "type": "string",
+                "title": "Proposition"
+            }
+        }
+    }
+}

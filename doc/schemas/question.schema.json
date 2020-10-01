@@ -1,0 +1,87 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://quiz.heig.ch/schemas/question",
+    "type": "object",
+    "title": "Frontmatter for questions",
+    "description": "Allowed options for a quiz question.",
+    "default": {},
+    "required": [
+    ],
+    "properties": {
+        "tags": {
+            "$id": "#/properties/tags",
+            "type": "array",
+            "title": "Tags",
+            "description": "Tags associated to a question.",
+            "default": false,
+            "examples": [
+                [
+                    "string",
+                    "arrays"
+                ]
+            ],
+            "items": {
+                "$id": "#/properties/tags/tag",
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*-",
+                "title": "Tag",
+                "description": "A tag",
+                "default": "",
+                "examples": [
+                    "string",
+                    "struct",
+                    "algorithms"
+                ]
+            }
+        },
+        "difficulty": {
+            "$id": "#/properties/difficulty",
+            "type": "string",
+            "enum": ["easy", "medium", "hard", "insane"],
+            "title": "Difficulty",
+            "description": "Tags associated to a question.",
+            "default": "easy",
+            "examples": [
+                "easy",
+                "hard"
+            ]
+        },
+        "type": {
+            "$id": "#/properties/type",
+            "type": "string",
+            "enum": ["multiple-choice", "short-answer", "fill-in-the-gaps", "code"],
+            "title": "Question Type",
+            "description": "Type of the question.",
+            "default": "short-answer",
+            "examples": [
+                "multiple-choice",
+                "short-answer"
+            ]
+        },
+        "scope": {
+            "$id": "#/properties/scope",
+            "type": "string",
+            "enum": ["quiz", "exercise", "exam", "drill"],
+            "title": "Question Scope",
+            "description": "For which application this question will be used.",
+            "default": "quiz",
+            "examples": [
+                "quiz",
+                "exercise",
+                "exam"
+            ]
+        },
+        "duration": {
+            "$id": "#/properties/duration",
+            "type": "integer",
+            "title": "Typical duration",
+            "description": "Typical duration for this question in seconds.",
+            "minimum": 0,
+            "default": 30,
+            "examples": [
+                10,
+                45
+            ]
+        }
+    }
+}

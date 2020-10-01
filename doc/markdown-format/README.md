@@ -117,11 +117,11 @@ validation:
   - diamond plain
   - UML
 gaps:
-  arrow:
+  -
     - plain arrow
     - diamond plain
     - diamond transparant
-  uml:
+  -
     - SOLID
     - UML
     - BPMN

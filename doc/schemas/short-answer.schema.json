@@ -1,0 +1,81 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://quiz.heig.ch/schemas/question",
+    "type": "object",
+    "title": "Frontmatter for questions",
+    "description": "Allowed options for a quiz question.",
+    "default": {},
+    "required": [
+    ],
+    "properties": {
+        "lines": {
+            "$id": "#/properties/lines",
+            "type": "integer",
+            "title": "Lines",
+            "description": "Number of lines for the answer.",
+            "default": 1,
+            "minimum": 1,
+            "examples": [
+                [
+                    1,
+                    2
+                ]
+            ]
+        },
+        "width": {
+            "$id": "#/properties/width",
+            "type": "integer",
+            "title": "Number of chars",
+            "description": "Width of the input field in chars.",
+            "default": 40,
+            "minimum": 1,
+            "maximum": 100,
+            "examples": [
+                [
+                    20,
+                    50
+                ]
+            ]
+        },
+        "validation": {
+            "$id": "#/properties/width",
+            "type": "object",
+            "title": "Validation",
+            "description": "Validation criteria.",
+            "default": {},
+            "properties": {
+                "pattern": {
+                    "$id": "#/properties/validation/pattern",
+                    "type": "string",
+                    "title": "Regex validation",
+                    "description": "Regex for input validation.",
+                    "default": "",
+                    "examples": [
+                        [
+                            "^\\w+[0-9]$"
+                        ]
+                    ]
+                },
+                "contains": {
+                    "$id": "#/properties/validation/contains",
+                    "type": "string",
+                    "title": "Contains",
+                    "description": "The given answer must contains this string.",
+                    "default": "",
+                    "examples": [
+                        [
+                            "A Bridge"
+                        ]
+                    ]
+                },
+                "trim": {
+                    "$id": "#/properties/validation/trim",
+                    "type": "boolean",
+                    "title": "Trim",
+                    "description": "Before validation the given answer is trimmed.",
+                    "default": true
+                }
+            }
+        }
+    }
+}
