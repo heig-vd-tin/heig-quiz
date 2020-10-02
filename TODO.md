@@ -27,6 +27,11 @@
 - [x] laravel-websockets to use on deployment
 - [x] Generate api_token on Shibboleth auth
 - [x] Deploy on chevallier.io
+- [ ] Questions display
+  - [ ] Types
+    - [ ] Fill-in-the-gaps
+    - [ ] ShortAnswer
+    - [ ] Code
 - [ ] View Correction
   - [ ] Display answered field and correction
     - [ ] For Short Answer
@@ -44,11 +49,6 @@
 - [ ] View Progress 
   - [ ] Listen to notifications
   - [ ] Two sliders : show names, show answers
-- [ ] Questions display
-  - [ ] Types
-    - [ ] Fill-in-the-gaps
-    - [ ] ShortAnswer
-    - [ ] Code
 - [ ] Dynamic Breadcrumb
 - [ ] New Question form
   - [ ] Parse markdown extract frontmatter

@@ -16,13 +16,16 @@ class QuestionSeeder extends Seeder
 
         // 1
         $q1 = Question::create([
-          'name' => 'Transformation binaire',
-          'content' => 'Que vaut 7 en binaire ?',
-          'validation' => (object)['pattern' => '/\b(0b?)0*111\b'],
-          'options' => (object)[
-              'length' => 10
-          ],
-          'difficulty' => 'medium'
+            'name' => 'Transformation binaire',
+            'content' => 'Que vaut 7 en binaire ?',
+            'validation' => (object)[
+                'pattern' => '/\b(0b?)0*111\b',
+                'expected' => '0b0111'
+            ],
+            'options' => (object)[
+                'length' => 10
+            ],
+            'difficulty' => 'medium'
         ]);
         $q1->keywords()->attach(Keyword::where('name', 'binary')->get());
 
@@ -30,7 +33,10 @@ class QuestionSeeder extends Seeder
         $q2 = Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0x8` en binaire ?',
-            'validation' => (object)["pattern" => "\b(0b?)0*1000\b"],
+            'validation' => (object)[
+                'pattern' => "\b(0b?)0*1000\b",
+                'expected' => '0b1000'
+            ],
             'difficulty' => 'medium',
             'explanation' => "`8` exprimé en hexadécimal correspond à $2^4$ soit le quatrième bit du nombre à un."
         ]);
@@ -40,7 +46,10 @@ class QuestionSeeder extends Seeder
         $q3 = Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0` en binaire ?',
-            'validation' => (object)["pattern" => "\b(0b?)0*0\b"],
+            'validation' => (object)[
+                'pattern' => "\b(0b?)0*0\b",
+                'expected' => '0'
+            ],
             'difficulty' => 'easy',
             'explanation' => ''
         ]);
@@ -120,7 +129,8 @@ Dans l'algorithme de Shunting-yard dont l'image suivante résume le principe, pl
             'name' => 'Boucle',
             'content' => "Comment déclarer une variable nommée `i`, un entier 32-bits non signé égal à la valeur `42` ?",
             'validation' => (object)[
-                'pattern' => '\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;?\b'
+                'pattern' => '\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;?\b',
+                'expected' => 'unsigned int i = 42;'
             ],
             'options' => (object)[
                 "lines" => 1,

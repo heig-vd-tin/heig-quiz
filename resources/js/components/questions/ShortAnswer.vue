@@ -3,14 +3,21 @@ Allow to give a short answer (one line of text)
 -->
 <template>
   <div>
-    <markdown-it-vue :content="content" />
+    <p>
+      <markdown-it-vue mb-2 :content="content" />
+    </p>
+    <b-form-group>
     <b-form-input
-      v-model="answered"
+      v-model="answer.answered"
       placeholder="Réponse"
       :size="width"
-      :readonly="is_correct != null"
-      :state="is_correct"
+      :readonly="answer.is_correct != null"
+      :state="answer.is_correct"
     ></b-form-input>
+    <b-form-invalid-feedback>
+      {{ validation.expected }}
+    </b-form-invalid-feedback>
+    </b-form-group>
   </div>
 </template>
 <script>
@@ -19,8 +26,8 @@ export default {
     content: String, // Question Markdown content
     answerType: String, // Input type (text, number)
     width: { type: String, default: "30"},
-    is_correct: { type: Boolean, default: null },
-    answered: String, // Given default value (can be blank)
+    answer: Object,
+    validation: Object
   },
 };
 </script>

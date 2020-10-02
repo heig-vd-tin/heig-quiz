@@ -11,6 +11,7 @@ propositions.
       <b-list-group-item v-for="(proposition, index) in propositions" :key="index">
         <b-row class="text-center align-middle">
           <b-col cols="1">
+            <!-- TODO: Checkboxes? -->
             <b-button
               :pressed.sync="selectedPropositions[index]"
               variant="outline-secondary"
@@ -29,7 +30,7 @@ propositions.
 
 <script>
 
-let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##)/mg;
+let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##|\Z)/mg;
 
 export default {
   props: {
@@ -53,11 +54,14 @@ export default {
       let output = [];
       while(matches = re.exec(this.content)) {
         let [_ignore, index, content] = matches;
-        if (index = /[A-Z]/i.exec(index)) {
-          index = index.input.toUpperCase().charCodeAt(0) - 65;
+        let letter;
+        if (letter = /[A-Z]/i.exec(index)) {
+          index = letter.input.toUpperCase().charCodeAt(0) - 65;
         }
-        output[parseInt(index)] = content;
+
+        output[parseInt(index) - 1] = content;
       }
+      console.log(output)
       return output;
     }
   },
@@ -74,9 +78,11 @@ export default {
   },
   mounted() {
     this.selectedPropositions = Array(this.propositions.length).fill(false)
-    if(this.answered) {
-      this.answered.forEach(ans => this.selectedPropositions[ans] = true)
+
+    if(this.answer) {
+      this.answer.forEach(ans => this.selectedPropositions[ans] = true)
     }
+
   }
 };
 </script>

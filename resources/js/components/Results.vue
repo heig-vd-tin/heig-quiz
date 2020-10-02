@@ -18,34 +18,51 @@
         :key="question.id"
       >
         <template v-slot:header>
-          <h2 class="mb-0">
-            <b-icon-check2 class="text-success" v-if="question.is_correct" />
-            <b-icon-x v-else class="text-danger" />
-            <strong>Question {{ index + 1}}. </strong> {{ question.name }}
-          </h2>
-          <b-progress height="1.0rem"
-            v-if="question.stats"
-            class="mt-2 opacity-50"
+          <b-progress
+            :id="`progress-${question.id}`"
+            v-if="question.statistics"
+            class="opacity-50 pb"
             :max="
-              question.stats.correct +
-              question.stats.incorrect +
-              question.stats.unanswered
+              question.statistics.correct_answers +
+              question.statistics.incorrect_answers +
+              question.statistics.missing_answers
             "
-            show-value
           >
             <b-progress-bar
-              :value="question.stats.correct"
+              :value="question.statistics.correct_answers"
               variant="success"
             ></b-progress-bar>
-            <b-progress-bar striped
-              :value="question.stats.incorrect"
+            <b-progress-bar
+              striped
+              :value="question.statistics.incorrect_answers"
               variant="danger"
             ></b-progress-bar>
-            <b-progress-bar striped
-              :value="question.stats.unanswered"
+            <b-progress-bar
+              striped
+              :value="question.statistics.missing_answers"
               variant="warning"
             ></b-progress-bar>
           </b-progress>
+
+          <b-popover
+            :target="`progress-${question.id}`"
+            triggers="hover"
+            placement="top"
+          >
+            Réponses correctes : {{ question.statistics.correct_answers }}<br />
+            Réponses incorrectes : {{ question.statistics.incorrect_answers
+            }}<br />
+            Non répondus : {{ question.statistics.missing_answers }}<br />
+          </b-popover>
+
+          <h2 class="mt-2 mb-0">
+            <b-icon-check2
+              class="text-success"
+              v-if="question.answer && question.answer.is_correct"
+            />
+            <b-icon-x v-else class="text-danger" />
+            <strong>Question {{ index + 1 }}. </strong> {{ question.name }}
+          </h2>
         </template>
 
         <component
@@ -53,6 +70,11 @@
           :is="question.component"
           v-bind="question"
         ></component>
+
+        <b-alert show variant="info" v-if="question.explanation">
+          <h4>Explications</h4>
+          <markdown-it-vue mb-2 :content="question.explanation" />
+        </b-alert>
       </b-card>
     </div>
   </div>
@@ -110,11 +132,15 @@ export default {
     isTeacher() {
       return Vue.prototype.$user.affiliation == "member;staff";
     },
+    isStudent() {
+      return Vue.prototype.$user.affiliation == "member;student";
+    },
     loadQuiz() {
       axios
         .get(`/api/activities/${this.activity_id}/questions`)
-        .then(({ data: questions }) => {
-          this.questions = questions;
+        .then(({ data: { data, count } }) => {
+          this.questions = data;
+
           this.questions.forEach((question) => {
             question.component = this.getComponent(question);
           });
@@ -129,5 +155,14 @@ export default {
 <style scoped>
 .opacity-50 {
   opacity: 0.5;
+}
+
+.pb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 0;
+  height: 0.5rem;
 }
 </style>

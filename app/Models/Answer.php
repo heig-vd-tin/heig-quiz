@@ -12,6 +12,7 @@ class Answer extends Model
 
     protected $casts = [
         'answer' => 'array', // JSON
+        'is_correct' => 'boolean'
     ];
 
     function activity() {

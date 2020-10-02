@@ -26,6 +26,7 @@ class QuestionTransformer extends Fractal\TransformerAbstract
             'name' => $question->name,
             'content' => $question->content,
             'options' => $question->options,
+            'type' => $question->type
         ];
 
         // Only for teachers
@@ -47,20 +48,26 @@ class QuestionTransformer extends Fractal\TransformerAbstract
 
         // Available to students once answered
         if ($this->is_student and $question->answer) {
-            $output = array_merge($output, [
+            $output = array_merge($output, ['answer' => [
                 'answered_at' => $question->answer->updated_at,
                 'answered' => $question->answer->answer,
-            ]);
+            ]]);
         }
 
         // Available to students once finished
         if ($this->is_student and $this->activity and $this->activity->status == 'finished') {
+            if ($question->answer) {
+                $output = array_merge($output, ['answer' => [
+                    'answered_at' => $question->answer->updated_at,
+                    'answered' => $question->answer->answer,
+                    'is_correct' => $question->answer->is_correct,
+                ]]);
+            }
+
             $output = array_merge($output, [
-                'answered_at' => $question->answered_at,
-                'answered' => $question->answered,
-                'is_correct' => $question->is_correct,
                 'explanation' => $question->explanation,
-                'statistics' => $question->statistics
+                'statistics' => $question->statistics,
+                'validation' => $question->validation
             ]);
         }
 
