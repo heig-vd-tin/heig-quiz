@@ -91,19 +91,11 @@ Route::namespace('Api')->group(function () {
         Route::post('activities/{id}/close', 'ActivityController@close');
     });
 
+    Route::get('activities/{id}/questions', 'ActivityController@questions');
+
     // Student
-    //Route::group(['middleware' => 'role:student'], function() {
-        Route::get('activities/{id}/questions', 'ActivityController@questions');
+    Route::group(['middleware' => 'role:student'], function() {
         Route::get('activities/{id}/questions/{question_id}', 'ActivityController@question');
         Route::post('activities/{id}/questions/{question_id}', 'ActivityController@question'); // New answer
-    //});
-
-
-    // Route::get('question/{id}', 'QuizController@index')->name('question');
-    // Route::get('quiz/{id}', 'QuizController@getQuiz')->name('quiz');
-
-    // Route::get('activities/answer/{id}', 'ActivityController@getActivityAnswer');
-    // Route::get('activities/{activity_id}/{num}', 'ActivityController@getQuestion');
-    // Route::get('activities', 'ActivityController@getMyActivities');
-    // Route::get('activities/{id}', 'ActivityController@getActivity');
+    });
 });

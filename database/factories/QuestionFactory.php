@@ -15,7 +15,7 @@ class QuestionFactory extends Factory
         return [
             'name' => $this->faker->sentence(),
             'content' => $this->faker->paragraph(),
-            'answer' => '42',
+            'validation' => '42',
             'difficulty' => Arr::random(['easy', 'medium', 'hard', 'insane']),
             'explanation' => $this->faker->paragraph()
         ];

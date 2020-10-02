@@ -19,35 +19,24 @@ use App\Transformer\ActivityTransformer;
 
 class ActivityController extends Controller
 {
+    /**
+     * Get all activities for teachers and participating in activites for students.
+     */
     function index(Request $request) {
-        $user = Auth::user();
+        $activities = Activity::query();
 
-        if ($user->isStudent()) {
-            $request->owned = true;
-        }
+        if ($request->user()->isStudent())
+            $activities = $request->user()->student->activities()->where('hidden', false);
 
-        if ($request->owned) {
-            if ($user->isStudent()) {
-                $activities = $user->student->activities();
-            } else {
-                $activities = Activity::where('user_id', $user->id);
-            }
-        }
-        else {
-            $activities = Activity::query();
-        }
+        if ($request->user()->isTeacher() && $request->owned)
+            $activities = $request->user()->activities();
 
-        if (($roster_id = $request->input('roster_id'))) {
+        if (($roster_id = $request->input('roster_id')))
             $activities->where('roster_id', $roster_id);
-        }
 
-        if ($user->isStudent()) {
-            $activities->where('hidden', false);
-        }
-
-        $activities->orderBy('updated_at', 'desc');
-
-        return fractal($activities->get(), new ActivityTransformer)->toArray();
+        return fractal(
+            $activities->orderBy('updated_at', 'desc')->get(),
+            new ActivityTransformer)->toArray();
     }
 
     function owned() {

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Proposition;
+use JsonSchema\Validator;
 
 class Question extends Model
 {
     use HasFactory;
 
     protected $casts = [
-        'answer' => 'array', // JSON
+        'validation' => 'array', // JSON
         'options' => 'array' // JSON
     ];
     protected $hidden = ['pivot'];
@@ -26,5 +26,20 @@ class Question extends Model
 
     function answers() {
         return $this->hasMany(Answer::class);
+    }
+
+    function setValidationAttribute() {
+
+    }
+
+    function setOptionsAttribute($data) {
+        $validator = new Validator;
+        $validator->validate($data, (object)['$ref' => 'file://' . realpath('doc/schemas/question.schema.json')]);
+
+        if (!$validator->isValid()) {
+            dd($validator->getErrors());
+        }
+
+        return $data;
     }
 }

@@ -65,6 +65,10 @@
   - [ ] Register new Shibboleth service
   - [ ] Get VM and DNS from IT
 - [ ] Cross origin
+- [ ] Validation 
+  - [ ] Markdown before SQL
+  - [ ] JSON before SQL
+- [ ] Rename Keywords -> Tags
 
 ## Open questions
 

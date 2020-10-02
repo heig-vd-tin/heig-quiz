@@ -18,8 +18,8 @@ class QuestionSeeder extends Seeder
         $q1 = Question::create([
           'name' => 'Transformation binaire',
           'content' => 'Que vaut 7 en binaire ?',
-          'answer' => ['pattern' => '/\b(0b?)0*111\b'],
-          'options' => [
+          'validation' => (object)['pattern' => '/\b(0b?)0*111\b'],
+          'options' => (object)[
               'length' => 10
           ],
           'difficulty' => 'medium'
@@ -30,7 +30,7 @@ class QuestionSeeder extends Seeder
         $q2 = Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0x8` en binaire ?',
-            'answer' => ["pattern" => "\b(0b?)0*1000\b"],
+            'validation' => (object)["pattern" => "\b(0b?)0*1000\b"],
             'difficulty' => 'medium',
             'explanation' => "`8` exprimé en hexadécimal correspond à $2^4$ soit le quatrième bit du nombre à un."
         ]);
@@ -40,7 +40,7 @@ class QuestionSeeder extends Seeder
         $q3 = Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0` en binaire ?',
-            'answer' => ["pattern" => "\b(0b?)0*0\b"],
+            'validation' => (object)["pattern" => "\b(0b?)0*0\b"],
             'difficulty' => 'easy',
             'explanation' => ''
         ]);
@@ -49,7 +49,7 @@ class QuestionSeeder extends Seeder
         $q4 = Question::create([
             'name' => 'Complément à deux',
             'type' => 'multiple-choice',
-            'options' => [
+            'options' => (object)[
                 "multipleAnswers" => false
             ],
             'content' => "
@@ -75,7 +75,7 @@ Complémenter le nombre binaire pour avoir une somme de deux
 
 Ajouter 1 puis inverer tous les bits
 ",
-            'answer' => [2],
+            'validation' => [2],
             'difficulty' => 'easy',
             'explanation' => ''
         ]);
@@ -94,8 +94,8 @@ Dans l'algorithme de Shunting-yard dont l'image suitante résume le principe, pl
 
 ![algorithm](https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Shunting_yard.svg/440px-Shunting_yard.svg.png)
 ",
-            'answer' => json_encode(["Une file d'attente", "une file d'attente", "une pile"]),
-            'options' => [
+            'validation' => json_encode(["Une file d'attente", "une file d'attente", "une pile"]),
+            'options' => (object)[
                 'gaps' => [
                     'first' => [
                         'Une pile',
@@ -119,10 +119,10 @@ Dans l'algorithme de Shunting-yard dont l'image suitante résume le principe, pl
         $q6 = Question::create([
             'name' => 'Boucle',
             'content' => "Comment déclarer une variable nommée `i`, un entier 32-bits non signé égal à la valeur `42` ?",
-            'answer' => [
+            'validation' => (object)[
                 'pattern' => '\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;?\b'
             ],
-            'options' => [
+            'options' => (object)[
                 "lines" => 1,
                 'chars' => 40
             ],
@@ -151,8 +151,8 @@ Dion Cassius adhère pleinement
 ## 4
 La quatrième proposition est certainement la bonne
 ",
-            'answer' => [3, 4],
-            'options' => ['multipleChoices' => true],
+            'validation' => [3, 4],
+            'options' => (object)['multipleChoices' => true],
             'difficulty' => 'hard',
             'explanation' => 'Aucune idée de pourquoi... Cette question ne semble pas avoir de sens'
         ]);
@@ -169,13 +169,13 @@ Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un *-*. Les deux *-* d'
 ![circuit](https://en.wikipedia.org/wiki/Amplifier#/media/File:Amplifier_Circuit_Small.svg)
 
 ",
-            'answer' => [
+            'validation' => (object)[
                 "une paire différentielle",
                 "transistors bipolaires",
                 "amplificateur de signal",
                 "push-pull"
             ],
-            'options' => [
+            'options' => (object)[
                 'gaps' => [
                     [
                         'une paire croisée',
