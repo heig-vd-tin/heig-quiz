@@ -7,6 +7,32 @@
     "default": {},
     "required": [
     ],
+    "allOf": [
+        {
+            "if": {
+                "properties": { "type": { "const": "multiple-choice" }}
+            },
+            "then": {
+                "$ref": "multiple-choice.schema.json"
+            }
+        },
+        {
+            "if": {
+                "properties": { "type": { "const": "short-answer" }}
+            },
+            "then": {
+                "$ref": "short-answer.schema.json"
+            }
+        },
+        {
+            "if": {
+                "properties": { "type": { "const": "fill-in-the-gaps" }}
+            },
+            "then": {
+                "$ref": "fill-in-the-gaps.schema.json"
+            }
+        }
+    ],
     "properties": {
         "tags": {
             "$id": "#/properties/tags",

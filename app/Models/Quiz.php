@@ -22,7 +22,9 @@ class Quiz extends Model
     ];
 
     function questions() {
-        return $this->belongsToMany(Question::class);
+        return $this->belongsToMany(Question::class)
+            ->withPivot('order')
+            ->orderBy('question_quiz.order');
     }
 
     function activities() {

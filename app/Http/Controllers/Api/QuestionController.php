@@ -12,12 +12,20 @@ use App\Transformer\QuestionTransformer;
 
 class QuestionController extends Controller
 {
+    protected $user;
+
+    function __construct()
+    {
+        $user = Auth::user();
+    }
+
     function index(Request $request)
     {
-        if (!$request->user()->isTeacher()) abort(403);
+        if (!$this->user->isTeacher()) abort(403);
 
         $questions = Question::query();
 
         return fractal($questions->get(), new QuestionTransformer())->toArray();
     }
+
 }

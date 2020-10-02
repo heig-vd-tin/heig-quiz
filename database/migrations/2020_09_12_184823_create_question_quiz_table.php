@@ -11,6 +11,7 @@ class CreateQuestionQuizTable extends Migration
         Schema::create('question_quiz', function (Blueprint $table) {
             $table->foreignId('quiz_id')->constrained('quizzes')->cascadeOnDelete();
             $table->foreignId('question_id')->constrained()->cascadeOnDelete();
+            $table->integer('order')->nullable();
         });
     }
 

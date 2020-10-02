@@ -79,67 +79,6 @@ class Activity extends Model
     }
 
     /**
-     * For the current activity, returns the question order in
-     * which they will be generated for the given student_id.
-     */
-    function getQuestionsOrder($student_id) {
-        if (!$this->shuffle_questions) {
-            $count = $this->quiz->questions_count;
-            return range(0, $count - 1);
-        }
-
-        $hash = hash('sha1', "$this->id $this->quiz_id $student_id");
-        $seed = unpack("L", substr($hash, 0, 4))[1];
-        $count = $this->quiz->questions_count;
-
-        mt_srand($seed , MT_RAND_MT19937);
-
-        $array = range(0, $count - 1);
-        for ($i = 0; $i < $count; ++$i) {
-            list($chunk) = array_splice($array, mt_rand(0, $count - 1), 1);
-            array_push($array, $chunk);
-        }
-
-        return $array;
-    }
-
-    /**
-     * Get the questions with the student's answers only if the activity
-     * is finished.
-     */
-    public function getQuestions() {
-        $answers = $this->status == 'finished' ? $this->getOwnedAnswers() : null;
-        $activity = $this;
-        $questions = $this->quiz->questions->each(function ($question) use ($answers, $activity) {
-            $correct = Answer::where('question_id', $question->id)
-                ->where('activity_id', $activity->id)
-                ->where('is_correct', true)->count();
-            $incorrect = Answer::where('question_id', $question->id)
-                ->where('activity_id', $activity->id)
-                ->where('is_correct', false)->count();
-            $unanswered = $activity->roster->students_count - $correct - $incorrect;
-            if ($answers) {
-                foreach ($answers as $answer) {
-                    if ($answer->question_id == $question->id) {
-                        $question['answered_at'] = $answer->created_at;
-                        $question['answered'] = $answer->answer;
-                        continue;
-                    }
-                    if ($activity->status == 'finished') {
-                        $question['is_correct'] = $answer->is_correct != 0;
-                        $question['stats'] = [
-                            'correct' => $correct,
-                            'incorrect' => $incorrect,
-                            'unanswered' => $unanswered
-                        ];
-                    }
-                }
-            }
-        });
-        return $questions;
-    }
-
-    /**
      * Get the final rank
      */
     public function getRank() {
@@ -151,5 +90,12 @@ class Activity extends Model
             }
         }
         return round($sum / count($questions) * 5 + 1, 1);
+    }
+
+    /**
+     * Get questions
+     */
+    public function getQuestions() {
+        return $this->quiz->questions;
     }
 }

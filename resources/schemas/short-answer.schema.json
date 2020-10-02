@@ -1,15 +1,15 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "http://quiz.heig.ch/schemas/question",
+    "$id": "http://quiz.heig.ch/schemas/question/short-answer",
     "type": "object",
-    "title": "Frontmatter for questions",
+    "title": "Short answer question type",
     "description": "Allowed options for a quiz question.",
     "default": {},
     "required": [
     ],
     "properties": {
         "lines": {
-            "$id": "#/properties/lines",
+            "$id": "#/lines",
             "type": "integer",
             "title": "Lines",
             "description": "Number of lines for the answer.",
@@ -23,7 +23,7 @@
             ]
         },
         "width": {
-            "$id": "#/properties/width",
+            "$id": "#/width",
             "type": "integer",
             "title": "Number of chars",
             "description": "Width of the input field in chars.",
@@ -38,14 +38,14 @@
             ]
         },
         "validation": {
-            "$id": "#/properties/width",
+            "$id": "#/width",
             "type": "object",
             "title": "Validation",
             "description": "Validation criteria.",
             "default": {},
             "properties": {
                 "pattern": {
-                    "$id": "#/properties/validation/pattern",
+                    "$id": "#/validation/pattern",
                     "type": "string",
                     "title": "Regex validation",
                     "description": "Regex for input validation.",
@@ -57,7 +57,7 @@
                     ]
                 },
                 "contains": {
-                    "$id": "#/properties/validation/contains",
+                    "$id": "#/validation/contains",
                     "type": "string",
                     "title": "Contains",
                     "description": "The given answer must contains this string.",
@@ -69,7 +69,7 @@
                     ]
                 },
                 "trim": {
-                    "$id": "#/properties/validation/trim",
+                    "$id": "#/validation/trim",
                     "type": "boolean",
                     "title": "Trim",
                     "description": "Before validation the given answer is trimmed.",

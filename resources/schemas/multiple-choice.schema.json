@@ -1,29 +1,28 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "http://quiz.heig.ch/schemas/question",
+    "$id": "http://quiz.heig.ch/schemas/question/multiple-choice",
     "type": "object",
-    "title": "Frontmatter for questions",
-    "description": "Allowed options for a quiz question.",
+    "title": "Multiple choice question",
     "default": {},
     "required": [
     ],
     "properties": {
         "allow-shuffle": {
-            "$id": "#/properties/allow-schuffle",
+            "$id": "#/allow-schuffle",
             "type": "boolean",
             "title": "Allow shuffling propositions",
             "description": "The propositions can be shuffled",
             "default": true
         },
         "allow-multiple": {
-            "$id": "#/properties/allow-multiple",
+            "$id": "#/allow-multiple",
             "type": "boolean",
             "title": "Allow multiple choices",
             "description": "Multiple propositions can be checked simultaniously",
             "default": false
         },
         "validation": {
-            "$id": "#/properties/width",
+            "$id": "#/width",
             "type": "array",
             "title": "Validation",
             "description": "Validation criteria.",
@@ -35,7 +34,7 @@
             ],
             "items": [
                 {
-                    "$id": "#/properties/validation/valid-choice",
+                    "$id": "#/validation/valid-choice",
                     "type": "integer",
                     "title": "Valid proposition"
                 }

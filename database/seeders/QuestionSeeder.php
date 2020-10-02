@@ -88,7 +88,7 @@ Ajouter 1 puis inverer tous les bits
             'type' => 'multiple-choice',
             'content' => "
 
-Dans l'algorithme de Shunting-yard dont l'image suitante résume le principe, plusieurs structures de données sont utilisées.
+Dans l'algorithme de Shunting-yard dont l'image suivante résume le principe, plusieurs structures de données sont utilisées.
 
 `first` est utilisé en entrée et `second` est utilisé en sortie. Les données intermédiaires sont stoquées sur `third`.
 

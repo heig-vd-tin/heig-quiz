@@ -16,6 +16,7 @@ use Auth;
 use Log;
 
 use App\Transformer\ActivityTransformer;
+use App\Transformer\QuestionTransformer;
 
 class ActivityController extends Controller
 {
@@ -319,134 +320,83 @@ class ActivityController extends Controller
     }
 
     /**
-     * Get all the questions ordered as the student should see them.
-     * (randomized or not)
-     *
-     * TODO: ... Not really working
-     */
-    protected function get_ordered_questions($activity) {
-        $questions = $activity->quiz->questions()->orderBy('id')->get()->toArray();
-        if ($activity->shuffle_questions)
-            return Arr::shuffle($questions, $activity->seed + Auth::id() + $activity->quiz_id);
-        else
-            return $questions;
-    }
-
-    /**
-     * Student questions with her answers.
-     */
-    protected function activity_questions($activity) {
-        return $activity->quiz->questions()->with(['answers' => function($query) use($activity) {
-            $query->where('activity_id', $activity->id)->where('student_id', Auth::id());
-        }])->get();
-    }
-
-    /**
-     * Return the answered and the current question for the current activity.
-     */
-    public function questions($id) {
-        $activity = Activity::findOrFail($id);
-
-        if ($activity->status != 'started' && $activity->status != 'finished') {
-            return response([
-                'message' => "Cannot access questions before the beginning of the activity",
-                'error' => "Unauthorized"
-            ], 403);
-        }
-
-        return $activity->getQuestions();
-
-        $questions = $this->get_ordered_questions($activity);
-
-        // Reformat the questions for the students
-        $data = [];
-        $answers = 0;
-        foreach($this->activity_questions($activity) as $key=>$question) {
-            $item = [
-                'id' => $key,
-                'name' => $question->name,
-                'content' => $question->content,
-                'answer' => count($question->answers) > 0 ? $question->answers[0]->answer : null
-            ];
-            $answers += $item['answer'] != null;
-
-            $data[] = $item;
-        };
-        $questions_count = count($data);
-
-        // Get first unanswered question
-        $current_question = 0;
-        foreach($data as $item) {
-            if ($item['answer'] == null) {
-                $current_question = $item['id'];
-                break;
-            }
-        }
-
-        // Format response
-        return [
-            'questions' => $data,
-            'current_question_id' => $current_question,
-
-            'remaining_seconds' => $activity->duration - $activity->elapsed,
-
-            'total_answered' => $answers,
-            'total_questions' => $questions_count,
-
-            'percent_progression' => round($answers / $questions_count * 100),
-
-            'current_question' => $current_question < $questions_count ? url("/api/activities/{$id}/questions/{$current_question}") : null,
-
-            'activity' => url("/api/activities/{$id}"),
-        ];
-    }
-
-    function question(Request $request, $id, $question_id) {
-        $activity = Activity::findOrFail($id);
-        $question = $this->activity_questions($activity)[$question_id];
-
-        $item = [
-            'id' => $question_id,
-            'name' => $question['name'],
-            'content' => $question['content'],
-            'type' => $question['type'],
-            'options' => json_decode($question['options']),
-            'answer' => count($question['answers']) > 0 ? json_decode($question['answers'][0]->answer) : null
-        ];
-
-        if ($request->isMethod('post')) {
-            if (!$request->answer) {
-                return response([
-                    'message' => "No answer given",
-                    'error' => "Bad Request"
-                ], 400);
-            }
-
-            //$activity->quiz->questions()
-            $answer = Answer::updateOrCreate(
-                [
-                    'activity_id' => $activity->id,
-                    'student_id' => Auth::id(),
-                    'question_id' => $question->id,
-                ],
-                [
-                    'answer' => json_encode($request->answer),
-                    'is_correct' => $this->validate_answer($request->answer, $question->answer)
-                ]
-            );
-
-            $item['answer'] = $request->answer;
-            $item['answer_id'] = $answer->id;
-        }
-
-        return $item;
-    }
-
-    /**
      * Validate an answer
      */
     protected function validate_answer($given, $wanted) {
         return true;
+    }
+
+    /**
+     * For the current activity, returns the question order in
+     * which they will be generated for the given student_id.
+     */
+    protected function getQuestionsOrder(Activity $activity) {
+        if (!$activity->shuffle_questions) {
+            $count = $activity->quiz->questions_count;
+            return range(0, $count - 1);
+        }
+
+        $student_id = Auth::user()->student->id;
+
+        $hash = hash('sha1', "$activity->id $activity->quiz_id $student_id");
+        $seed = unpack("L", substr($hash, 0, 4))[1];
+        $count = $activity->quiz->questions_count;
+
+        mt_srand($seed , MT_RAND_MT19937);
+
+        $array = range(0, $count - 1);
+        for ($i = 0; $i < $count; ++$i) {
+            list($chunk) = array_splice($array, mt_rand(0, $count - 1), 1);
+            array_push($array, $chunk);
+        }
+
+        return $array;
+    }
+
+    /**
+     * Questions
+     */
+    public function questions($activity_id) {
+        $activity = Activity::findOrFail($activity_id);
+        $question_orders = $this->getQuestionsOrder($activity);
+        $questions = $activity->quiz->questions()->get()->each(function ($item, $key) use ($activity, $question_orders) {
+
+            $item['answers_count'] = Answer::where('activity_id', $activity->id)->where('question_id', $item->id)->count();
+            $correct_answers = Answer::where('activity_id', $activity->id)->where('question_id', $item->id)->where('is_correct', true)->count();
+            $incorrect_answers = Answer::where('activity_id', $activity->id)->where('question_id', $item->id)->where('is_correct', false)->count();
+
+            // Compute statistics for this question in this activity
+            $item['statistics'] = [
+                'correct_answers' => $correct_answers,
+                'incorrect_answers' => $incorrect_answers,
+                'missing_answers' => $activity->roster->students_count - $correct_answers - $incorrect_answers
+            ];
+
+            // Fetch student answer
+            if (Auth::user()->isStudent()) {
+                $item['answer'] = Answer::where('activity_id', $activity->id)
+                    ->where('question_id', $item->id)
+                    ->where('student_id', Auth::user()->student->id)
+                    ->first();
+            }
+
+            // Get next and previous question
+            if (Auth::user()->isStudent()) {
+                $item['question_number'] = $question_orders[$key];
+                $item['previous_question'] = $key - 1 > 0 ? $question_orders[$key - 1] : null;
+                $item['next_question'] = $key + 1 < $activity->quiz->questions_count ? $question_orders[$key + 1] : null;
+            }
+        });
+        return fractal(
+            $questions,
+            new QuestionTransformer($activity))->toArray();
+    }
+
+    /**
+     * Question
+     */
+    public function question($activity_id, $question_number) {
+        // Todo...
     }
 
     /**
