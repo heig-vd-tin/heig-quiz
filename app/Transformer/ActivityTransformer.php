@@ -66,9 +66,6 @@ class ActivityTransformer extends Fractal\TransformerAbstract
             if ($activity->status == 'finished') {
                 $data['mark'] = $activity->getRank();
             }
-            if ($activity->status == 'started' or $activity->status == 'finished') {
-                $data['questions_order'] = $activity->getQuestionsOrder(Auth::user()->student->id);
-            }
         }
 
         /**

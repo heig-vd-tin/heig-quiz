@@ -79,6 +79,66 @@ class Activity extends Model
     }
 
     /**
+     * For the current activity, returns the question order in
+     * which they will be generated for the given student_id.
+     */
+    protected function getQuestionsOrder() {
+        if (!$this->shuffle_questions) {
+            $count = $this->quiz->questions_count;
+            return range(0, $count - 1);
+        }
+
+        $student_id = Auth::user()->student->id;
+
+        $hash = hash('sha1', "$this->id $this->quiz_id $student_id");
+        $seed = unpack("L", substr($hash, 0, 4))[1];
+        $count = $this->quiz->questions_count;
+
+        mt_srand($seed , MT_RAND_MT19937);
+
+        $array = range(0, $count - 1);
+        for ($i = 0; $i < $count; ++$i) {
+            list($chunk) = array_splice($array, mt_rand(0, $count - 1), 1);
+            array_push($array, $chunk);
+        }
+
+        return $array;
+    }
+
+    function questions() {
+        $question_orders = $this->getQuestionsOrder($this);
+        $activity = $this;
+        return $this->quiz->questions()->get()->each(function ($item, $key) use ($activity, $question_orders) {
+
+            $item['answers_count'] = Answer::where('activity_id', $activity->id)->where('question_id', $item->id)->count();
+            $correct_answers = Answer::where('activity_id', $activity->id)->where('question_id', $item->id)->where('is_correct', true)->count();
+            $incorrect_answers = Answer::where('activity_id', $activity->id)->where('question_id', $item->id)->where('is_correct', false)->count();
+
+            // Compute statistics for this question in this activity
+            $item['statistics'] = [
+                'correct_answers' => $correct_answers,
+                'incorrect_answers' => $incorrect_answers,
+                'missing_answers' => $activity->roster->students_count - $correct_answers - $incorrect_answers
+            ];
+
+            // Fetch student answer
+            if (Auth::user()->isStudent()) {
+                $item['answer'] = Answer::where('activity_id', $activity->id)
+                    ->where('question_id', $item->id)
+                    ->where('student_id', Auth::user()->student->id)
+                    ->first();
+            }
+
+            // Get next and previous question
+            if (Auth::user()->isStudent()) {
+                $item['question_number'] = $question_orders[$key];
+                $item['previous_question'] = $key - 1 > 0 ? $question_orders[$key - 1] : null;
+                $item['next_question'] = $key + 1 < $activity->quiz->questions_count ? $question_orders[$key + 1] : null;
+            }
+        });
+    }
+
+    /**
      * Get the final rank
      */
     public function getRank() {
