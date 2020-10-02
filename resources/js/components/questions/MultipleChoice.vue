@@ -58,10 +58,8 @@ export default {
         if (letter = /[A-Z]/i.exec(index)) {
           index = letter.input.toUpperCase().charCodeAt(0) - 65;
         }
-
         output[parseInt(index) - 1] = content;
       }
-      console.log(output)
       return output;
     }
   },
