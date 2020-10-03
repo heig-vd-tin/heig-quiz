@@ -15,12 +15,13 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-item-dropdown right>
+        <!-- TODO: Notifications -->
+        <!-- <b-nav-item-dropdown right>
           <template v-slot:button-content>
             <b-icon-bell/><sup><b-badge pill class="blob" variant="danger">3<span class="sr-only">unread notifications</span></b-badge></sup>
           </template>
           <b-dropdown-item href="#">Notification...</b-dropdown-item>
-        </b-nav-item-dropdown>
+        </b-nav-item-dropdown> -->
 
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->

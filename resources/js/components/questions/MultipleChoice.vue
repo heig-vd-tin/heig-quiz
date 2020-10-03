@@ -1,7 +1,3 @@
-<!-- Multiple choices
-An embedded Markdown content where titles `## K` are remplaced with selectable
-propositions.
--->
 <template>
   <div>
     <b-card-text>
@@ -11,7 +7,6 @@ propositions.
       <b-list-group-item v-for="(proposition, index) in propositions" :key="index">
         <b-row class="text-center align-middle">
           <b-col cols="1">
-            <!-- TODO: Checkboxes? -->
             <b-button
               @click="onClick(index)"
               :pressed.sync="selectedPropositions[index]"
@@ -31,14 +26,16 @@ propositions.
 
 <script>
 
+// Match Markdown propositions (## titles)
 let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##|\Z)/mg;
 
 export default {
   props: {
     content: String,
     multipleAnswers: { type: Boolean, default: false},
-    answer: Object,
-    validation: Array
+    answered: { type: Array, default: [] },
+    validation: Array,
+    is_correct: Boolean
   },
   data() {
     return {
@@ -84,18 +81,19 @@ export default {
     },
     addClass(index) {
       if (this.validation == null) return;
-      if (this.validation.includes(index + 1)) {
+      if (this.validation.includes(index + 1))
+      {
         return "btn-outline-success btn-good"
-      } else if(this.answer.answered.includes(index + 1)) {
+      }
+      else if (this.answered.includes(index + 1))
+      {
         return "btn-bad"
       }
     }
   },
   mounted() {
     this.selectedPropositions = Array(this.propositions.length).fill(false)
-    if (this.answer.answered) {
-      this.answer.answered.forEach(ans => this.selectedPropositions[ans - 1] = true)
-    }
+    this.answered.forEach(ans => this.selectedPropositions[ans - 1] = true)
   }
 };
 </script>

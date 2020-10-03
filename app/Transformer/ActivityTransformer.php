@@ -16,6 +16,8 @@ class ActivityTransformer extends Fractal\TransformerAbstract
 
 	public function transform(Activity $activity)
 	{
+        $user = Auth::user();
+
         /**
          * Common attributes
          */
@@ -43,7 +45,7 @@ class ActivityTransformer extends Fractal\TransformerAbstract
         /**
          * Teacher's only attributes
          */
-        if (Auth::user()->isTeacher()) {
+        if ($user->isTeacher()) {
             $data['shuffle_questions'] = $activity->shuffle_questions;
             $data['shuffle_propositions'] = $activity->shuffle_propositions;
 
@@ -62,9 +64,9 @@ class ActivityTransformer extends Fractal\TransformerAbstract
                 $data['@start_url'] = url("/api/activities/{$activity['id']}/start");
         }
 
-        if (Auth::user()->isStudent()) {
+        if ($user->isStudent()) {
             if ($activity->status == 'finished') {
-                $data['mark'] = $activity->getRank();
+                $data['mark'] = $activity->getRank($user->student->id);
             }
         }
 

@@ -1,17 +1,16 @@
 <template>
   <div>
     <navbar>
-      <template v-slot:title> Activités </template>
-      <b-nav-item to="home"><b-icon-easel /> Activités</b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="quizzes"
+      <template v-slot:title> Corrigé du quiz</template>
+      <b-nav-item to="/quiz/home"><b-icon-easel /> Mes Activités</b-nav-item>
+      <b-nav-item v-if="this.isTeacher()" to="/quiz/quizzes"
         ><b-icon-dice-5 /> Quizzes</b-nav-item
       >
-      <b-nav-item v-if="this.isTeacher()" to="sandbox"
+      <b-nav-item v-if="this.isTeacher()" to="/quiz/sandbox"
         ><b-icon-bucket /> Bac à sable</b-nav-item
       >
     </navbar>
     <div class="mt-4 container">
-      <h2>Résultats du Quiz</h2>
       <b-card
         class="mb-4 mt-1"
         v-for="(question, index) in questions"
@@ -70,7 +69,7 @@
           <h2 class="mt-2 mb-0">
             <b-icon-check2
               class="text-success"
-              v-if="question.answer && question.answer.is_correct"
+              v-if="question.is_correct"
             />
             <b-icon-x v-else class="text-danger" />
             <strong>Question {{ index + 1 }}. </strong> {{ question.name }}
@@ -84,7 +83,6 @@
         ></component>
 
         <b-alert show variant="info" v-if="question.explanation">
-          <h4>Explications</h4>
           <markdown-it-vue mb-2 :content="question.explanation" />
         </b-alert>
       </b-card>

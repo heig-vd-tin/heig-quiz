@@ -22,13 +22,19 @@
           <b-badge class="p-1" v-else-if="data.item.status == 'opened'" variant="primary">Ouvert</b-badge>
           <b-badge class="p-1" v-else-if="data.item.status == 'finished'" variant="success">Terminé</b-badge>
           <b-badge class="p-1" v-else-if="data.item.status == 'started'" variant="warning">Démarré</b-badge>
+          <b-badge class="p-1" v-else-if="data.item.status == 'running'" variant="warning">En cours</b-badge>
+          <b-badge class="p-1" v-else variant="danger">{{ data.item.status }}</b-badge>
+        </template>
+
+        <template v-slot:cell(mark)="data">
+          <span :class="{ 'text-danger' : data.item.mark < 4.0}">{{data.item.mark}}</span>
         </template>
 
         <template v-slot:cell(actions)="data">
 
           <!-- Go to the activity -->
           <b-button
-            v-if="data.item.status == 'opened'"
+            v-if="data.item.status == 'opened' || data.item.status == 'running'"
             :to="`/quiz/activities/${data.item.id}/questions/1`"
             variant="outline-success"
             class="btn-circle"
@@ -143,7 +149,6 @@ export default {
         .then((rep) => {
           this.activities.data = rep.data.data;
           this.activities.count = rep.data.count;
-          console.log("Activities loaded")
         });
     },
   },

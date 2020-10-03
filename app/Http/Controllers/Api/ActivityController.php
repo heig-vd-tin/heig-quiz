@@ -342,7 +342,10 @@ class ActivityController extends Controller
      * Question
      */
     public function question($activity_id, $question_number) {
-        // Todo...
+        $activity = Activity::findOrFail($activity_id);
+        return fractal(
+            $activity->questions()[$question_number],
+            new QuestionTransformer($activity))->toArray();
     }
 
     /**

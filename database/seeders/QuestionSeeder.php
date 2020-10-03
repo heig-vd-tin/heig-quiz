@@ -94,27 +94,27 @@ Ajouter 1 puis inverer tous les bits
         // @...@ pour les champs libres
         $q5 = Question::create([
             'name' => 'Shunting Yard',
-            'type' => 'multiple-choice',
+            'type' => 'fill-in-the-gaps',
             'content' => "
 
 Dans l'algorithme de Shunting-yard dont l'image suivante résume le principe, plusieurs structures de données sont utilisées.
 
-`first` est utilisé en entrée et `second` est utilisé en sortie. Les données intermédiaires sont stoquées sur `third`.
+*-* est utilisé en entrée et *-* est utilisé en sortie. Les données intermédiaires sont stoquées sur *-*.
 
 ![algorithm](https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Shunting_yard.svg/440px-Shunting_yard.svg.png)
 ",
-            'validation' => json_encode(["Une file d'attente", "une file d'attente", "une pile"]),
+            'validation' => ["Une file d'attente", "une file d'attente", "une pile"],
             'options' => (object)[
                 'gaps' => [
-                    'first' => [
+                    [
                         'Une pile',
                         "Une file d'attente",
                     ],
-                    'second' => [
+                    [
                         "une pile",
                         "une file d'attente"
                     ],
-                    'third' => [
+                    [
                         "une pile",
                         "une file d'attente"
                     ]
@@ -176,7 +176,7 @@ La quatrième proposition est certainement la bonne
 
 Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un *-*. Les deux *-* d'entrée forment un *-*. Les deux *-* de sortie forment un montage de type *-*
 
-![circuit](https://en.wikipedia.org/wiki/Amplifier#/media/File:Amplifier_Circuit_Small.svg)
+![circuit](https://i.stack.imgur.com/aEd8e.png)
 
 ",
             'validation' => (object)[

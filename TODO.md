@@ -27,22 +27,27 @@
 - [x] laravel-websockets to use on deployment
 - [x] Generate api_token on Shibboleth auth
 - [x] Deploy on chevallier.io
-- [ ] Questions display
-  - [ ] Types
+- [x] Questions display
+  - [x] Types
+    - [x] Fill-in-the-gaps
+    - [x] ShortAnswer
+- [x] View Correction
+  - [x] Display answered field and correction
+    - [x] For Short Answer
+      - [x] Validation bad on the fields with correction in red under
+    - [x] For fill-in-the-gaps
+      - [x] Validation bad on the fields with correction in red under
+    - [x] For Multiple choices
+      - [x] Highlight good answer
+      - [x] Color current answer green or red
+- [.] Answer questions
+  - [x] Waiting room
+  - [ ] Display countdown on activities teacher
+  - [ ] Start Quiz
+  - [ ] Answer questions
+    - [ ] Short answer
+    - [ ] Multiple-choice
     - [ ] Fill-in-the-gaps
-    - [ ] ShortAnswer
-    - [ ] Code
-- [ ] View Correction
-  - [ ] Display answered field and correction
-    - [ ] For Short Answer
-      - [ ] Validation bad on the fields with correction in red under
-    - [ ] For Code
-      - [ ] Additional textfield with syntax coloring and answer
-    - [ ] For fill-in-the-gaps
-      - [ ] Validation bad on the fields with correction in red under
-    - [ ] For Multiple choices
-      - [ ] Highlight good answer
-      - [ ] Color current answer green or red
 - [ ] Redis/Pusher Events
   - [ ] Activity finished
   - [ ] New answer given
@@ -69,6 +74,8 @@
   - [ ] Markdown before SQL
   - [ ] JSON before SQL
 - [ ] Rename Keywords -> Tags
+- [ ] Code question
+- [ ] Footer HEIG-VD (with logos)
 
 ## Open questions
 

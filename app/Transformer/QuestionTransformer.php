@@ -48,20 +48,20 @@ class QuestionTransformer extends Fractal\TransformerAbstract
 
         // Available to students once answered
         if ($this->is_student and $question->answer) {
-            $output = array_merge($output, ['answer' => [
+            $output = array_merge($output, [
                 'answered_at' => $question->answer->updated_at,
                 'answered' => $question->answer->answer,
-            ]]);
+            ]);
         }
 
         // Available to students once finished
         if ($this->is_student and $this->activity and $this->activity->status == 'finished') {
             if ($question->answer) {
-                $output = array_merge($output, ['answer' => [
+                $output = array_merge($output, [
                     'answered_at' => $question->answer->updated_at,
                     'answered' => $question->answer->answer,
                     'is_correct' => $question->answer->is_correct,
-                ]]);
+                ]);
             }
 
             $output = array_merge($output, [

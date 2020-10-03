@@ -4,8 +4,8 @@
       <template v-slot:title>
         Activités
       </template>
-      <b-nav-item to="quizzes"><b-icon-dice-5/> Quizzes</b-nav-item>
-      <b-nav-item to="sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
+      <b-nav-item to="/quiz/quizzes"><b-icon-dice-5/> Quizzes</b-nav-item>
+      <b-nav-item to="/quiz/sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
       <b-nav-text>|</b-nav-text>
 
       <!-- Select roster -->
@@ -71,7 +71,7 @@
           <!-- View results -->
           <b-button
             v-if="data.item.status == 'finished'"
-            :to="{name: 'results', params: { activity_id: data.item.id }}"
+            :to="`/quiz/activity/${data.item.id}/results`"
             variant="outline-primary"
             class="btn-circle"
             v-b-popover.hover.top="'Voir les résultats'"
@@ -124,6 +124,18 @@
           <span v-if="data.item.status == 'opened'">
           {{ activities.presence.here }} / {{ data.item.roster.students }}
           </span>
+
+          <countdown v-if="data.item.status == 'running'" :time="data.item.duration * 1000 - (Date.now() - Date.parse(data.item.started_at))">
+            <template slot-scope="props">
+              {{ String(props.minutes).padStart(2, "0") }} :
+              {{ String(props.seconds).padStart(2, "0") }}
+            </template>
+          </countdown>
+
+          <span v-if="data.item.status == 'running'">
+            <b-spinner small type="grow" label="Spinning"></b-spinner>
+            {{ activities.data[data.index].countdown }}
+          </span>
         </template>
       </b-table>
     </div>
@@ -133,11 +145,16 @@
 <script>
 import axios from "axios";
 import TimeAgo from "javascript-time-ago";
+import VueCountdown from "@chenfengyuan/vue-countdown";
+
 import fr from "javascript-time-ago/locale/fr";
 TimeAgo.addLocale(fr);
 const timeAgo = new TimeAgo("fr-CH");
 
 export default {
+  components: {
+    'countdown': VueCountdown
+  },
   data() {
     return {
       activity: {
@@ -317,13 +334,31 @@ export default {
         .then(({data : activities}) => {
           this.activities.data = activities.data;
           this.activities.count = activities.count;
-          this.activities.data.forEach(activity => {
+          this.activities.data.forEach((activity, index) => {
             if (activity.status == 'opened')
               this.listenActivity(activity.id)
+            if (activity.status == 'running') {
+              this.startTimer(activity, index)
+            }
           })
         });
     },
+    startTimer(activity, index) {
+      console.log(activity)
+      console.log(this.activities.data)
+      activity.timer = activity.duration;
+      let timer = setInterval(() => {
+        let minutes = parseInt(activity.timer / 60, 10);
+        let seconds = parseInt(activity.timer % 60, 10);
 
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        //activity.countdown = minutes + ":" + seconds;
+        this.activities.data[index].countdown = minutes + ":" + seconds;
+        if (--activity.timer <= 0) clearInterval(timer);
+      }, 1000);
+    },
   },
   mounted() {
     this.loadRosters();

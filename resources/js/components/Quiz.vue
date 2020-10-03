@@ -2,9 +2,13 @@
   <div>
     <navbar>
       <template v-slot:title> {{ name }} </template>
-      <b-nav-item to="activities"><b-icon-easel/> Activités</b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="quizzes"><b-icon-dice-5/> Quizzes</b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
+      <b-nav-item to="/quiz/activities"><b-icon-easel /> Activités</b-nav-item>
+      <b-nav-item v-if="this.isTeacher()" to="/quiz/quizzes"
+        ><b-icon-dice-5 /> Quizzes</b-nav-item
+      >
+      <b-nav-item v-if="this.isTeacher()" to="/quiz/sandbox"
+        ><b-icon-bucket /> Bac à sable</b-nav-item
+      >
     </navbar>
     <div class="mt-4 container">
       <!-- Activity Finished -->
@@ -29,11 +33,14 @@
           {{ students.total - students.here }} étudiant{{
             students.total - students.here > 1 ? "s" : ""
           }}.
-          <b-spinner v-if="students.total - students.here > 1" label="Spinning"></b-spinner>
+          <b-spinner
+            v-if="students.total - students.here > 1"
+            label="Spinning"
+          ></b-spinner>
         </template>
       </b-jumbotron>
       <!-- Quiz started -->
-      <div v-else-if="activity.status == 'started'">
+      <div v-else-if="activity.status == 'running'">
         <div class="progress mb-2">
           <div
             class="progress-bar bg-dark progress-bar"
@@ -55,7 +62,8 @@
             class="mb-4"
             :key="reloadComp"
             :is="compQuestion"
-            v-bind="compProp"
+            v-bind="question"
+            @update:answered="(u) => (question.answered = u)"
           ></component>
           <b-container>
             <b-row class="text-center align-middle">
@@ -69,11 +77,13 @@
                 >
               </b-col>
               <b-col cols="5">
-                <h2
-                  class="display-3 time"
-                  v-bind:class="{ 'text-danger': timer < 30 }"
-                >
-                  {{ countdown }}
+                <h2 class="display-3 time">
+                  <countdown :time="timeLeft">
+                    <template slot-scope="props">
+                      {{ String(props.minutes).padStart(2, "0") }} :
+                      {{ String(props.seconds).padStart(2, "0") }}
+                    </template>
+                  </countdown>
                 </h2>
               </b-col>
               <b-col>
@@ -101,12 +111,15 @@ import FillInTheGaps from "./questions/FillInTheGaps";
 import MultipleChoice from "./questions/MultipleChoice";
 import ShortAnswer from "./questions/ShortAnswer";
 
+import VueCountdown from "@chenfengyuan/vue-countdown";
+
 export default {
   components: {
-    "q-code": Code,
-    "q-fill-in-the-gaps": FillInTheGaps,
-    "q-multiple-choice": MultipleChoice,
-    "q-short-answer": ShortAnswer,
+    'q-code': Code,
+    'q-fill-in-the-gaps': FillInTheGaps,
+    'q-multiple-choice': MultipleChoice,
+    'q-short-answer': ShortAnswer,
+    'countdown': VueCountdown,
   },
   props: {
     question_id: {
@@ -120,24 +133,34 @@ export default {
   },
   data() {
     return {
+      activity: {},
       name: "",
-      activity: {
-        duration: 0,
-      },
       reloadComp: 0,
       compQuestion: null,
       compProp: {},
       total: 1,
       question: {},
       values: [],
-      countdown: "- : -",
-      timer: 20,
-
       students: {
         here: 0,
         total: 0,
       },
+      timeLeft: 0
     };
+  },
+  watch: {
+    activity() {
+      console.log("ActivityUpdated")
+      if (this.activity.status == "running") {
+        let elapsed = Date.now() - Date.parse(this.activity.started_at);
+        this.timeLeft = this.activity.duration * 1000 - elapsed
+      } else {
+        this.timeLeft = 0;
+      }
+    },
+    question() {
+      console.log("QuestionUpdated")
+    }
   },
   computed: {
     percent() {
@@ -163,12 +186,7 @@ export default {
           this.compQuestion = "q-multiple-choice";
           break;
       }
-
-      this.compProp = {
-        question: this.question,
-        values: this.values,
-      };
-
+      console.log(this.question);
       this.reloadComp += 1;
     },
 
@@ -217,53 +235,36 @@ export default {
         this.values.splice(0, this.values.length);
       }
     },
-    /**
-     * Start countdown timer from the received duration
-     */
-    startTimer(duration) {
-      this.timer = duration;
-      let timer = setInterval(() => {
-        let minutes = parseInt(this.timer / 60, 10);
-        let seconds = parseInt(this.timer % 60, 10);
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        this.countdown = minutes + ":" + seconds;
-
-        if (--this.timer <= 0) clearInterval(timer);
-      }, 1000);
-    },
     loadActivity() {
       axios
         .get(`/api/activities/${this.activity_id}`)
         .then(({ data: activity }) => {
           this.activity = activity;
-          this.students.total = activity.roster.students;
-          // this.loadQuestion();
-          // this.startTimer(this.duration);
+          this.loadQuestion();
+        });
+    },
+    joinActivityChannel() {
+      window.Echo.join(`activity.${this.activity_id}`)
+        .here((users) => {
+          let students = 0;
+          users.forEach((student) => {
+            if (student.type == "student") students++;
+          });
+          this.students.here = students;
+        })
+        .joining((user) => {
+          if (user.type == "student") this.students.here++;
+        })
+        .leaving((user) => {
+          if (user.type == "student") this.students.here--;
+        })
+        .listen("ActivityUpdated", (e) => {
+          this.loadActivity();
         });
     },
   },
   mounted() {
-    window.Echo.join(`activity.${this.activity_id}`)
-      .here((users) => {
-        let students = 0;
-        users.forEach((student) => {
-          if (student.type == "student") students++;
-        });
-        this.students.here = students;
-      })
-      .joining((user) => {
-        if (user.type == "student") this.students.here++;
-      })
-      .leaving((user) => {
-        if (user.type == "student") this.students.here--;
-      })
-      .listen("ActivityUpdated", (e) => {
-        this.loadActivity();
-      });
-
+    this.joinActivityChannel();
     this.loadActivity();
   },
 };

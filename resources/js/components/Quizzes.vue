@@ -4,8 +4,8 @@
       <template v-slot:title>
         Liste des Quiz
       </template>
-      <b-nav-item to="activities"><b-icon-easel/> Activités</b-nav-item>
-      <b-nav-item to="sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
+      <b-nav-item to="/quiz/activities"><b-icon-easel/> Activités</b-nav-item>
+      <b-nav-item to="/quiz/sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
     </navbar>
     <div class="mt-2 container">
       <h2>Tous les quiz</h2>

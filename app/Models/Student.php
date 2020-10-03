@@ -34,7 +34,7 @@ class Student extends Model
 
         return $activity && (
             $activity->status == 'opened' ||
-            $activity->status == 'started'
+            $activity->status == 'running'
         );
     }
 }

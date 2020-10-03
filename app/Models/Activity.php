@@ -12,6 +12,8 @@ class Activity extends Model
 {
     use HasFactory;
 
+    protected $dates = ['started_at', 'ended_at'];
+
     protected $guarded = [
         'id'
     ];
@@ -51,7 +53,7 @@ class Activity extends Model
         if (!$this->started_at)
             return 0;
 
-        $elapsed = Carbon::now()->diffInSeconds(Carbon::create($this->started_at));
+        $elapsed = Carbon::now()->diffInSeconds($this->started_at);
         if ($elapsed < 0) {
             Log::critical("Negative time difference detected in activity {$this->id}");
             return $elapsed;
@@ -141,21 +143,17 @@ class Activity extends Model
     /**
      * Get the final rank
      */
-    public function getRank() {
+    public function getRank($student_id = null) {
         $sum = 0;
-        $questions = $this->getQuestions();
-        foreach ($this->getQuestions() as $question) {
-            if ($question->answered_at && $question->is_correct) {
-                $sum++;
-            }
-        }
-        return round($sum / count($questions) * 5 + 1, 1);
-    }
 
-    /**
-     * Get questions
-     */
-    public function getQuestions() {
-        return $this->quiz->questions;
+        if ($this->status != 'finished')
+            return null;
+
+        $mark = $this->answers()
+            ->where('student_id', $student_id)
+            ->where('is_correct', true)
+            ->count() / $this->quiz->questions_count * 5 + 1;
+
+        return round($mark, 1);
     }
 }

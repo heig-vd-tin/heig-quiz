@@ -1,6 +1,3 @@
-<!-- Short Answer
-Allow to give a short answer (one line of text)
--->
 <template>
   <div>
     <p>
@@ -8,13 +5,12 @@ Allow to give a short answer (one line of text)
     </p>
     <b-form-group>
     <b-form-input
-      v-model="answer.answered"
-      placeholder="Réponse"
+      v-model="value"
       :size="width"
-      :readonly="answer.is_correct != null"
-      :state="answer.is_correct"
+      :readonly="validation != null"
+      :state="validation ? is_correct : null"
     ></b-form-input>
-    <b-form-invalid-feedback>
+    <b-form-invalid-feedback v-if="validation">
       {{ validation.expected }}
     </b-form-invalid-feedback>
     </b-form-group>
@@ -22,12 +18,18 @@ Allow to give a short answer (one line of text)
 </template>
 <script>
 export default {
+  computed: {
+    value: {
+      get() { return this.answered },
+      set(value) { this.$emit('update:answered', value) }
+    }
+  },
   props: {
-    content: String, // Question Markdown content
-    answerType: String, // Input type (text, number)
-    width: { type: String, default: "30"},
-    answer: Object,
-    validation: Object
+    content: String,
+    width: { type: String, default: "30" },
+    answered: String,
+    validation: Object,
+    is_correct: { type: [Boolean, null], required: false }
   },
 };
 </script>
