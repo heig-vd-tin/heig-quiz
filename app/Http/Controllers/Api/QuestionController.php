@@ -8,22 +8,17 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Activity;
 
+use Auth;
+
 use App\Transformer\QuestionTransformer;
 
 class QuestionController extends Controller
 {
-    protected $user;
-
-    function __construct()
-    {
-        $user = Auth::user();
-    }
-
     function index(Request $request)
     {
-        if (!$this->user->isTeacher()) abort(403);
+        if (!$request->user()->isTeacher()) abort(403);
 
-        $questions = Question::query();
+        $questions = Question::with('keywords');
 
         return fractal($questions->get(), new QuestionTransformer())->toArray();
     }

@@ -5,6 +5,7 @@
         Activités
       </template>
       <b-nav-item to="/quiz/quizzes"><b-icon-dice-5/> Quizzes</b-nav-item>
+      <b-nav-item to="/quiz/questions"><b-icon-dice-3/> Questions</b-nav-item>
       <b-nav-item to="/quiz/sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
       <b-nav-text>|</b-nav-text>
 
@@ -71,7 +72,7 @@
           <!-- View results -->
           <b-button
             v-if="data.item.status == 'finished'"
-            :to="`/quiz/activity/${data.item.id}/results`"
+            :to="`/quiz/activities/${data.item.id}/results`"
             variant="outline-primary"
             class="btn-circle"
             v-b-popover.hover.top="'Voir les résultats'"

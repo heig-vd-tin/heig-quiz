@@ -89,6 +89,8 @@ Route::namespace('Api')->group(function () {
         Route::post('activities/{id}/delete', 'ActivityController@delete');
         Route::post('activities/{id}/open', 'ActivityController@open');
         Route::post('activities/{id}/close', 'ActivityController@close');
+
+        Route::get('questions', 'QuestionController@index');
     });
 
     Route::get('activities/{id}/questions', 'ActivityController@questions');

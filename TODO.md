@@ -40,12 +40,22 @@
     - [x] For Multiple choices
       - [x] Highlight good answer
       - [x] Color current answer green or red
+- [ ] Quiz
+  - [ ] Next / Previous
+  - [ ] Submit answer
+  - [ ] Color count down if < 30 seconds
+  - [ ] Finished panel
+  - [ ] Event New Answer Given
+- [ ] Teacher's correction
+  - [ ] Show statistics for the whole class
+  - [ ] Do not show good/bad
+- [ ] Server event to finish the activity
 - [.] Answer questions
   - [x] Waiting room
-  - [ ] Display countdown on activities teacher
-  - [ ] Start Quiz
-  - [ ] Answer questions
-    - [ ] Short answer
+  - [x] Display countdown on activities teacher
+  - [x] Start Quiz
+  - [.] Answer questions
+    - [x] Short answer
     - [ ] Multiple-choice
     - [ ] Fill-in-the-gaps
 - [ ] Redis/Pusher Events

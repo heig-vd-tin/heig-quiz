@@ -4,10 +4,11 @@ import VueRouter from "vue-router"
 Vue.use(VueRouter)
 
 import Activities from "./components/Activities"
+import Progress from "./components/Progress"
+import Questions from "./components/Questions"
+import Quiz from "./components/Quiz"
 import Quizzes from "./components/Quizzes"
 import Results from "./components/Results"
-import Quiz from "./components/Quiz"
-import Progress from "./components/Progress"
 import Sandbox from "./components/sandbox/Sandbox"
 
 const routes = [
@@ -25,6 +26,11 @@ const routes = [
     path: "/quiz/quizzes",
     name: "quizzes",
     component: Quizzes
+  },
+  {
+    path: "/quiz/questions",
+    name: "questions",
+    component: Questions
   },
   {
     path: "/quiz/activities/:activity_id/results",

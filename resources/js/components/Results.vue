@@ -44,6 +44,7 @@
           </b-progress>
 
           <b-popover
+            v-if="question.statistics"
             :target="`progress-${question.id}`"
             triggers="hover"
             placement="auto"
@@ -67,11 +68,13 @@
           </b-popover>
 
           <h2 class="mt-2 mb-0">
-            <b-icon-check2
-              class="text-success"
-              v-if="question.is_correct"
-            />
-            <b-icon-x v-else class="text-danger" />
+            <span v-if="isStudent()">
+              <b-icon-check2
+                class="text-success"
+                v-if="question.is_correct"
+              />
+              <b-icon-x v-else class="text-danger" />
+            </span>
             <strong>Question {{ index + 1 }}. </strong> {{ question.name }}
           </h2>
         </template>
@@ -154,6 +157,7 @@ export default {
           this.questions.forEach((question) => {
             question.component = this.getComponent(question);
           });
+
         });
     },
   },

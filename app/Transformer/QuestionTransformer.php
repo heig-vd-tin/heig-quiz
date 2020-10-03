@@ -36,6 +36,7 @@ class QuestionTransformer extends Fractal\TransformerAbstract
                 'created_at' => $question->created_at,
                 'updated_at' => $question->updated_at,
                 'difficulty' => $question->difficulty,
+                'keywords' => $question->keywords
             ]);
         }
 
@@ -63,7 +64,10 @@ class QuestionTransformer extends Fractal\TransformerAbstract
                     'is_correct' => $question->answer->is_correct,
                 ]);
             }
+        }
 
+        // Available to everyone once finished
+        if ($this->activity and $this->activity->status == 'finished') {
             $output = array_merge($output, [
                 'explanation' => $question->explanation,
                 'statistics' => $question->statistics,
@@ -73,10 +77,14 @@ class QuestionTransformer extends Fractal\TransformerAbstract
 
         // Only for students
         if ($this->is_student and $this->activity) {
-            if ($question->next_question)
+            if ($question->next_question) {
                 $output['next_question_url'] = url("/api/activities/{$this->activity->id}/questions/{$question->next_question}");
-            if ($question->previous_question)
+                $output['next_question'] = $question->next_question;
+            }
+            if ($question->previous_question) {
                 $output['previous_question_url'] = url("/api/activities/{$this->activity->id}/questions/{$question->previous_question}");
+                $output['next_question'] = $question->previous_question;
+            }
         }
 
         return $output;

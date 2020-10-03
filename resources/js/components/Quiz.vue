@@ -63,16 +63,16 @@
             :key="reloadComp"
             :is="compQuestion"
             v-bind="question"
-            @update:answered="(u) => (question.answered = u)"
+            @update:answered="(u) => {answered = u}"
           ></component>
           <b-container>
             <b-row class="text-center align-middle">
               <b-col>
                 <b-button
-                  v-if="question_id > 1"
+                  v-if="question.previous_question"
                   pill
                   variant="outline-secondary"
-                  @click="previousQuestion"
+                  :to="`/quiz/activities/${activity.id}/questions/${question.previous_question + 1}`"
                   >Précédent</b-button
                 >
               </b-col>
@@ -88,10 +88,10 @@
               </b-col>
               <b-col>
                 <b-button
-                  v-if="question_id < total"
+                  v-if="question.next_question"
                   pill
                   variant="outline-secondary"
-                  @click="nextQuestion"
+                  :to="`/quiz/activities/${activity.id}/questions/${question.next_question + 1}`"
                   >Suivant</b-button
                 >
               </b-col>
@@ -100,6 +100,7 @@
         </b-card>
       </div>
     </div>
+    {{ answered }}
   </div>
 </template>
 
@@ -134,6 +135,7 @@ export default {
   data() {
     return {
       activity: {},
+      answered: null,
       name: "",
       reloadComp: 0,
       compQuestion: null,
@@ -158,8 +160,11 @@ export default {
         this.timeLeft = 0;
       }
     },
-    question() {
+    answered() {
       console.log("QuestionUpdated")
+    },
+    question_id() {
+      this.loadQuestion();
     }
   },
   computed: {
