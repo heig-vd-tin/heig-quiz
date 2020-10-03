@@ -132,6 +132,20 @@ class ActivitySeeder extends Seeder
             'is_correct' => true
         ]);
 
+        Answer::create([
+            'activity_id' => 1,
+            'student_id' => $bob->id,
+            'question_id' => 8,
+            'answer' => [
+                "une paire différentielle",
+                "transistors bipolaires",
+                "amplificateur de signal",
+                "transistors bipolaires",
+                "de Schottky"
+            ],
+            'is_correct' => false
+        ]);
+
         Activity::factory()->count(20)->create();
     }
 }

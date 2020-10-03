@@ -183,6 +183,7 @@ Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un *-*. Les deux *-* d'
                 "une paire différentielle",
                 "transistors bipolaires",
                 "amplificateur de signal",
+                "transistors bipolaires",
                 "push-pull"
             ],
             'options' => (object)[

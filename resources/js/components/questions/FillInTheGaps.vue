@@ -3,7 +3,7 @@ Allow to give a short answer (one line of text)
 -->
 <template>
   <b-form inline ref="content">
-      <markdown-it-vue :content="content"/>
+      <markdown-it-vue @hook:mounted="parseGaps(options.gaps)" :content="content"/>
   </b-form>
 </template>
 <script>
@@ -23,29 +23,34 @@ export default {
   props: {
     content: String, // Question Markdown content
     options: Object, // Gaps type
-    answered: Object,
-    is_correct: { type: Boolean, default: null },
+    answer: Object,
+    validation: Array,
+  },
+  methods: {
+    /**
+     * Replace <em>-</em> or `*-*` in Markdown in the rendered question content.
+     * These are gaps.
+     */
+    parseGaps(gaps) {
+      this.$nextTick().then(() => {
+        this.$refs.content.querySelectorAll("em").forEach((em, index) => {
+          if (em.innerText != "-") return;
+          let gap = new Gap({
+            propsData: {
+              options: gaps[index].map((item, index) => { return {value: item, text: item}}),
+              answered: this.answer ? this.answer.answered[index] : null,
+              validation: this.validation ? this.validation[index] : null,
+              is_correct: this.validation ? this.answer.answered[index] == this.validation[index] : null
+            },
+          });
+          gap.$mount();
+          em.replaceWith(gap.$el);
+        });
+      });
+    }
   },
   mounted() {
-    this.$nextTick().then(() => {
-      this.$refs.content.querySelectorAll("em").forEach((em, index) => {
-        if (em.innerText != "-") return;
 
-        let gap = new Gap({
-          propsData: {
-            name: "Foobar",
-            options: this.options.gaps[index].map((item, index) => { return {value: index, text: item}})
-          },
-          listeners: {
-            updated() {
-              console.log("updated thing")
-            }
-          }
-        });
-        gap.$mount();
-        em.replaceWith(gap.$el);
-      });
-    });
   }
 };
 </script>

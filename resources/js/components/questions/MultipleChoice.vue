@@ -93,11 +93,9 @@ export default {
   },
   mounted() {
     this.selectedPropositions = Array(this.propositions.length).fill(false)
-
     if (this.answer.answered) {
       this.answer.answered.forEach(ans => this.selectedPropositions[ans - 1] = true)
     }
-    console.log(this.selectedPropositions)
   }
 };
 </script>
