@@ -13,10 +13,11 @@ propositions.
           <b-col cols="1">
             <!-- TODO: Checkboxes? -->
             <b-button
-              :pressed.sync="selectedPropositions[index]"
-              variant="outline-secondary"
-              class="btn-circle"
               @click="onClick(index)"
+              :pressed.sync="selectedPropositions[index]"
+              :class="addClass(index)"
+              class="btn-circle"
+              variant="outline-secondary"
             >{{index+1}}</b-button>
           </b-col>
           <b-col class="text-left align-middle">
@@ -36,7 +37,8 @@ export default {
   props: {
     content: String,
     multipleAnswers: { type: Boolean, default: false},
-    answered: Array,
+    answer: Object,
+    validation: Array
   },
   data() {
     return {
@@ -65,6 +67,13 @@ export default {
   },
   methods: {
     onClick(index) {
+      // If disabled revert change
+      // TODO: Prevent default state instead
+      if (this.validation != null) {
+        this.selectedPropositions[index] = !this.selectedPropositions[index];
+        return;
+      }
+
       // Prevent multiple answers if not allowed
       if (!this.multipleAnswers && this.selectedPropositions[index]) {
          if (this.selectedPropositions.filter(v => v).length > 1) {
@@ -73,14 +82,22 @@ export default {
          }
       }
     },
+    addClass(index) {
+      if (this.validation == null) return;
+      if (this.validation.includes(index + 1)) {
+        return "btn-outline-success btn-good"
+      } else if(this.answer.answered.includes(index + 1)) {
+        return "btn-bad"
+      }
+    }
   },
   mounted() {
     this.selectedPropositions = Array(this.propositions.length).fill(false)
 
-    if(this.answer) {
-      this.answer.forEach(ans => this.selectedPropositions[ans] = true)
+    if (this.answer.answered) {
+      this.answer.answered.forEach(ans => this.selectedPropositions[ans - 1] = true)
     }
-
+    console.log(this.selectedPropositions)
   }
 };
 </script>
@@ -108,5 +125,18 @@ export default {
 .btn-circle:hover {
   background-color: inherit;
   color: inherit;
+}
+
+.btn-good {
+  border-width: 3px;
+}
+
+/* TODO: Use default bootstrap colors instead */
+/* TODO: Have a second circle aroung the button to indicate the answer */
+.btn-bad {
+  color: #fff !important;
+  border-width: 3px;
+  background-color: #d1504b !important;
+  border-color: #c90700 !important;
 }
 </style>

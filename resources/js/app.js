@@ -9,7 +9,9 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import Vue from 'vue'
+
 Vue.config.devtools = true
+Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
