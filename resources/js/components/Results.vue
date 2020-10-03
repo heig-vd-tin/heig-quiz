@@ -2,7 +2,7 @@
   <div>
     <navbar>
       <template v-slot:title> Activités </template>
-      <b-nav-item to="activities"><b-icon-easel /> Activités</b-nav-item>
+      <b-nav-item to="home"><b-icon-easel /> Activités</b-nav-item>
       <b-nav-item v-if="this.isTeacher()" to="quizzes"
         ><b-icon-dice-5 /> Quizzes</b-nav-item
       >

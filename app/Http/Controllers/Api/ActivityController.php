@@ -264,7 +264,7 @@ class ActivityController extends Controller
 
         $activity->delete();
 
-        broadcast(new \App\Events\ActivityUpdated(null));
+        broadcast(new \App\Events\ActivityUpdated());
     }
 
     function create(Request $request) {

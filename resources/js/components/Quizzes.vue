@@ -47,7 +47,7 @@
 
         <template v-slot:cell(actions)="data">
           <b-button
-            v-on:click="displayCreateActivityForm(data.index)"
+            v-on:click="displayCreateActivityForm(data.item.id)"
             variant="outline-primary"
             class="btn-circle pulse-primary"
             v-b-popover.hover.left="'Créer une activité à partir de ce quiz'"
@@ -119,7 +119,7 @@ export default {
         roster_id: null,
         quiz_id: null,
         shuffle_questions: false,
-        shuffle_propositions: false
+        shuffle_propositions: false,
       },
       rosters: {
         data: [],
@@ -174,11 +174,11 @@ export default {
      */
     displayCreateActivityForm(quiz_id) {
       this.$bvModal.show("new-activity-modal");
+      console.log("Hey", quiz_id)
       this.form.quiz_id = quiz_id;
       this.loadRosters();
     },
     createActivity(bvModalEvt) {
-      console.log("Create Activity");
       bvModalEvt.preventDefault();
       this.handleSubmit();
     },

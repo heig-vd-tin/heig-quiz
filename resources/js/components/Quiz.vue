@@ -145,6 +145,12 @@ export default {
     },
   },
   methods: {
+    isTeacher() {
+      return Vue.prototype.$user.affiliation == "member;staff";
+    },
+    isStudent() {
+      return Vue.prototype.$user.affiliation == "member;student";
+    },
     setComponent() {
       switch (this.question.type) {
         case "short-answer":
@@ -247,19 +253,15 @@ export default {
           if (student.type == "student") students++;
         });
         this.students.here = students;
-        console.log(users);
       })
       .joining((user) => {
         if (user.type == "student") this.students.here++;
-        console.log(user.name);
       })
       .leaving((user) => {
         if (user.type == "student") this.students.here--;
-        console.log(user.name);
       })
       .listen("ActivityUpdated", (e) => {
         this.loadActivity();
-        console.log("Activity Updated", e);
       });
 
     this.loadActivity();

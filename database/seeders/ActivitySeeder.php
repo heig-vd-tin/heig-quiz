@@ -145,7 +145,5 @@ class ActivitySeeder extends Seeder
             ],
             'is_correct' => false
         ]);
-
-        Activity::factory()->count(20)->create();
     }
 }

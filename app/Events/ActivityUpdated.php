@@ -22,7 +22,7 @@ class ActivityUpdated implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
-        return ['id' => $this->activity->id];
+        return $this->activity ? ['id' => $this->activity->id] : [];
     }
 
     public function broadcastOn()
