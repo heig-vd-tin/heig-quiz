@@ -47,12 +47,24 @@
           <b-popover
             :target="`progress-${question.id}`"
             triggers="hover"
-            placement="top"
+            placement="auto"
+            delay="5"
           >
-            Réponses correctes : {{ question.statistics.correct_answers }}<br />
-            Réponses incorrectes : {{ question.statistics.incorrect_answers
-            }}<br />
-            Non répondus : {{ question.statistics.missing_answers }}<br />
+            <div v-if="question.statistics.correct_answers > 0">
+              Réponses correctes :
+              <strong>{{ question.statistics.correct_answers }}</strong
+              ><br />
+            </div>
+            <div v-if="question.statistics.incorrect_answers > 0">
+              Réponses incorrectes :
+              <strong>{{ question.statistics.incorrect_answers }}</strong
+              ><br />
+            </div>
+            <div v-if="question.statistics.missing_answers > 0">
+              Non répondus :
+              <strong>{{ question.statistics.missing_answers }}</strong
+              ><br />
+            </div>
           </b-popover>
 
           <h2 class="mt-2 mb-0">
