@@ -40,30 +40,25 @@
     - [x] For Multiple choices
       - [x] Highlight good answer
       - [x] Color current answer green or red
-- [ ] Quiz
-  - [ ] Next / Previous
-  - [ ] Submit answer
-  - [ ] Color count down if < 30 seconds
-  - [ ] Finished panel
-  - [ ] Event New Answer Given
-- [ ] Teacher's correction
-  - [ ] Show statistics for the whole class
-  - [ ] Do not show good/bad
-- [ ] Server event to finish the activity
-- [.] Answer questions
+- [x] Quiz
+  - [x] Next / Previous
+  - [x] Submit answer
+  - [x] Finished panel
+  - [x] Event New Answer Given
+- [x] Answer questions
   - [x] Waiting room
   - [x] Display countdown on activities teacher
   - [x] Start Quiz
-  - [.] Answer questions
+  - [x] Answer questions
     - [x] Short answer
-    - [ ] Multiple-choice
-    - [ ] Fill-in-the-gaps
-- [ ] Redis/Pusher Events
-  - [ ] Activity finished
-  - [ ] New answer given
-- [ ] View Progress 
-  - [ ] Listen to notifications
-  - [ ] Two sliders : show names, show answers
+    - [x] Multiple-choice
+    - [x] Fill-in-the-gaps
+- [x] View Progress 
+  - [x] Listen to notifications
+  - [x] Two sliders : show names, show answers
+- [ ] Teacher's correction
+  - [ ] Show statistics for the whole class
+  - [ ] Do not show good/bad
 - [ ] Dynamic Breadcrumb
 - [ ] New Question form
   - [ ] Parse markdown extract frontmatter
@@ -87,6 +82,9 @@
 - [ ] Code question
 - [ ] Footer HEIG-VD (with logos)
 - [ ] Global frontend storage (current activity... automatically update with notifications)
+- [ ] Color count down if < 30 seconds
+- [ ] Server event to finish the activity
+- [ ] Result 0 is false
 ## Open questions
 
 - [ ] Singular or Plural for API routes?

@@ -9,8 +9,10 @@
       <b-nav-item v-if="this.isTeacher()" to="/quiz/sandbox"><b-icon-bucket/> Bac à sable</b-nav-item>
     </navbar>
     <div class="mt-2 container">
+      <b-button variant="primary" to="/quiz/questions/create">Nouvelle Question</b-button>
       <!-- Questions list -->
       <b-table
+        pt-2
         striped
         hover
         :items="questions.data"

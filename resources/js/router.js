@@ -4,6 +4,7 @@ import VueRouter from "vue-router"
 Vue.use(VueRouter)
 
 import Activities from "./components/Activities"
+import NewQuestion from "./components/NewQuestion"
 import Progress from "./components/Progress"
 import Questions from "./components/Questions"
 import Quiz from "./components/Quiz"
@@ -56,6 +57,11 @@ const routes = [
     props: route => ({
       activity_id: parseInt(route.params.activity_id)
     })
+  },
+  {
+    path: "/quiz/questions/create",
+    name: "new-question",
+    component: NewQuestion
   },
   {
     path: "/quiz/sandbox",
