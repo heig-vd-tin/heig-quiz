@@ -6,15 +6,20 @@
     <foobar title="Foo" :value.sync="shared"></foobar>
     <foobar title="Bar" :value.sync="shared"></foobar>
     <button @click="value = 600 * 2000">Reset</button>
+
+    <appFooter></appFooter>
   </div>
 </template>
 <script>
 import Sub from "./sub";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 
+import Footer from "../../layouts/footer"
+
 export default {
   components: {
     foobar: Sub,
+    appFooter: Footer,
     countdown: VueCountdown,
   },
   data() {
