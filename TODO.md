@@ -86,7 +86,7 @@
 - [ ] Rename Keywords -> Tags
 - [ ] Code question
 - [ ] Footer HEIG-VD (with logos)
-
+- [ ] Global frontend storage (current activity... automatically update with notifications)
 ## Open questions
 
 - [ ] Singular or Plural for API routes?

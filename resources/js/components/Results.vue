@@ -11,6 +11,7 @@
       >
     </navbar>
     <div class="mt-4 container">
+      <h2 v-if="activity.quiz">Quiz n°{{activity.quiz.id}} <span v-if="activity.mark">(note : {{activity.mark}})</span></h2>
       <b-card
         class="mb-4 mt-1"
         v-for="(question, index) in questions"
@@ -109,6 +110,7 @@ export default {
   data() {
     return {
       questions: {},
+      activity: {}
     };
   },
   props: {
@@ -148,6 +150,11 @@ export default {
     isStudent() {
       return Vue.prototype.$user.affiliation == "member;student";
     },
+    loadActivity() {
+      axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {
+        this.activity = activity;
+      });
+    },
     loadQuiz() {
       axios
         .get(`/api/activities/${this.activity_id}/questions`)
@@ -162,6 +169,7 @@ export default {
     },
   },
   mounted() {
+    this.loadActivity();
     this.loadQuiz();
   },
 };

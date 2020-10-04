@@ -55,7 +55,7 @@
             class="btn-circle"
             v-b-popover.hover.top="'Rendre visible l\'activité'"
           >
-            <b-icon-eye-slash></b-icon-eye-slash>
+            <b-icon-eye-slash/>
           </b-button>
 
           <!-- Hide the activity -->
@@ -66,7 +66,7 @@
             class="btn-circle"
             v-b-popover.hover.top="'Cacher l\'activité aux étudiants'"
           >
-            <b-icon-eye-fill></b-icon-eye-fill>
+            <b-icon-eye-fill/>
           </b-button>
 
           <!-- View results -->
@@ -77,8 +77,9 @@
             class="btn-circle"
             v-b-popover.hover.top="'Voir les résultats'"
           >
-            <b-icon-trophy-fill></b-icon-trophy-fill>
+            <b-icon-trophy-fill/>
           </b-button>
+
           <!-- Delete an activity -->
           <b-button
             v-if="data.item.status == 'idle'"
@@ -87,8 +88,9 @@
             class="btn-circle"
             @click="deleteActivity(data.item.id)"
           >
-            <b-icon-trash></b-icon-trash>
+            <b-icon-trash/>
           </b-button>
+
           <!-- Open an activity -->
           <b-button
             v-if="data.item.status == 'idle'"
@@ -97,7 +99,7 @@
             class="btn-circle"
             v-b-popover.hover.top="'Ouvrir l\'activité pour participation'"
           >
-            <b-icon-broadcast></b-icon-broadcast>
+            <b-icon-broadcast/>
           </b-button>
 
           <!-- Start the activity -->
@@ -108,7 +110,7 @@
             class="btn-circle"
             v-b-popover.hover.top="'Démarrer l\'activité'"
           >
-            <b-icon-play-fill></b-icon-play-fill>
+            <b-icon-play-fill/>
           </b-button>
 
           <!-- Open an activity -->
@@ -119,14 +121,26 @@
             class="btn-circle running"
             v-b-popover.hover.top="'Activité disponible pour les étudiants. Cliquez pour interrompre.'"
           >
-            <b-icon-broadcast></b-icon-broadcast>
+            <b-icon-broadcast/>
+          </b-button>
+
+          <!-- Follow an activity -->
+          <b-button
+            v-if="data.item.status == 'running' || data.item.status == 'finished'"
+            @click="closeActivity(data.item.id)"
+            variant="outline-info"
+            class="btn-circle"
+            :to="`/quiz/activities/${data.item.id}/progression`"
+            v-b-popover.hover.top="'Voir la progression en temps réel.'"
+          >
+            <b-icon-bar-chart-fill/>
           </b-button>
 
           <span v-if="data.item.status == 'opened'">
           {{ activities.presence.here }} / {{ data.item.roster.students }}
           </span>
 
-          <countdown v-if="data.item.status == 'running'" :time="data.item.duration * 1000 - (Date.now() - Date.parse(data.item.started_at))">
+          <countdown @end="data.item.status = 'finished'" v-if="data.item.status == 'running'" :time="data.item.duration * 1000 - (Date.now() - Date.parse(data.item.started_at))">
             <template slot-scope="props">
               {{ String(props.minutes).padStart(2, "0") }} :
               {{ String(props.seconds).padStart(2, "0") }}
@@ -280,7 +294,6 @@ export default {
       window.Echo.leave(`activity.${activity_id}`);
     },
     listenActivity(activity_id) {
-      console.log("Activity Listen ", activity_id)
       this.leaveActivity(activity_id);
       window.Echo.join(`activity.${activity_id}`)
       .here((users) => {

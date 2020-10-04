@@ -17,9 +17,10 @@
     </navbar>
     <div class="mt-4 container">
       <!-- Activity Finished -->
-      <b-jumbotron v-if="activity.status == 'finished'" header="Erreur !">
+      <b-jumbotron v-if="activity.status == 'finished'" header="Merci !">
         <template v-slot:lead>
-          L'activité n'est plus disponible pour édition.
+          <p>L'activité n'est plus disponible pour édition.</p>
+          <b-button :to="`/quiz/activities/${activity.id}/results`" variant="primary">Voir la correction</b-button>
         </template>
       </b-jumbotron>
       <!-- Activity Idle -->
@@ -29,17 +30,31 @@
         </template>
       </b-jumbotron>
       <!-- Activity Opened -->
-      <b-jumbotron v-if="activity.status == 'opened'" header="Salle d'attente">
+      <b-jumbotron class="waiting-room" v-if="activity.status == 'opened'" header="Salle d'attente">
         <template v-slot:lead>
-          {{ students.here }} / {{ students.total }} étudiant{{ students.total > 1 ? 's' : '' }}
-          connectés. Attente d'encore
+          {{ students.here }} / {{ students.total }} étudiant{{ students.total > 1 ? 's' : '' }} connectés.
+          <br />
+          Attente de encore
           {{ students.total - students.here }}
-          étudiant{{ students.total - students.here > 1 ? 's' : '' }}.
+          étudiant{{ students.total - students.here > 1 ? 's' : '' }}...
           <b-spinner v-if="students.total - students.here > 1" label="Spinning"></b-spinner>
         </template>
       </b-jumbotron>
+      <!-- Wait for the end -->
+      <b-jumbotron v-if="activity.status == 'running' && finished" header="Merci !">
+        <template v-slot:lead>
+          <p>L'activité n'est plus disponible pour édition. Vos résultats dans : </p>
+          <countdown :time="timeLeft" @end="activity.status = 'finished'">
+            <template slot-scope="props">
+              {{ String(props.minutes).padStart(2, '0') }}
+              :
+              {{ String(props.seconds).padStart(2, '0') }}
+            </template>
+          </countdown>
+        </template>
+      </b-jumbotron>
       <!-- Quiz started -->
-      <div v-else-if="activity.status == 'running'">
+      <div v-else-if="activity.status == 'running' && !finished">
         <div class="progress mb-2">
           <div
             class="progress-bar bg-dark progress-bar"
@@ -55,8 +70,8 @@
         <b-card border-variant="dark" :title="'Question ' + question_id + '. ' + question.name" align="left">
           <component
             class="mb-4"
-            :key="reloadComp"
-            :is="compQuestion"
+            :key="component_nonce"
+            :is="component_question"
             v-bind="question"
             @update:answered="
               u => {
@@ -73,7 +88,7 @@
               </b-col>
               <b-col cols="5">
                 <h2 class="display-3 time">
-                  <countdown :time="timeLeft" @end="() => this.question.status = 'finished'">
+                  <countdown :time="timeLeft" @end="activity.status = 'finished'">
                     <template slot-scope="props">
                       {{ String(props.minutes).padStart(2, '0') }}
                       :
@@ -130,13 +145,12 @@ export default {
   },
   data() {
     return {
+      finished: false,
       activity: {},
       answered: null,
       name: '',
-      reloadComp: 0,
-      compQuestion: null,
-      compProp: {},
-      total: 1,
+      component_nonce: 0,
+      component_question: null,
       question: {},
       values: [],
       students: {
@@ -179,16 +193,16 @@ export default {
     setComponent() {
       switch (this.question.type) {
         case 'short-answer':
-          this.compQuestion = 'q-short-answer';
+          this.component_question = 'q-short-answer';
           break;
         case 'fill-in-the-gaps':
-          this.compQuestion = 'q-fill-in-the-gaps';
+          this.component_question = 'q-fill-in-the-gaps';
           break;
         case 'multiple-choice':
-          this.compQuestion = 'q-multiple-choice';
+          this.component_question = 'q-multiple-choice';
           break;
       }
-      this.reloadComp += 1;
+      this.component_nonce += 1;
     },
     previousQuestion() {
       if (this.answered != this.question.answered) this.submitQuestion();
@@ -209,16 +223,21 @@ export default {
         console.log(erreur);
       });
     },
-    submitQuiz() {},
+    submitQuiz() {
+      if (this.answered != this.question.answered) this.submitQuestion();
+      this.finished = true;
+    },
     loadActivity() {
       axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {
         this.activity = activity;
+        this.students.total = this.activity.roster.students;
         if (this.activity.status == 'running') this.loadQuestion();
       });
     },
     loadQuestion() {
       axios.get(`/api/activities/${this.activity_id}/questions/${this.question_id}`).then(rep => {
         this.question = rep.data;
+        this.answered = this.question.answered;
         this.setComponent();
       });
     },
@@ -251,5 +270,12 @@ export default {
 <style scoped>
 .time {
   font-size: 2.5rem;
+}
+
+.waiting-room {
+  background-image: url('../../img/waiting-room.svg');
+  background-position: right;
+  background-repeat: no-repeat;
+  background-origin: content-box;
 }
 </style>

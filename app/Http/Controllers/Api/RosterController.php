@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Transformer\RosterTransformer;
+use App\Transformer\StudentTransformer;
 
 use App\Models\Roster;
-use App\Models\Course;
 use App\Models\User;
 use Auth;
 
@@ -46,14 +46,9 @@ class RosterController extends Controller
     }
 
     function students($id) {
-        $students = Roster::with('students')->findOrFail($id)->students->each(function ($item, $key) {
-            $item['user'] = url('/api/users/' . $item['user_id']);
-        });
-        return [
-            'count' => count($students),
-            'roster' => $id,
-            'students' => $students
-        ];
+        $students = Roster::findOrFail($id)->students;
+
+        return fractal($students, new StudentTransformer())->toArray();
     }
 
     function course($id) {

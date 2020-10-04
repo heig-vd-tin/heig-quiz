@@ -50,9 +50,12 @@ const routes = [
     })
   },
   {
-    path: "/quiz/progress",
-    name: "progress",
-    component: Progress
+    path: "/quiz/activities/:activity_id/progression",
+    name: "progression",
+    component: Progress,
+    props: route => ({
+      activity_id: parseInt(route.params.activity_id)
+    })
   },
   {
     path: "/quiz/sandbox",

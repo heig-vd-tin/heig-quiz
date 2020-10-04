@@ -93,9 +93,10 @@ export default {
     },
     addClass(index) {
       if (this.validation == null) return;
+
       if (this.validation.includes(index + 1)) {
         return 'btn-outline-success btn-good';
-      } else if (this.answered.includes(index + 1)) {
+      } else if (this.answered != null && this.answered.includes(index + 1)) {
         return 'btn-bad';
       }
     }

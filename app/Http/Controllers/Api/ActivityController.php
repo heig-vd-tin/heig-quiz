@@ -133,11 +133,12 @@ class ActivityController extends Controller
                 ->where('activity_id', $activity->id)
                 ->where('question_id', $questions[$k]->id)->first();
                 if ($answer) {
-                    $question['answer'] = $answer->answer;
-                    $question['is_correct'] = $answer->is_correct;
+                    $matrix[$student->id][$k]['answer'] = $answer->answer;
+                    $matrix[$student->id][$k]['is_correct'] = $answer->is_correct;
                 }
             }
         }
+        return $matrix;
         return [
             'students' => $students,
             'quesions' => $questions,

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 use App\Models\Answer;
-
+use Log;
 class AnswerUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -32,6 +32,7 @@ class AnswerUpdated implements ShouldBroadcastNow
 
     public function broadcastOn()
     {
+        Log::debug('Answer Updated');
         return [
             new PrivateChannel('activity'),
             new PrivateChannel("activity.{$this->answer->activity_id}.teacher"),
