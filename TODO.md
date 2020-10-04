@@ -1,95 +1,47 @@
 # What to do?
 
-- [x] Tables
-- [x] Migrations
-- [x] Seeds
-- [x] Factories
-- [x] Models
-- [x] Base API
-- [x] Base Controller to get data
-- [x] Get student questions in order
-- [x] Actions
-  - [x] Show/Hide Activity
-  - [x] Start/Stop Activity
-  - [x] Create Activity
-  - [x] Answer Question
-- [x] Setup Event System (with Pusher?)
-- [x] View Home Teacher
-  - [x] Show Rosters Tabs
-  - [x] Create Activity from Quiz
-- [x] View Home Student
-- [x] View Question
-  - [x] Short Answer
-  - [x] Multiple Choices
-- [x] Redis/Pusher Events
-  - [x] New activity  
-  - [x] Activity started
-- [x] laravel-websockets to use on deployment
-- [x] Generate api_token on Shibboleth auth
-- [x] Deploy on chevallier.io
-- [x] Questions display
-  - [x] Types
-    - [x] Fill-in-the-gaps
-    - [x] ShortAnswer
-- [x] View Correction
-  - [x] Display answered field and correction
-    - [x] For Short Answer
-      - [x] Validation bad on the fields with correction in red under
-    - [x] For fill-in-the-gaps
-      - [x] Validation bad on the fields with correction in red under
-    - [x] For Multiple choices
-      - [x] Highlight good answer
-      - [x] Color current answer green or red
-- [x] Quiz
-  - [x] Next / Previous
-  - [x] Submit answer
-  - [x] Finished panel
-  - [x] Event New Answer Given
-- [x] Answer questions
-  - [x] Waiting room
-  - [x] Display countdown on activities teacher
-  - [x] Start Quiz
-  - [x] Answer questions
-    - [x] Short answer
-    - [x] Multiple-choice
-    - [x] Fill-in-the-gaps
-- [x] View Progress 
-  - [x] Listen to notifications
-  - [x] Two sliders : show names, show answers
 - [ ] Teacher's correction
   - [ ] Show statistics for the whole class
   - [ ] Do not show good/bad
-- [ ] Dynamic Breadcrumb
-- [ ] New Question form
-  - [ ] Parse markdown extract frontmatter
+
+- [.] New Question form
+  - [x] Parse markdown extract frontmatter
+  - [.] Preview question in realtime
   - [ ] Validate frontmatter
-  - [ ] Button to insert scaffolding for different questions
-  - [ ] Preview question in realtime
+  - [ ] Button to insert default scaffolding for different questions
 - [ ] New Quiz form
   - [ ] Select questions from list add to a new Quiz
-- [ ] Copy tables questions, quiz... 
-- [ ] Git Sync
-  - [ ] Add table sync
-- [ ] Deployment
-  - [ ] On chevallier.io
-  - [ ] Register new Shibboleth service
-  - [ ] Get VM and DNS from IT
-- [ ] Cross origin
 - [ ] Validation 
   - [ ] Markdown before SQL
   - [ ] JSON before SQL
-- [ ] Rename Keywords -> Tags
 - [ ] Code question
-- [ ] Footer HEIG-VD (with logos)
-- [ ] Global frontend storage (current activity... automatically update with notifications)
-- [ ] Color count down if < 30 seconds
 - [ ] Server event to finish the activity
-- [ ] Result 0 is false
+- [ ] Bugs
+  - [ ] Result 0 is false ?
+- [ ] Anestetics
+  - [ ] Color count down if < 30 seconds
+  - [ ] Footer HEIG-VD (with logos)
+  - [ ] Dynamic Breadcrumb
+- [ ] Deployment
+  - [ ] Register new Shibboleth service
+  - [ ] Get VM and DNS from IT
+
 ## Open questions
 
 - [ ] Singular or Plural for API routes?
 - [ ] Student can pass questions?
 
+## Refactoring
+
+- [ ] Dynamic navigation bar
+- [ ] Emit events from models
+- [ ] Rename Keywords -> Tags
+- [ ] Global frontend storage 
+  - [ ] Register vueex or whatever needed
+  - [ ] Create interface to get (activities, ... ...)
+- [ ] Global Channels manager
+- [ ] Add tests
+  
 ## New features
 
 - [ ] Activity Type (quiz, exercise, exam)
@@ -100,6 +52,8 @@
 - [ ] Force Stop Quiz (add stopped_at in activities)
 - [ ] Limited time per question, the question is seen once by the student
 - [ ] Estimated time for question to be answered, get an estimated quiz time
+- [ ] Separate activities from questions pool
+- [ ] Git Sync
 
 ## Discussions
 
