@@ -13,10 +13,12 @@
               :class="addClass(index)"
               class="btn-circle"
               variant="outline-secondary"
-            >{{index+1}}</b-button>
+            >
+              {{ index + 1 }}
+            </b-button>
           </b-col>
           <b-col class="text-left align-middle">
-             <markdown-it-vue :content="proposition" />
+            <markdown-it-vue :content="proposition" />
           </b-col>
         </b-row>
       </b-list-group-item>
@@ -25,42 +27,52 @@
 </template>
 
 <script>
-
 // Match Markdown propositions (## titles)
-let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##|\Z)/mg;
+let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##|\Z)/gm;
 
 export default {
   props: {
     content: String,
-    multipleAnswers: { type: Boolean, default: false},
-    answered: { type: Array, default: [] },
+    multipleAnswers: { type: Boolean, default: false },
+    answered: Array,
     validation: Array,
-    is_correct: Boolean
+    is_correct: { type: Boolean, default: null }
   },
   data() {
     return {
       selectedPropositions: new Proxy([], {
-        get(array, i) { return array[i] ? array[i] : false },
+        get(array, i) {
+          return array[i] ? array[i] : false;
+        }
       })
+    };
+  },
+  watch: {
+    selectedPropositions() {
+      let values = []
+      this.selectedPropositions.forEach((value, index) => {
+        if (value) values.push(index + 1)
+      })
+      this.$emit('update:answered', values);
     }
   },
   computed: {
     markdownContent() {
-      return this.content.replace(re, '')
+      return this.content.replace(re, '');
     },
     propositions() {
       let matches;
       let output = [];
-      while(matches = re.exec(this.content)) {
+      while ((matches = re.exec(this.content))) {
         let [_ignore, index, content] = matches;
         let letter;
-        if (letter = /[A-Z]/i.exec(index)) {
+        if ((letter = /[A-Z]/i.exec(index))) {
           index = letter.input.toUpperCase().charCodeAt(0) - 65;
         }
         output[parseInt(index) - 1] = content;
       }
       return output;
-    }
+    },
   },
   methods: {
     onClick(index) {
@@ -73,27 +85,25 @@ export default {
 
       // Prevent multiple answers if not allowed
       if (!this.multipleAnswers && this.selectedPropositions[index]) {
-         if (this.selectedPropositions.filter(v => v).length > 1) {
-           this.selectedPropositions = Array(this.selectedPropositions.length).fill(false)
-           this.selectedPropositions[index] = true;
-         }
+        if (this.selectedPropositions.filter(v => v).length > 1) {
+          this.selectedPropositions = Array(this.selectedPropositions.length).fill(false);
+          this.selectedPropositions[index] = true;
+        }
       }
     },
     addClass(index) {
       if (this.validation == null) return;
-      if (this.validation.includes(index + 1))
-      {
-        return "btn-outline-success btn-good"
-      }
-      else if (this.answered.includes(index + 1))
-      {
-        return "btn-bad"
+      if (this.validation.includes(index + 1)) {
+        return 'btn-outline-success btn-good';
+      } else if (this.answered.includes(index + 1)) {
+        return 'btn-bad';
       }
     }
   },
   mounted() {
-    this.selectedPropositions = Array(this.propositions.length).fill(false)
-    this.answered.forEach(ans => this.selectedPropositions[ans - 1] = true)
+    this.selectedPropositions = Array(this.propositions.length).fill(false);
+    if (this.answered != null)
+      this.answered.forEach(ans => (this.selectedPropositions[ans - 1] = true));
   }
 };
 </script>

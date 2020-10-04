@@ -31,16 +31,11 @@
       <!-- Activity Opened -->
       <b-jumbotron v-if="activity.status == 'opened'" header="Salle d'attente">
         <template v-slot:lead>
-          {{ students.here }} / {{ students.total }} étudiant{{
-            students.total > 1 ? 's' : ''
-          }}
+          {{ students.here }} / {{ students.total }} étudiant{{ students.total > 1 ? 's' : '' }}
           connectés. Attente d'encore
           {{ students.total - students.here }}
           étudiant{{ students.total - students.here > 1 ? 's' : '' }}.
-          <b-spinner
-            v-if="students.total - students.here > 1"
-            label="Spinning"
-          ></b-spinner>
+          <b-spinner v-if="students.total - students.here > 1" label="Spinning"></b-spinner>
         </template>
       </b-jumbotron>
       <!-- Quiz started -->
@@ -57,11 +52,7 @@
             {{ question_id }}/{{ activity.quiz.questions }}
           </div>
         </div>
-        <b-card
-          border-variant="dark"
-          :title="question_id + '. ' + question.name"
-          align="left"
-        >
+        <b-card border-variant="dark" :title="'Question ' + question_id + '. ' + question.name" align="left">
           <component
             class="mb-4"
             :key="reloadComp"
@@ -76,18 +67,13 @@
           <b-container>
             <b-row class="text-center align-middle">
               <b-col>
-                <b-button
-                  v-if="question.previous_question"
-                  pill
-                  variant="outline-secondary"
-                  @click="previousQuestion"
-                >
+                <b-button v-if="question.previous_question" pill variant="outline-secondary" @click="previousQuestion">
                   Précédent
                 </b-button>
               </b-col>
               <b-col cols="5">
                 <h2 class="display-3 time">
-                  <countdown :time="timeLeft">
+                  <countdown :time="timeLeft" @end="() => this.question.status = 'finished'">
                     <template slot-scope="props">
                       {{ String(props.minutes).padStart(2, '0') }}
                       :
@@ -97,12 +83,7 @@
                 </h2>
               </b-col>
               <b-col>
-                <b-button
-                  v-if="question.next_question"
-                  pill
-                  variant="outline-secondary"
-                  @click="nextQuestion"
-                >
+                <b-button v-if="question.next_question" pill variant="outline-secondary" @click="nextQuestion">
                   Suivant
                 </b-button>
                 <!-- Last question -->
@@ -115,7 +96,6 @@
         </b-card>
       </div>
     </div>
-    {{ answered }}
   </div>
 </template>
 
@@ -180,13 +160,13 @@ export default {
       console.log('QuestionUpdated');
     },
     question_id() {
-      console.log('Question Id Changed')
+      console.log('Question Id Changed');
       this.loadQuestion();
     }
   },
   computed: {
     percent() {
-      return (this.question_id / this.total) * 100;
+      return (this.question_id / this.activity.quiz.questions) * 100;
     }
   },
   methods: {
@@ -211,49 +191,36 @@ export default {
       this.reloadComp += 1;
     },
     previousQuestion() {
-      if (this.answered != this.question.answered)
-        this.submitQuestion();
+      if (this.answered != this.question.answered) this.submitQuestion();
 
-      this.$router.push(
-        `/quiz/activities/${this.activity_id}/questions/${this.question.previous_question}`
-      );
+      this.$router.push(`/quiz/activities/${this.activity_id}/questions/${this.question.previous_question}`);
     },
     nextQuestion() {
-      if (this.answered != this.question.answered)
-        this.submitQuestion();
+      if (this.answered != this.question.answered) this.submitQuestion();
 
-      this.$router.push(
-        `/quiz/activities/${this.activity_id}/questions/${this.question.next_question}`
-      );
+      this.$router.push(`/quiz/activities/${this.activity_id}/questions/${this.question.next_question}`);
     },
     submitQuestion() {
       axios({
         method: 'post',
         url: `/api/activities/${this.activity_id}/questions/${this.question_id}`,
         data: { answer: this.answered }
-      })
-      .catch(function(erreur) {
+      }).catch(function(erreur) {
         console.log(erreur);
       });
     },
     submitQuiz() {},
     loadActivity() {
-      axios
-        .get(`/api/activities/${this.activity_id}`)
-        .then(({ data: activity }) => {
-          this.activity = activity;
-          if (this.activity.status == 'running') this.loadQuestion();
-        });
+      axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {
+        this.activity = activity;
+        if (this.activity.status == 'running') this.loadQuestion();
+      });
     },
     loadQuestion() {
-      axios
-        .get(
-          `/api/activities/${this.activity_id}/questions/${this.question_id}`
-        )
-        .then(rep => {
-          this.question = rep.data;
-          this.setComponent();
-        });
+      axios.get(`/api/activities/${this.activity_id}/questions/${this.question_id}`).then(rep => {
+        this.question = rep.data;
+        this.setComponent();
+      });
     },
     joinActivityChannel() {
       window.Echo.join(`activity.${this.activity_id}`)

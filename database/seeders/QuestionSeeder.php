@@ -123,12 +123,10 @@ Dans l'algorithme de Shunting-yard dont l'image suivante résume le principe, pl
             'explanation' => ""
         ]);
 
-
         $q6 = Question::create([
-            'name' => 'Boucle',
             'content' => "Comment déclarer une variable nommée `i`, un entier 32-bits non signé égal à la valeur `42` ?",
             'validation' => (object)[
-                'pattern' => '\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;?\b',
+                'pattern' => '/\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;?\b/',
                 'expected' => 'unsigned int i = 42;'
             ],
             'options' => (object)[

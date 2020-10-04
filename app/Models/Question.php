@@ -65,18 +65,21 @@ class Question extends Model
     }
 
     protected function validateMultipleChoice($value) {
-        return false;
+        $target = array_unique($this->validation);
+        sort($target);
+        $answer = array_unique($value);
+        sort($value);
+
+        return $value == $target;
+    }
+
+    protected function validateFillInTheGaps($value) {
+        return $value == $this->validation;
     }
 
     protected function validateCode($value) {
         return false;
     }
-
-    protected function validateFillInTheGaps($value) {
-        return false;
-    }
-
-
 
     // TODO: Make validation occur with doc/schemas/validation
     // function setValidationAttribute() {

@@ -6,25 +6,32 @@
       v-if="options.length == 0 || validation != null"
       :readonly="validation != null"
       :state="is_correct"
-      :value="answered"
-    >{{answered}}</b-form-input>
-    <b-form-select
-      v-model="answered"
-      v-on:change="$emit('updated')"
-      v-else
-      :options="options"
-      size="sm"
-    ></b-form-select>
+      :value="value"
+    >
+      {{ answered }}
+    </b-form-input>
+    <b-form-select v-model="value" v-on:change="$emit('updated')" v-else :options="options" size="sm"></b-form-select>
   </span>
 </template>
 <script>
 export default {
+  computed: {
+    value: {
+      get() {
+        return this.answered;
+      },
+      set(value) {
+        this.$emit('update:gap', [this.id, value]);
+      }
+    }
+  },
   props: {
+    id: Number,
     name: String,
     options: { type: Array, default: [] },
-    answered: { type: String, default: "" },
+    answered: { type: String, default: '' },
     validation: String,
-    is_correct: Boolean,
-  },
+    is_correct: Boolean
+  }
 };
 </script>

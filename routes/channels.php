@@ -38,3 +38,10 @@ Broadcast::channel('activity.{activity_id}', function ($user, $activity_id) {
         return ['id' => $user->id, 'name' => $user->name, 'type' => 'teacher'];
     }
 });
+
+/**
+ * Receives answers when posted
+ */
+Broadcast::channel('activity.{activity_id}.teacher', function ($user, $activity_id) {
+    return $user->isTeacher();
+});
