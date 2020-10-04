@@ -320,15 +320,6 @@ class ActivityController extends Controller
     }
 
     /**
-     * Validate an answer
-     */
-    protected function validate_answer($given, $wanted) {
-        return true;
-    }
-
-
-
-    /**
      * Questions
      */
     public function questions($activity_id) {
@@ -339,12 +330,30 @@ class ActivityController extends Controller
     }
 
     /**
-     * Question
+     * Question (get or post question)
      */
-    public function question($activity_id, $question_number) {
+    public function question($activity_id, $question_number, Request $request) {
         $activity = Activity::findOrFail($activity_id);
+        $question = $activity->questions()[$question_number - 1];
+
+        // Submit an answer?
+        if ($request->isMethod('post') && $activity->status == 'running') {
+            $answered = $request->answer;
+            Answer::updateOrCreate(
+                [
+                    'activity_id' => $activity_id,
+                    'student_id' => $request->user()->student->id,
+                    'question_id' => $question->id,
+                ],
+                [
+                    'answer' => $answered,
+                    'is_correct' => $question->validate($answered)
+                ]
+            );
+        }
+
         return fractal(
-            $activity->questions()[$question_number],
+            $question,
             new QuestionTransformer($activity))->toArray();
     }
 

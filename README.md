@@ -29,7 +29,7 @@ php artisan key:generate
 php artisan migrate:freah --seed
 ```
 
-### Configure
+### Configure Environment
 
 In your `.env`  make sure that `APP_DEBUG` is set to `true` and give a default login with:
 
@@ -43,6 +43,14 @@ Then you should configure your MySQL `DB_CONNECTION=mysql` and your Pusher setti
 PUSHER_APP_ID=
 PUSHER_APP_KEY=
 PUSHER_APP_SECRET=
+```
+
+### Configure Cron
+
+The cron allows task scheduling such as emitting an event when an activity is about to end. Artisan command will be called every minute.
+
+```
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
 ### Serve
@@ -62,6 +70,8 @@ npm run watch
 ```
 php artisan migrate:fresh --seed
 ```
+
+## Production
 
 ### Deployment
 

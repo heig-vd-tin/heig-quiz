@@ -43,7 +43,7 @@ class QuestionTransformer extends Fractal\TransformerAbstract
         // Only for students
         if ($this->is_student) {
             $output = array_merge($output, [
-                'number' => $question->question_number,
+                'key' => $question->question_number,
             ]);
         }
 
@@ -83,10 +83,9 @@ class QuestionTransformer extends Fractal\TransformerAbstract
             }
             if ($question->previous_question) {
                 $output['previous_question_url'] = url("/api/activities/{$this->activity->id}/questions/{$question->previous_question}");
-                $output['next_question'] = $question->previous_question;
+                $output['previous_question'] = $question->previous_question;
             }
         }
-
         return $output;
 	}
 }

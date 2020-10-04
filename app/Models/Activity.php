@@ -132,10 +132,12 @@ class Activity extends Model
             }
 
             // Get next and previous question
+            // TODO: Question shuffling not yet working...
             if (Auth::user()->isStudent()) {
-                $item['question_number'] = $question_orders[$key];
-                $item['previous_question'] = $key - 1 > 0 ? $question_orders[$key - 1] : null;
-                $item['next_question'] = $key + 1 < $activity->quiz->questions_count ? $question_orders[$key + 1] : null;
+                $item['key'] = $key;
+                $item['question_number'] = $key + 1;
+                $item['previous_question'] = $key - 1 >= 0 ? $key : null;
+                $item['next_question'] = $key + 1 < $activity->quiz->questions_count ? $key + 2 : null;
             }
         });
     }

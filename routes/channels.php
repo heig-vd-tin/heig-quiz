@@ -20,7 +20,6 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 
 Broadcast::channel('activity', ActivityChannel::class);
 
-
 Broadcast::channel('quiz', function ($user) {
     if ($user->isTeacher()) {
         Log::debug('Request to access quiz-channel approved for ' . $user->name);
@@ -32,8 +31,6 @@ Broadcast::channel('quiz', function ($user) {
 });
 
 Broadcast::channel('activity.{activity_id}', function ($user, $activity_id) {
-    Log::debug("Request to access activity-channel $activity_id approved for $user->name");
-    Log::debug($user->student->canJoinActivity($activity_id));
     if ($user->isStudent() && $user->student->canJoinActivity($activity_id)) {
         return ['id' => $user->id, 'name' => $user->name, 'type' => 'student'];
     }

@@ -1,14 +1,19 @@
 <template>
   <div>
     <navbar>
-      <template v-slot:title> {{ name }} </template>
-      <b-nav-item to="/quiz/activities"><b-icon-easel /> Activités</b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="/quiz/quizzes"
-        ><b-icon-dice-5 /> Quizzes</b-nav-item
-      >
-      <b-nav-item v-if="this.isTeacher()" to="/quiz/sandbox"
-        ><b-icon-bucket /> Bac à sable</b-nav-item
-      >
+      <template v-slot:title>{{ name }}</template>
+      <b-nav-item to="/quiz/activities">
+        <b-icon-easel />
+        Activités
+      </b-nav-item>
+      <b-nav-item v-if="this.isTeacher()" to="/quiz/quizzes">
+        <b-icon-dice-5 />
+        Quizzes
+      </b-nav-item>
+      <b-nav-item v-if="this.isTeacher()" to="/quiz/sandbox">
+        <b-icon-bucket />
+        Bac à sable
+      </b-nav-item>
     </navbar>
     <div class="mt-4 container">
       <!-- Activity Finished -->
@@ -27,12 +32,11 @@
       <b-jumbotron v-if="activity.status == 'opened'" header="Salle d'attente">
         <template v-slot:lead>
           {{ students.here }} / {{ students.total }} étudiant{{
-            students.total > 1 ? "s" : ""
+            students.total > 1 ? 's' : ''
           }}
           connectés. Attente d'encore
-          {{ students.total - students.here }} étudiant{{
-            students.total - students.here > 1 ? "s" : ""
-          }}.
+          {{ students.total - students.here }}
+          étudiant{{ students.total - students.here > 1 ? 's' : '' }}.
           <b-spinner
             v-if="students.total - students.here > 1"
             label="Spinning"
@@ -50,7 +54,7 @@
             aria-valuemin="0"
             aria-valuemax="100"
           >
-            {{ question_id }}/{{ total }}
+            {{ question_id }}/{{ activity.quiz.questions }}
           </div>
         </div>
         <b-card
@@ -63,7 +67,11 @@
             :key="reloadComp"
             :is="compQuestion"
             v-bind="question"
-            @update:answered="(u) => {answered = u}"
+            @update:answered="
+              u => {
+                answered = u;
+              }
+            "
           ></component>
           <b-container>
             <b-row class="text-center align-middle">
@@ -72,16 +80,18 @@
                   v-if="question.previous_question"
                   pill
                   variant="outline-secondary"
-                  :to="`/quiz/activities/${activity.id}/questions/${question.previous_question + 1}`"
-                  >Précédent</b-button
+                  @click="previousQuestion"
                 >
+                  Précédent
+                </b-button>
               </b-col>
               <b-col cols="5">
                 <h2 class="display-3 time">
                   <countdown :time="timeLeft">
                     <template slot-scope="props">
-                      {{ String(props.minutes).padStart(2, "0") }} :
-                      {{ String(props.seconds).padStart(2, "0") }}
+                      {{ String(props.minutes).padStart(2, '0') }}
+                      :
+                      {{ String(props.seconds).padStart(2, '0') }}
                     </template>
                   </countdown>
                 </h2>
@@ -91,9 +101,14 @@
                   v-if="question.next_question"
                   pill
                   variant="outline-secondary"
-                  :to="`/quiz/activities/${activity.id}/questions/${question.next_question + 1}`"
-                  >Suivant</b-button
+                  @click="nextQuestion"
                 >
+                  Suivant
+                </b-button>
+                <!-- Last question -->
+                <b-button v-else pill variant="primary" @click="submitQuiz">
+                  Terminer
+                </b-button>
               </b-col>
             </b-row>
           </b-container>
@@ -105,14 +120,14 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
-import Code from "./questions/Code";
-import FillInTheGaps from "./questions/FillInTheGaps";
-import MultipleChoice from "./questions/MultipleChoice";
-import ShortAnswer from "./questions/ShortAnswer";
+import Code from './questions/Code';
+import FillInTheGaps from './questions/FillInTheGaps';
+import MultipleChoice from './questions/MultipleChoice';
+import ShortAnswer from './questions/ShortAnswer';
 
-import VueCountdown from "@chenfengyuan/vue-countdown";
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
 export default {
   components: {
@@ -120,23 +135,24 @@ export default {
     'q-fill-in-the-gaps': FillInTheGaps,
     'q-multiple-choice': MultipleChoice,
     'q-short-answer': ShortAnswer,
-    'countdown': VueCountdown,
+    countdown: VueCountdown
   },
   props: {
     question_id: {
       type: Number,
-      required: true,
+      required: false,
+      default: 1
     },
     activity_id: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       activity: {},
       answered: null,
-      name: "",
+      name: '',
       reloadComp: 0,
       compQuestion: null,
       compProp: {},
@@ -145,133 +161,124 @@ export default {
       values: [],
       students: {
         here: 0,
-        total: 0,
+        total: 0
       },
       timeLeft: 0
     };
   },
   watch: {
     activity() {
-      console.log("ActivityUpdated")
-      if (this.activity.status == "running") {
+      console.log('ActivityUpdated');
+      if (this.activity.status == 'running') {
         let elapsed = Date.now() - Date.parse(this.activity.started_at);
-        this.timeLeft = this.activity.duration * 1000 - elapsed
+        this.timeLeft = this.activity.duration * 1000 - elapsed;
       } else {
         this.timeLeft = 0;
       }
     },
     answered() {
-      console.log("QuestionUpdated")
+      console.log('QuestionUpdated');
     },
     question_id() {
+      console.log('Question Id Changed')
       this.loadQuestion();
     }
   },
   computed: {
     percent() {
       return (this.question_id / this.total) * 100;
-    },
+    }
   },
   methods: {
     isTeacher() {
-      return Vue.prototype.$user.affiliation == "member;staff";
+      return Vue.prototype.$user.affiliation == 'member;staff';
     },
     isStudent() {
-      return Vue.prototype.$user.affiliation == "member;student";
+      return Vue.prototype.$user.affiliation == 'member;student';
     },
     setComponent() {
       switch (this.question.type) {
-        case "short-answer":
-          this.compQuestion = "q-short-answer";
+        case 'short-answer':
+          this.compQuestion = 'q-short-answer';
           break;
-        case "fill-in-the-gaps":
-          this.compQuestion = "q-fill-in-the-gaps";
+        case 'fill-in-the-gaps':
+          this.compQuestion = 'q-fill-in-the-gaps';
           break;
-        case "multiple-choice":
-          this.compQuestion = "q-multiple-choice";
+        case 'multiple-choice':
+          this.compQuestion = 'q-multiple-choice';
           break;
       }
-      console.log(this.question);
       this.reloadComp += 1;
     },
-
-    nextQuestion() {
-      this.submitAnswer();
-      this.question_id += 1;
-      this.loadQuestion();
-    },
-
     previousQuestion() {
-      this.submitAnswer();
-      this.question_id -= 1;
-      this.loadQuestion();
-    },
+      if (this.answered != this.question.answered)
+        this.submitQuestion();
 
-    loadQuestion() {
-      axios
-        .get(
-          `/api/activities/${this.activity_id}/questions/${
-            this.question_id - 1
-          }`
-        )
-        .then((rep) => {
-          this.question = rep.data;
-          this.setComponent();
-        });
+      this.$router.push(
+        `/quiz/activities/${this.activity_id}/questions/${this.question.previous_question}`
+      );
     },
+    nextQuestion() {
+      if (this.answered != this.question.answered)
+        this.submitQuestion();
 
-    submitAnswer() {
-      // Todo(tmz): Check if request not working
-      if (this.values.length > 0) {
-        let obj = { answer: [...this.values] };
-        axios({
-          method: "post",
-          url: `/api/activities/${this.activity_id}/questions/${
-            this.question_id - 1
-          }`,
-          data: obj,
-        })
-          .then(function (reponse) {
-            //console.log(reponse);
-          })
-          .catch(function (erreur) {
-            //console.log(erreur);
-          });
-        this.values.splice(0, this.values.length);
-      }
+      this.$router.push(
+        `/quiz/activities/${this.activity_id}/questions/${this.question.next_question}`
+      );
     },
+    submitQuestion() {
+      axios({
+        method: 'post',
+        url: `/api/activities/${this.activity_id}/questions/${this.question_id}`,
+        data: { answer: this.answered }
+      })
+      .catch(function(erreur) {
+        console.log(erreur);
+      });
+    },
+    submitQuiz() {},
     loadActivity() {
       axios
         .get(`/api/activities/${this.activity_id}`)
         .then(({ data: activity }) => {
           this.activity = activity;
-          this.loadQuestion();
+          if (this.activity.status == 'running') this.loadQuestion();
+        });
+    },
+    loadQuestion() {
+      axios
+        .get(
+          `/api/activities/${this.activity_id}/questions/${this.question_id}`
+        )
+        .then(rep => {
+          this.question = rep.data;
+          this.setComponent();
         });
     },
     joinActivityChannel() {
       window.Echo.join(`activity.${this.activity_id}`)
-        .here((users) => {
+        .here(users => {
           let students = 0;
-          users.forEach((student) => {
-            if (student.type == "student") students++;
+          users.forEach(student => {
+            if (student.type == 'student') students++;
           });
           this.students.here = students;
         })
-        .joining((user) => {
-          if (user.type == "student") this.students.here++;
+        .joining(user => {
+          if (user.type == 'student') this.students.here++;
         })
-        .leaving((user) => {
-          if (user.type == "student") this.students.here--;
+        .leaving(user => {
+          if (user.type == 'student') this.students.here--;
         })
-        .listen("ActivityUpdated", (e) => {
+        .listen('ActivityUpdated', e => {
           this.loadActivity();
         });
-    },
+    }
   },
   mounted() {
     this.joinActivityChannel();
     this.loadActivity();
-  },
+  }
 };
 </script>
 <style scoped>

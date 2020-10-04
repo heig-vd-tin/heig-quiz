@@ -1,6 +1,6 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand href="#">
+    <b-navbar-brand to="/quiz/home">
       <div class="logo-quiz d-inline-block align-top" alt="Kitten"></div>
     </b-navbar-brand>
     <b-navbar-brand>

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Log;
 class Student extends Model
 {
     use HasFactory;
@@ -30,11 +30,7 @@ class Student extends Model
     }
 
     function canJoinActivity($activity_id) {
-        $activity = $this->activities()->find($activity_id);
-
-        return $activity && (
-            $activity->status == 'opened' ||
-            $activity->status == 'running'
-        );
+        $activity = $this->activities()->where('hidden', false)->find($activity_id);
+        return $activity != null;
     }
 }

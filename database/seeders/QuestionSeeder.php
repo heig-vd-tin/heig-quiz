@@ -13,16 +13,15 @@ class QuestionSeeder extends Seeder
 {
     public function run()
     {
-
         // 1
         $q1 = Question::create([
             'name' => 'Transformation binaire',
             'content' => 'Que vaut 7 en binaire ?',
-            'validation' => (object)[
-                'pattern' => '/\b(0b?)0*111\b',
+            'validation' => [
+                'pattern' => '/\b(0b?)0*111\b/',
                 'expected' => '0b0111'
             ],
-            'options' => (object)[
+            'options' => [
                 'length' => 10
             ],
             'difficulty' => 'medium'
@@ -34,7 +33,7 @@ class QuestionSeeder extends Seeder
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0x8` en binaire ?',
             'validation' => (object)[
-                'pattern' => "\b(0b?)0*1000\b",
+                'pattern' => '/\b(0b?)0*1000\b/',
                 'expected' => '0b1000'
             ],
             'difficulty' => 'medium',
@@ -47,7 +46,7 @@ class QuestionSeeder extends Seeder
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0` en binaire ?',
             'validation' => (object)[
-                'pattern' => "\b(0b?)0*0\b",
+                'pattern' => '/\b(0b?)0*0\b/',
                 'expected' => '0'
             ],
             'difficulty' => 'easy',
