@@ -67,7 +67,7 @@
             {{ question_id }}/{{ activity.quiz.questions }}
           </div>
         </div>
-        <b-card border-variant="dark" :title="'Question ' + question_id + '. ' + question.name" align="left">
+        <b-card border-variant="dark" :title="'Question ' + question_id + '. ' + (question.name != null ? question.name : '')" align="left">
           <component
             class="mb-4"
             :key="component_nonce"

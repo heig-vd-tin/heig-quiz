@@ -68,9 +68,9 @@ class QuestionCreator
             'name' => Arr::get($fm, 'name'),
             'difficulty' => Arr::get($fm, 'difficulty', 1),
             'duration' => Arr::get($fm, 'duration', 30),
-            'validation' => Arr::get($fm, 'validation', (object)[]),
+            'validation' => Arr::get($fm, 'validation'),
             'type' => Arr::get($fm, 'type', $this->guessType($this->content)),
-            'options' => Arr::get($fm, 'options', (object)[]),
+            'options' => Arr::get($fm, 'options'),
         ];
 
         // Check if the question exists

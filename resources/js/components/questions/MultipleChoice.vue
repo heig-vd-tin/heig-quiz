@@ -27,8 +27,10 @@
 </template>
 
 <script>
+
 // Match Markdown propositions (## titles)
-let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##|\Z)/gm;
+// https://regex101.com/r/dkfEQY/2
+let re = /^##\s*([A-Z]|\d+)\b\s*(.*?)(?=^##|$(?![\s\S]))/gms;
 
 export default {
   props: {
@@ -72,13 +74,16 @@ export default {
     propositions() {
       let matches;
       let output = [];
+      console.log(this.content);
       while ((matches = re.exec(this.content))) {
         let [_ignore, index, content] = matches;
+
         let letter;
         if ((letter = /[A-Z]/i.exec(index))) {
           index = letter.input.toUpperCase().charCodeAt(0) - 65;
         }
         output[parseInt(index) - 1] = content;
+        console.log(content);
       }
       return output;
     },
@@ -111,6 +116,7 @@ export default {
     }
   },
   mounted() {
+    console.log("Options", this.options)
     this.selectedPropositions = Array(this.propositions.length).fill(false);
     if (this.answered != null)
       this.answered.forEach(ans => (this.selectedPropositions[ans - 1] = true));
