@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Arr;
 use Auth;
 
 class Activity extends Model
@@ -129,6 +129,27 @@ class Activity extends Model
                     ->where('question_id', $item->id)
                     ->where('student_id', Auth::user()->student->id)
                     ->first();
+            }
+
+            // Fetch multiple choices stats
+            if (Auth::user()->isTeacher() && $item->type == 'multiple-choice') {
+                $choices = (object)[];
+                Answer::where('activity_id', $activity->id)
+                    ->where('question_id', $item->id)
+                    ->select('answer')
+                    ->get()->each(function ($item) use ($choices) {
+                        $answer = $item->answer;
+                        foreach($answer as $proposition) {
+                            $proposition -= 1;
+                            if (property_exists($choices, $proposition)) {
+                                $choices->$proposition++;
+                            } else {
+                                $choices->$proposition = 1;
+                            }
+                        }
+                    });
+
+                $item['choices'] = $choices;
             }
 
             // Get next and previous question

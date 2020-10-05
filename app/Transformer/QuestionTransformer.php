@@ -36,7 +36,9 @@ class QuestionTransformer extends Fractal\TransformerAbstract
                 'created_at' => $question->created_at,
                 'updated_at' => $question->updated_at,
                 'difficulty' => $question->difficulty,
-                'keywords' => $question->keywords
+                'keywords' => $question->keywords,
+                'choices' => $question->choices,
+                'students' => $this->activity->roster->students_count
             ]);
         }
 

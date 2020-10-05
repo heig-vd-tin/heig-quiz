@@ -20,6 +20,11 @@
           <b-col class="text-left align-middle">
             <markdown-it-vue :content="proposition" />
           </b-col>
+          <b-col v-if="choices" class="text-right align-middle">
+            <b-progress class="mt-2" :max="students" show-value>
+              <b-progress-bar :value="choices[index]" :variant="getVariant(index)">{{ Math.round(choices[index] / students * 100, 1) }}%</b-progress-bar>
+            </b-progress>
+          </b-col>
         </b-row>
       </b-list-group-item>
     </b-list-group>
@@ -27,7 +32,6 @@
 </template>
 
 <script>
-
 // Match Markdown propositions (## titles)
 // https://regex101.com/r/dkfEQY/2
 let re = /^##\s*([A-Z]|\d+)\b\s*(.*?)(?=^##|$(?![\s\S]))/gms;
@@ -38,10 +42,14 @@ export default {
     options: Object,
     answered: Array,
     validation: Array,
-    is_correct: { type: Boolean, default: null }
+    is_correct: { type: Boolean, default: null },
+    choices: Object,
+    students: Number,
   },
   data() {
     return {
+      value: 45,
+      max: 100,
       selectedPropositions: new Proxy([], {
         get(array, i) {
           return array[i] ? array[i] : false;
@@ -51,20 +59,18 @@ export default {
   },
   watch: {
     selectedPropositions() {
-      let values = []
+      let values = [];
       this.selectedPropositions.forEach((value, index) => {
-        if (value) values.push(index + 1)
-      })
+        if (value) values.push(index + 1);
+      });
       this.$emit('update:answered', values);
     }
   },
   computed: {
     multipleChoices() {
-      if (this.options && this.options.multiple == true)
-        return true;
+      if (this.options && this.options.multiple == true) return true;
 
-      if (this.options && this.options.multiple == false)
-        return false;
+      if (this.options && this.options.multiple == false) return false;
 
       return false;
     },
@@ -74,7 +80,6 @@ export default {
     propositions() {
       let matches;
       let output = [];
-      console.log(this.content);
       while ((matches = re.exec(this.content))) {
         let [_ignore, index, content] = matches;
 
@@ -83,10 +88,9 @@ export default {
           index = letter.input.toUpperCase().charCodeAt(0) - 65;
         }
         output[parseInt(index) - 1] = content;
-        console.log(content);
       }
       return output;
-    },
+    }
   },
   methods: {
     onClick(index) {
@@ -113,13 +117,21 @@ export default {
       } else if (this.answered != null && this.answered.includes(index + 1)) {
         return 'btn-bad';
       }
+    },
+    getVariant(index) {
+      if (this.validation == null)
+        return 'danger';
+      if (this.validation.includes(index + 1)) {
+        return 'success';
+      } else if (this.answered != null && this.answered.includes(index + 1)) {
+        return 'danger';
+      } else
+        return 'danger'
     }
   },
   mounted() {
-    console.log("Options", this.options)
     this.selectedPropositions = Array(this.propositions.length).fill(false);
-    if (this.answered != null)
-      this.answered.forEach(ans => (this.selectedPropositions[ans - 1] = true));
+    if (this.answered != null) this.answered.forEach(ans => (this.selectedPropositions[ans - 1] = true));
   }
 };
 </script>

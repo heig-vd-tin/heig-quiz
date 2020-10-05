@@ -23,7 +23,7 @@
       <table v-if="loadedMatrix" class="matrix">
         <tr>
           <th>&nbsp;</th>
-          <th class="lead text-center" v-for="question in questions" :key="question.id">Q{{ question.id }}</th>
+          <th class="lead text-center" v-for="(question, index) in questions" :key="question.id">Q{{ index + 1 }}</th>
         </tr>
         <tr v-for="(student, index) in students" :key="student.id">
           <th class="lead">{{ showNames ? student.name : `Étudiant ${index + 1}` }} </th>
