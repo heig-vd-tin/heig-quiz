@@ -3,13 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-function is_teacher() {
-    return Auth::user()->hasRole('teacher');
-}
+
 
 Route::namespace('Api')->group(function () {
     // Public
     Route::get('/', function() {
+        function is_teacher() {
+            return Auth::user()->hasRole('teacher');
+        }
+                
         return [
             'keywords' => [
                 'description' => "Each question may be tagged with keywords",
