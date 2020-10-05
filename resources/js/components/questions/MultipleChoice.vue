@@ -33,7 +33,7 @@ let re = /^##\s*([A-Z]|\d+)\s*\r?\n(.*)(?!^##|\Z)/gm;
 export default {
   props: {
     content: String,
-    multipleAnswers: { type: Boolean, default: false },
+    options: Object,
     answered: Array,
     validation: Array,
     is_correct: { type: Boolean, default: null }
@@ -57,6 +57,15 @@ export default {
     }
   },
   computed: {
+    multipleChoices() {
+      if (this.options && this.options.multiple == true)
+        return true;
+
+      if (this.options && this.options.multiple == false)
+        return false;
+
+      return false;
+    },
     markdownContent() {
       return this.content.replace(re, '');
     },
@@ -84,7 +93,7 @@ export default {
       }
 
       // Prevent multiple answers if not allowed
-      if (!this.multipleAnswers && this.selectedPropositions[index]) {
+      if (!this.multipleChoices && this.selectedPropositions[index]) {
         if (this.selectedPropositions.filter(v => v).length > 1) {
           this.selectedPropositions = Array(this.selectedPropositions.length).fill(false);
           this.selectedPropositions[index] = true;

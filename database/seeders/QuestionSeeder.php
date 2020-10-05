@@ -159,7 +159,7 @@ Dion Cassius adhère pleinement
 La quatrième proposition est certainement la bonne
 ",
             'validation' => [3, 4],
-            'options' => (object)['multipleChoices' => true],
+            'options' => (object)['multiple' => true],
             'difficulty' => 'hard',
             'explanation' => 'Aucune idée de pourquoi... Cette question ne semble pas avoir de sens'
         ]);

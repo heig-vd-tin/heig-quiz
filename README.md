@@ -82,3 +82,9 @@ npm run production
 tar cvzf dist.tar.gz public/css/app.css public/css/app.css.map public/js/app.js public/js/app.js.LICENSE.txt public/js/app.js.map
 scp dist.tar.gz ...
 ```
+
+## PHP
+
+```
+sudo apt install php-yaml php-zip
+```
