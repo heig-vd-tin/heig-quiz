@@ -11,7 +11,7 @@ Route::namespace('Api')->group(function () {
         function is_teacher() {
             return Auth::user()->hasRole('teacher');
         }
-                
+
         return [
             'keywords' => [
                 'description' => "Each question may be tagged with keywords",
@@ -102,4 +102,27 @@ Route::namespace('Api')->group(function () {
         Route::get('activities/{id}/questions/{question_id}', 'ActivityController@question');
         Route::post('activities/{id}/questions/{question_id}', 'ActivityController@question'); // New answer
     });
+
+    Route::post('build/c', function(Request $request) {
+        $c = new App\Services\Code();
+
+        $r = $c->build($request->input('code'));
+        $stderr = preg_replace('/^<stdin>:/m', '', $r->stderr);
+
+        if ($r->exit_status == 0) {
+            $q = $c->run($r->stdout);
+
+            return [
+                'build-errors' => $stderr,
+                'stdout' => $q->stdout,
+                'stderr' => $q->stderr,
+                'exit_status' => $q->exit_status
+            ];
+        }
+
+        return [
+            'build-errors' => $stderr,
+        ];
+    });
+
 });

@@ -21,6 +21,7 @@ import router from './router.js'
 require('./fontawesome');
 
 
+
 /**
  * Vue components
  */
@@ -55,8 +56,10 @@ Vue.component('markdown-it-vue', MarkdownIt)
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
+import store from './store'
 
-    router,
-    el: '#app',
+const app = new Vue({
+  store,
+  router,
+  el: '#app',
 });

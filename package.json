@@ -37,8 +37,11 @@
         "laravel-echo": "^1.8.1",
         "markdown-it": "^11.0.1",
         "markdown-it-vue": "^1.1.3",
+        "prismjs": "^1.21.0",
         "pusher-js": "^7.0.0",
+        "vue-prism-editor": "^1.2.2",
         "vuetify": "^2.3.10",
+        "vuex": "^3.5.1",
         "yaml": "^1.10.0"
     }
 }

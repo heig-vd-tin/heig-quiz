@@ -6,6 +6,9 @@ Route::get('/', function () {
 
 Route::get('/quiz/{any}', function () {return view('vue');})->where('any', '.*');
 
+
+
+
 Auth::routes(['register' => false]);
 
 Route::get('/shibboleth-data', function () {});
