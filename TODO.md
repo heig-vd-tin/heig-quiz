@@ -1,11 +1,9 @@
 # What to do?
 
 - [ ] Teacher's correction
-  - [ ] Show statistics for the whole class
   - [ ] Do not show good/bad
 
 - [.] New Question form
-  - [x] Parse markdown extract frontmatter
   - [.] Preview question in realtime
   - [ ] Validate frontmatter
   - [ ] Button to insert default scaffolding for different questions
@@ -25,6 +23,14 @@
 - [ ] Deployment
   - [ ] Register new Shibboleth service
   - [ ] Get VM and DNS from IT
+
+- [ ] Vue trend chart to display Quiz result
+- [ ] "Passer" button
+- [ ] Top quiz progression buttons with colors: answered, skipped, unknown
+- [ ] Popover on activity to see who's there, who's missing
+- [ ] Connected status on realtime results
+
+- [ ] Code type question
 
 ## Open questions
 
