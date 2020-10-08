@@ -20,7 +20,9 @@
       <prism-editor class="my-editor" v-model="code" :highlight="highlighter" line-numbers></prism-editor>
       <b-button @click="build" variant="primary">Run</b-button>
     </div>
-    <b-modal id="modal-lg" centered size="lg" title="Résultat" button-size="sm">{{result.stdout}}</b-modal>
+    <b-modal id="modal-lg" centered size="lg" title="Résultat" button-size="sm">{{result.stdout}}
+      <b-alert v-if="result.stderr" variant="danger">{{result.stderr}}</b-alert>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -50,9 +52,8 @@ export default {
       shared: 'Content',
       value: 600 * 1000,
       code: `#include <stdio.h>
-
 int main() {
-    printf("hello, world!\\n");
+    while(1) printf("hello, world!\\n");
 }
 `,
       result: {}
