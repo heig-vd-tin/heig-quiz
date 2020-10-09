@@ -25,6 +25,7 @@
       <foobar title="Foo" :value.sync="shared"></foobar>
       <foobar title="Bar" :value.sync="shared"></foobar>
       <button @click="value = 600 * 2000">Reset</button>
+      <button @click="dabout">Reset</button>
 
       <appFooter></appFooter>
     </div>
@@ -40,6 +41,12 @@ export default {
     foobar: Sub,
     appFooter: Footer,
     countdown: VueCountdown
+  },
+  methods: {
+    dabout() {
+      this.alert("Salut");
+      this.$activity.start();
+    }
   },
   data() {
     return {

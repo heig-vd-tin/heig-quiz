@@ -50,13 +50,47 @@ import MarkdownIt from 'markdown-it-vue'
 Vue.component('markdown-it-vue', MarkdownIt)
 
 /**
+ * Vuex
+ */
+import store from './store/store'
+
+
+
+Vue.mixin({
+  methods: {
+    error: function (msg) {
+      this.$bvModal.msgBoxOk(msg, {
+        centered: true,
+        title: 'Oops !',
+        okVariant: 'danger',
+        noCloseOnEsc: true,
+        noCloseOnBackdrop: true,
+        okTitle: 'Fermer'
+      })
+      .then(value => {
+        this.boxOne = value
+      })
+    },
+  },
+})
+
+/**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
 const app = new Vue({
+  store,
+  router,
+  el: '#app',
+  created() {
+    console.log('created')
+    this.$store.dispatch('initialize')
+  },
+  mounted() {
 
-    router,
-    el: '#app',
+  }
 });
+
+import Activity from './controllers/activity'
+const activity = new Activity(app);

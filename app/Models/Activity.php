@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Arr;
+use App\Events\ActivityUpdated;
 use Auth;
 
 class Activity extends Model
@@ -179,4 +179,9 @@ class Activity extends Model
 
         return round($mark, 1);
     }
+
+    protected $dispatchesEvents = [
+        'saved' => ActivityUpdated::class,
+        'deleted' => ActivityUpdated::class,
+    ];
 }

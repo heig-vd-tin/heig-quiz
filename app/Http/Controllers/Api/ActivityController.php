@@ -105,7 +105,6 @@ class ActivityController extends Controller
 
         $activity->started_at = Carbon::now();
         $activity->save();
-        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     /**
@@ -171,7 +170,6 @@ class ActivityController extends Controller
         }
 
         $activity->update(['hidden' => true]);
-        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function set_visible($id) {
@@ -192,7 +190,6 @@ class ActivityController extends Controller
         }
 
         $activity->update(['hidden' => false]);
-        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function open($id) {
@@ -220,7 +217,6 @@ class ActivityController extends Controller
         }
 
         $activity->update(['opened_at' => Carbon::now()]);
-        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function close($id) {
@@ -242,8 +238,6 @@ class ActivityController extends Controller
 
         $activity->update(['opened_at' => null]);
         $activity->save();
-
-        broadcast(new \App\Events\ActivityUpdated($activity));
     }
 
     function delete($id) {
@@ -264,8 +258,6 @@ class ActivityController extends Controller
         }
 
         $activity->delete();
-
-        broadcast(new \App\Events\ActivityUpdated());
     }
 
     function create(Request $request) {
@@ -311,8 +303,6 @@ class ActivityController extends Controller
             'shuffle_propositions' => $request->input('shuffle_propositions', false),
             'seed' => $request->input('seed', random_int(0, 4294967295))
         ]);
-
-        broadcast(new \App\Events\ActivityUpdated($activity));
 
         return response([
             'message' => 'New activity created',
