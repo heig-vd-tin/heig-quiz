@@ -18,9 +18,6 @@ Vue.use(BootstrapVueIcons)
 
 import router from './router.js'
 
-require('./fontawesome');
-
-
 /**
  * Vue components
  */

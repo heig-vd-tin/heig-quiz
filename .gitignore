@@ -7,7 +7,7 @@
 /public/js/
 /public/*.cur
 /public/*.json
-
+/public/*.js
 
 /storage/*.key
 /vendor

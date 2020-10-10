@@ -1,5 +1,5 @@
 const mix = require('laravel-mix');
-
+require('laravel-mix-bundle-analyzer');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -14,4 +14,9 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
    .sourceMaps()
-   .browserSync();
+   .browserSync({ proxy: 'localhost:8000' });
+
+// Disabled by default because it is very slow...
+// if (mix.isWatching()) {
+//   mix.bundleAnalyzer();
+// }

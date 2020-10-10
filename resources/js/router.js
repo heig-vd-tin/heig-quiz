@@ -10,9 +10,10 @@ import Questions from "./components/Questions"
 import Quiz from "./components/Quiz"
 import Quizzes from "./components/Quizzes"
 import Results from "./components/Results"
-import Sandbox from "./components/sandbox/Sandbox"
-import Help from "./components/Help"
 import Dashboard from "./layouts/dashboard"
+
+import ActivitiesTeacher from "./components/ActivitiesTeacher"
+import ActivitiesStudent from "./components/ActivitiesStudent"
 
 import store from "./store"
 
@@ -105,7 +106,7 @@ const routes = [
           teacher: true,
           navbar: true
         },
-        component: Sandbox
+        component: () => import(/* webpackChunkName: "sandbox" */ "./components/sandbox/Sandbox")
       },
       {
         path: "/quiz/help",
@@ -114,7 +115,7 @@ const routes = [
           title: "Informations",
           icon: 'question-diamond',
         },
-        component: Help
+        component: () => import(/* webpackChunkName: "help" */ "./components/Help")
       },
     ]
   },
