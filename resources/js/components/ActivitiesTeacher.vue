@@ -1,22 +1,6 @@
 <template>
   <div>
-    <navbar>
-      <template v-slot:title>
-        Activités
-      </template>
-      <b-nav-item to="/quiz/quizzes">
-        <b-icon-dice-5 />
-        Quizzes
-      </b-nav-item>
-      <b-nav-item to="/quiz/questions">
-        <b-icon-dice-3 />
-        Questions
-      </b-nav-item>
-      <b-nav-item to="/quiz/sandbox">
-        <b-icon-bucket />
-        Bac à sable
-      </b-nav-item>
-      <b-nav-text>|</b-nav-text>
+    <portal to="navbar">
 
       <!-- Select roster -->
       <b-nav-item-dropdown :text="current_roster != null ? current_roster.name : 'Toutes les classes'">
@@ -36,7 +20,8 @@
           <b-spinner v-if="roster.has_running_activities" type="grow" small></b-spinner>
         </b-dropdown-item>
       </b-nav-item-dropdown>
-    </navbar>
+    </portal>
+
     <div class="mt-4 container">
       <h2>Activités de {{ current_roster != null ? current_roster.name : 'toutes les classes' }}</h2>
       <p>

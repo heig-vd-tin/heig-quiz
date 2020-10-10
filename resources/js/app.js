@@ -54,6 +54,11 @@ Vue.component('markdown-it-vue', MarkdownIt)
  */
 import store from './store/store'
 
+/**
+ * Portal
+ */
+import PortalVue from 'portal-vue'
+Vue.use(PortalVue)
 
 
 Vue.mixin({

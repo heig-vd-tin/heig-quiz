@@ -1,21 +1,5 @@
 <template>
   <div>
-    <navbar>
-      <template v-slot:title>Progression</template>
-      <b-nav-item to="/quiz/activities">
-        <b-icon-easel />
-        Activités
-      </b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="/quiz/quizzes">
-        <b-icon-dice-5 />
-        Quizzes
-      </b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="/quiz/sandbox">
-        <b-icon-bucket />
-        Bac à sable
-      </b-nav-item>
-    </navbar>
-
     <div v-if="this.isTeacher()" class="mt-4 container">
       <vue-toggle variant="info" :toggled.sync="showNames" label="Afficher noms"></vue-toggle>
       <vue-toggle variant="warning" class="pl-2" :toggled.sync="showTF" label="Afficher résultats"></vue-toggle>

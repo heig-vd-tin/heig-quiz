@@ -1,115 +1,102 @@
 <template>
-  <div>
-    <navbar>
-      <template v-slot:title>{{ name }}</template>
-      <b-nav-item to="/quiz/activities">
-        <b-icon-easel />
-        Activités
-      </b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="/quiz/quizzes">
-        <b-icon-dice-5 />
-        Quizzes
-      </b-nav-item>
-      <b-nav-item v-if="this.isTeacher()" to="/quiz/sandbox">
-        <b-icon-bucket />
-        Bac à sable
-      </b-nav-item>
-    </navbar>
-    <div class="mt-4 container">
-      <!-- Activity Finished -->
-      <b-jumbotron v-if="activity.status == 'finished'" header="Merci !">
-        <template v-slot:lead>
-          <p>L'activité n'est plus disponible pour édition.</p>
-          <b-button :to="`/quiz/activities/${activity.id}/results`" variant="primary">Voir la correction</b-button>
-        </template>
-      </b-jumbotron>
-      <!-- Activity Idle -->
-      <b-jumbotron v-if="activity.status == 'idle'" header="Fermé">
-        <template v-slot:lead>
-          L'activité n'est pas disponible, revenez plus tard.
-        </template>
-      </b-jumbotron>
-      <!-- Activity Opened -->
-      <b-jumbotron class="waiting-room" v-if="activity.status == 'opened'" header="Salle d'attente">
-        <template v-slot:lead>
-          {{ students.here }} / {{ students.total }} étudiant{{ students.total > 1 ? 's' : '' }} connectés.
-          <br />
-          Attente de encore
-          {{ students.total - students.here }}
-          étudiant{{ students.total - students.here > 1 ? 's' : '' }}...
-          <b-spinner v-if="students.total - students.here > 1" label="Spinning"></b-spinner>
-        </template>
-      </b-jumbotron>
-      <!-- Wait for the end -->
-      <b-jumbotron v-if="activity.status == 'running' && finished" header="Merci !">
-        <template v-slot:lead>
-          <p>L'activité n'est plus disponible pour édition. Vos résultats dans : </p>
-          <countdown :time="timeLeft" @end="activity.status = 'finished'">
-            <template slot-scope="props">
-              {{ String(props.minutes).padStart(2, '0') }}
-              :
-              {{ String(props.seconds).padStart(2, '0') }}
-            </template>
-          </countdown>
-        </template>
-      </b-jumbotron>
-      <!-- Quiz started -->
-      <div v-else-if="activity.status == 'running' && !finished">
-        <div class="progress mb-2">
-          <div
-            class="progress-bar bg-dark progress-bar"
-            role="progressbar"
-            :style="'width: ' + percent + '%'"
-            :aria-valuenow="percent"
-            aria-valuemin="0"
-            aria-valuemax="100"
-          >
-            {{ question_id }}/{{ activity.quiz.questions }}
-          </div>
+  <div class="mt-4 container">
+    <!-- Activity Finished -->
+    <b-jumbotron v-if="activity.status == 'finished'" header="Merci !">
+      <template v-slot:lead>
+        <p>L'activité n'est plus disponible pour édition.</p>
+        <b-button :to="`/quiz/activities/${activity.id}/results`" variant="primary">Voir la correction</b-button>
+      </template>
+    </b-jumbotron>
+    <!-- Activity Idle -->
+    <b-jumbotron v-if="activity.status == 'idle'" header="Fermé">
+      <template v-slot:lead>
+        L'activité n'est pas disponible, revenez plus tard.
+      </template>
+    </b-jumbotron>
+    <!-- Activity Opened -->
+    <b-jumbotron class="waiting-room" v-if="activity.status == 'opened'" header="Salle d'attente">
+      <template v-slot:lead>
+        {{ students.here }} / {{ students.total }} étudiant{{ students.total > 1 ? 's' : '' }} connectés.
+        <br />
+        Attente de encore
+        {{ students.total - students.here }}
+        étudiant{{ students.total - students.here > 1 ? 's' : '' }}...
+        <b-spinner v-if="students.total - students.here > 1" label="Spinning"></b-spinner>
+      </template>
+    </b-jumbotron>
+    <!-- Wait for the end -->
+    <b-jumbotron v-if="activity.status == 'running' && finished" header="Merci !">
+      <template v-slot:lead>
+        <p>L'activité n'est plus disponible pour édition. Vos résultats dans :</p>
+        <countdown :time="timeLeft" @end="activity.status = 'finished'">
+          <template slot-scope="props">
+            {{ String(props.minutes).padStart(2, '0') }}
+            :
+            {{ String(props.seconds).padStart(2, '0') }}
+          </template>
+        </countdown>
+      </template>
+    </b-jumbotron>
+    <!-- Quiz started -->
+    <div v-else-if="activity.status == 'running' && !finished">
+      <div class="progress mb-2">
+        <div
+          class="progress-bar bg-dark progress-bar"
+          role="progressbar"
+          :style="'width: ' + percent + '%'"
+          :aria-valuenow="percent"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          {{ question_id }}/{{ activity.quiz.questions }}
         </div>
-        <b-card border-variant="dark" :title="'Question ' + question_id + '. ' + (question.name != null ? question.name : '')" align="left">
-          <component
-            class="mb-4"
-            :key="component_nonce"
-            :is="component_question"
-            v-bind="question"
-            @update:answered="
-              u => {
-                answered = u;
-              }
-            "
-          ></component>
-          <b-container>
-            <b-row class="text-center align-middle">
-              <b-col>
-                <b-button v-if="question.previous_question" pill variant="outline-secondary" @click="previousQuestion">
-                  Précédent
-                </b-button>
-              </b-col>
-              <b-col cols="5">
-                <h2 class="display-3 time">
-                  <countdown :time="timeLeft" @end="activity.status = 'finished'">
-                    <template slot-scope="props">
-                      {{ String(props.minutes).padStart(2, '0') }}
-                      :
-                      {{ String(props.seconds).padStart(2, '0') }}
-                    </template>
-                  </countdown>
-                </h2>
-              </b-col>
-              <b-col>
-                <b-button v-if="question.next_question" pill variant="outline-secondary" @click="nextQuestion">
-                  Suivant
-                </b-button>
-                <!-- Last question -->
-                <b-button v-else pill variant="primary" @click="submitQuiz">
-                  Terminer
-                </b-button>
-              </b-col>
-            </b-row>
-          </b-container>
-        </b-card>
       </div>
+      <b-card
+        border-variant="dark"
+        :title="'Question ' + question_id + '. ' + (question.name != null ? question.name : '')"
+        align="left"
+      >
+        <component
+          class="mb-4"
+          :key="component_nonce"
+          :is="component_question"
+          v-bind="question"
+          @update:answered="
+            u => {
+              answered = u;
+            }
+          "
+        ></component>
+        <b-container>
+          <b-row class="text-center align-middle">
+            <b-col>
+              <b-button v-if="question.previous_question" pill variant="outline-secondary" @click="previousQuestion">
+                Précédent
+              </b-button>
+            </b-col>
+            <b-col cols="5">
+              <h2 class="display-3 time">
+                <countdown :time="timeLeft" @end="activity.status = 'finished'">
+                  <template slot-scope="props">
+                    {{ String(props.minutes).padStart(2, '0') }}
+                    :
+                    {{ String(props.seconds).padStart(2, '0') }}
+                  </template>
+                </countdown>
+              </h2>
+            </b-col>
+            <b-col>
+              <b-button v-if="question.next_question" pill variant="outline-secondary" @click="nextQuestion">
+                Suivant
+              </b-button>
+              <!-- Last question -->
+              <b-button v-else pill variant="primary" @click="submitQuiz">
+                Terminer
+              </b-button>
+            </b-col>
+          </b-row>
+        </b-container>
+      </b-card>
     </div>
   </div>
 </template>
