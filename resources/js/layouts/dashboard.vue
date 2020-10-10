@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-container">
     <navbar>
       <template v-slot:title>
         {{ $route.meta.title }}
@@ -18,16 +18,23 @@
 
     <a class="d-none d-lg-block logo-heig-vd" href="https://heig-vd.ch" target="_blank" />
 
-    <div class="mt-2 container">
+    <div class="mt-2 container content-wrap">
       <router-view></router-view>
     </div>
+
+    <app-footer class="footer"></app-footer>
   </div>
 </template>
 
 <script>
 import NavBar from './navbar';
+import Footer from './footer';
 
 export default {
+  components: {
+    navbar: NavBar,
+    'app-footer': Footer,
+  },
   data() {
     return {
       routes: [],
@@ -39,9 +46,6 @@ export default {
         },
       ]
     };
-  },
-  components: {
-    navbar: NavBar
   },
   methods: {
     traverseRoutes(el) {
@@ -63,6 +67,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$footer-height: 100px;
+
 .logo-heig-vd {
     background: url(../../img/logo-heig-vd.svg) no-repeat;
     background-size: 100%;
@@ -70,5 +76,21 @@ export default {
     width: 40px;
     height: 100px;
     top: 150px;
+}
+
+.page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  padding-bottom: $footer-height;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: $footer-height;
 }
 </style>

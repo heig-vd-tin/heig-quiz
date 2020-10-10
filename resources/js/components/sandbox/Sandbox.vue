@@ -1,27 +1,14 @@
 <template>
-  <div class="container">
-    <countdown :time="value">
-      <template slot-scope="props">
-        {{ String(props.minutes).padStart(2, '0') }} : {{ String(props.seconds).padStart(2, '0') }}
-      </template>
-    </countdown>
-    <foobar title="Foo" :value.sync="shared"></foobar>
-    <foobar title="Bar" :value.sync="shared"></foobar>
-    <button @click="value = 600 * 2000">Reset</button>
-    <button @click="dabout">Reset</button>
-
-    <appFooter></appFooter>
+  <div>
+    <h2>Bac à sable</h2>
   </div>
 </template>
 <script>
 import Sub from './sub';
 import VueCountdown from '@chenfengyuan/vue-countdown';
-import Footer from '../../layouts/footer';
 
 export default {
   components: {
-    foobar: Sub,
-    appFooter: Footer,
     countdown: VueCountdown
   },
   methods: {
