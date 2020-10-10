@@ -1,8 +1,6 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 
-Vue.use(VueRouter)
-
 import Activities from "./components/Activities"
 import NewQuestion from "./components/NewQuestion"
 import Progress from "./components/Progress"
@@ -12,18 +10,13 @@ import Quizzes from "./components/Quizzes"
 import Results from "./components/Results"
 import Dashboard from "./layouts/dashboard"
 
-import ActivitiesTeacher from "./components/ActivitiesTeacher"
-import ActivitiesStudent from "./components/ActivitiesStudent"
-
-import store from "./store"
-
 const routes = [
   {
-    path: "/quiz",
+    path: "",
     component: Dashboard,
     children: [
       {
-        path: "/quiz/home",
+        path: "/home",
         name: "home",
         meta: {
           title: "Activités",
@@ -32,7 +25,7 @@ const routes = [
         component: Activities
       },
       {
-        path: "/quiz/activities",
+        path: "/activities",
         name: "activities",
         meta: {
           title: "Activités",
@@ -42,7 +35,7 @@ const routes = [
         component: Activities
       },
       {
-        path: "/quiz/quizzes",
+        path: "/quizzes",
         name: "quizzes",
         meta: {
           title: "Quizzes",
@@ -52,7 +45,7 @@ const routes = [
         component: Quizzes
       },
       {
-        path: "/quiz/questions",
+        path: "/questions",
         name: "questions",
         meta: {
           title: "Questions",
@@ -61,7 +54,7 @@ const routes = [
         component: Questions
       },
       {
-        path: "/quiz/activities/:activity_id/results",
+        path: "/activities/:activity_id/results",
         name: "results",
         component: Results,
         meta: {
@@ -73,7 +66,7 @@ const routes = [
         })
       },
       {
-        path: "/quiz/activities/:activity_id/questions/:question_id",
+        path: "/activities/:activity_id/questions/:question_id",
         name: "quiz",
         component: Quiz,
         meta: { title: "Quiz", icon: 'easel' },
@@ -83,7 +76,7 @@ const routes = [
         })
       },
       {
-        path: "/quiz/activities/:activity_id/progression",
+        path: "/activities/:activity_id/progression",
         name: "progression",
         meta: { title: "Suivi de l'activité", teacher: true },
         component: Progress,
@@ -92,13 +85,13 @@ const routes = [
         })
       },
       {
-        path: "/quiz/questions/create",
+        path: "/questions/create",
         name: "new-question",
         meta: { title: "Nouvelle question", teacher: true },
         component: NewQuestion
       },
       {
-        path: "/quiz/sandbox",
+        path: "/sandbox",
         name: "sandbox",
         meta: {
           title: "Bac à sable",
@@ -109,7 +102,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "sandbox" */ "./components/sandbox/Sandbox")
       },
       {
-        path: "/quiz/help",
+        path: "/help",
         name: "help",
         meta: {
           title: "Informations",
@@ -123,20 +116,11 @@ const routes = [
 
 const router = new VueRouter({
   history: true,
-  base: "/",
+  base: "/quiz",
   mode: "history",
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  next()
-})
-
-router.beforeResolve((to, from, next) => {
-  next();
-});
-
-router.afterEach((to, from) => {
-});
+Vue.use(VueRouter)
 
 export default router;

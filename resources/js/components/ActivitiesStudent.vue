@@ -25,7 +25,7 @@
         <!-- Go to the activity -->
         <b-button
           v-if="data.item.status == 'opened' || data.item.status == 'running'"
-          :to="`/quiz/activities/${data.item.id}/questions/1`"
+          :to="`/activities/${data.item.id}/questions/1`"
           variant="outline-success"
           class="btn-circle"
           v-b-popover.hover.top="'Démarrer l\'activité'"
@@ -36,7 +36,7 @@
         <!-- View results -->
         <b-button
           v-if="data.item.status == 'finished'"
-          :to="`/quiz/activities/${data.item.id}/results`"
+          :to="`/activities/${data.item.id}/results`"
           variant="outline-primary"
           class="btn-circle"
           v-b-popover.hover.top="'Voir les résultats'"

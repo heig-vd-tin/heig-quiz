@@ -1,12 +1,26 @@
 # What to do?
 
-- [ ] Teacher's correction
-  - [ ] Do not show good/bad
+- [x] Redirect to / if not logged
 
-- [.] New Question form
-  - [.] Preview question in realtime
-  - [ ] Validate frontmatter
-  - [ ] Button to insert default scaffolding for different questions
+Demain : 
+
+- [ ] Centralize join/leave channels
+- [ ] Popover on activity to see who's there, who's missing
+- [ ] Connected status on realtime results (circle green/yellow/red)
+- [ ] Remove all Axios but in store
+- [ ] Show Quiz result (chart on popper on result button) and avg score
+- [ ] Quick access question number (question 1..10 button)
+- [ ] Do not show good/bad on teacher's correction
+- [ ] Code type question
+- [ ] Generate new certificates for quiz.chevallier.io
+- [ ] Migrate to quiz.chevallier.io, migrate repository to heig-vd-tin
+- [ ] Separate question type :
+  - [ ] PHP Validator file
+  - [ ] Vue file
+  - [ ] Schema file
+
+Un autre jour :
+
 - [ ] New Quiz form
   - [ ] Select questions from list add to a new Quiz
 - [ ] Validation 
@@ -16,22 +30,15 @@
 - [ ] Server event to finish the activity
 - [ ] Bugs
   - [ ] Result 0 is false ?
-- [ ] Anestetics
-  - [ ] Color count down if < 30 seconds
-  - [ ] Footer HEIG-VD (with logos)
-  - [ ] Dynamic Breadcrumb
 - [ ] Deployment
   - [ ] Register new Shibboleth service
   - [ ] Get VM and DNS from IT
-
-- [ ] Vue trend chart to display Quiz result
 - [ ] "Passer" button
-- [ ] Top quiz progression buttons with colors: answered, skipped, unknown
-- [ ] Popover on activity to see who's there, who's missing
-- [ ] Connected status on realtime results
-
-- [ ] Code type question
-
+- [.] New Question form
+  - [.] Preview question in realtime
+  - [ ] Validate frontmatter
+  - [ ] Button to insert default scaffolding for different questions
+  
 ## Open questions
 
 - [ ] Singular or Plural for API routes?

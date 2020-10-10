@@ -13,10 +13,10 @@ export default {
     }
   },
   mounted() {
-    if (Vue.prototype.$user.affiliation == 'member;student')
-      this.component = ActivityStudent;
-    else
+    if (this.$store.state.user.role == 'teacher')
       this.component = ActivityTeacher;
+    else
+      this.component = ActivityStudent;
   },
 }
 </script>

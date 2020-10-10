@@ -36,7 +36,12 @@
 // https://regex101.com/r/dkfEQY/2
 let re = /^##\s*([A-Z]|\d+)\b\s*(.*?)(?=^##|$(?![\s\S]))/gms;
 
+import MarkdownItVue from 'markdown-it-vue'
+
 export default {
+  components: {
+    MarkdownItVue
+  },
   props: {
     content: String,
     options: Object,

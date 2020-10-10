@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="this.isTeacher()" class="mt-4 container">
+    <div v-if="$store.state.user.role == 'teacher'" class="mt-4 container">
       <vue-toggle variant="info" :toggled.sync="showNames" label="Afficher noms"></vue-toggle>
       <vue-toggle variant="warning" class="pl-2" :toggled.sync="showTF" label="Afficher résultats"></vue-toggle>
       <vue-toggle variant="danger" class="pl-2" :toggled.sync="showAnswers" label="Afficher réponses"></vue-toggle>
@@ -53,9 +53,6 @@ export default {
       } else if (value.answer != null) {
           return 'bg-info';
       }
-    },
-    isTeacher() {
-      return Vue.prototype.$user.affiliation == 'member;staff';
     },
     loadActivity() {
       axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {

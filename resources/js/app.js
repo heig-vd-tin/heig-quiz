@@ -1,35 +1,34 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-import { BIconTypeStrikethrough, BootstrapVue, BootstrapVueIcons, IconsPlugin } from 'bootstrap-vue'
-
-require('./bootstrap');
-
-window.Vue = require('vue');
 import Vue from 'vue'
+import PortalVue from 'portal-vue'
+import App from './App'
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+
+import router from './router.js'
+import store from './store'
 
 Vue.config.devtools = true
 Vue.config.productionTip = false;
 
+// TODO: Remove if not used
+//window._ = require('lodash');
+//window.$ = window.jQuery = require('jquery');
+//window.Vue = require('vue');
+
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+window.Popper = require('popper.js').default;
+
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 
-import router from './router.js'
-
 /**
- * Vue components
+ * Authenticated user (from Laravel)
  */
-Vue.component('app', require('./App').default);
-
-Vue.prototype.$user = JSON.parse(document.querySelector("meta[name='user']").getAttribute('content'));
-
-/**
- * Global components
- */
-import NavBar from './layouts/navbar'
-Vue.component('navbar', NavBar)
+let meta_user = document.querySelector("meta[name='user']").getAttribute('content')
+if (!meta_user)
+  window.location.replace('/');
+Vue.prototype.$user = JSON.parse(meta_user);
 
 /**
  * Filters
@@ -41,23 +40,8 @@ Vue.filter('capitalize', function (value) {
 })
 
 /**
- * Markdown-it
+ * Mixins
  */
-import MarkdownIt from 'markdown-it-vue'
-Vue.component('markdown-it-vue', MarkdownIt)
-
-/**
- * Vuex
- */
-import store from './store'
-
-/**
- * Portal
- */
-import PortalVue from 'portal-vue'
-Vue.use(PortalVue)
-
-
 Vue.mixin({
   methods: {
     error: function (msg) {
@@ -76,15 +60,17 @@ Vue.mixin({
   },
 })
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+
+Vue.use(PortalVue)
+
+
 const app = new Vue({
   store,
   router,
   el: '#app',
+  components: {
+    'app': App
+  },
   created() {
     this.$store.dispatch('initialize')
   },

@@ -46,7 +46,7 @@
         </b-popover>
 
         <h2 class="mt-2 mb-0">
-          <span v-if="isStudent()">
+          <span v-if="$store.state.user.role == 'student'">
             <b-icon-check2 class="text-success" v-if="question.is_correct" />
             <b-icon-x v-else class="text-danger" />
           </span>
@@ -69,13 +69,14 @@ import Code from './questions/Code';
 import FillInTheGaps from './questions/FillInTheGaps';
 import MultipleChoice from './questions/MultipleChoice';
 import ShortAnswer from './questions/ShortAnswer';
-
+import MarkdownItVue from 'markdown-it-vue'
 export default {
   components: {
     'q-code': Code,
     'q-fill-in-the-gaps': FillInTheGaps,
     'q-multiple-choice': MultipleChoice,
-    'q-short-answer': ShortAnswer
+    'q-short-answer': ShortAnswer,
+    MarkdownItVue
   },
   data() {
     return {
@@ -111,12 +112,6 @@ export default {
           break;
       }
       return null;
-    },
-    isTeacher() {
-      return Vue.prototype.$user.affiliation == 'member;staff';
-    },
-    isStudent() {
-      return Vue.prototype.$user.affiliation == 'member;student';
     },
     loadActivity() {
       axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {

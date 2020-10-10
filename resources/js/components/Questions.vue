@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button variant="primary" to="/quiz/questions/create">Nouvelle Question</b-button>
+    <b-button variant="primary" to="/questions/create">Nouvelle Question</b-button>
     <!-- Questions list -->
     <b-table pt-2 striped hover :items="questions.data" :fields="questions.fields">
       <template v-slot:cell(name)="data">
@@ -59,12 +59,6 @@ export default {
     };
   },
   methods: {
-    isTeacher() {
-      return Vue.prototype.$user.affiliation == 'member;staff';
-    },
-    isStudent() {
-      return Vue.prototype.$user.affiliation == 'member;student';
-    },
     loadQuestions() {
       axios.get('/api/questions').then(rep => {
         this.questions.data = rep.data.data;

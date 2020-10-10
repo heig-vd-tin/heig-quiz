@@ -1,6 +1,6 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand to="/quiz/home">
+    <b-navbar-brand :to="{name: 'home'}">
       <div class="logo-quiz d-inline-block align-top" alt="Kitten"></div>
     </b-navbar-brand>
     <b-navbar-brand>
@@ -27,7 +27,7 @@
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
             <b-icon-person-circle />
-            {{ username }}
+            {{ $store.state.user.name }}
           </template>
           <b-dropdown-item href="/logout">Déconnexion</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -57,7 +57,7 @@ export default {
       items: [
         {
           text: 'Activités',
-          href: '/quiz/activities'
+          href: '/activities'
         },
         {
           text: 'Sandbox',
@@ -66,9 +66,6 @@ export default {
       ]
     };
   },
-  mounted() {
-    this.username = Vue.prototype.$user.name;
-  }
 };
 </script>
 <style scoped>

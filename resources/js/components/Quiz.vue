@@ -4,7 +4,7 @@
     <b-jumbotron v-if="activity.status == 'finished'" header="Merci !">
       <template v-slot:lead>
         <p>L'activité n'est plus disponible pour édition.</p>
-        <b-button :to="`/quiz/activities/${activity.id}/results`" variant="primary">Voir la correction</b-button>
+        <b-button :to="`/activities/${activity.id}/results`" variant="primary">Voir la correction</b-button>
       </template>
     </b-jumbotron>
     <!-- Activity Idle -->
@@ -30,9 +30,11 @@
         <p>L'activité n'est plus disponible pour édition. Vos résultats dans :</p>
         <countdown :time="timeLeft" @end="activity.status = 'finished'">
           <template slot-scope="props">
+            <span :class="{ 'text-danger' : props.totalMilliseconds <= 30 * 1000 }">
             {{ String(props.minutes).padStart(2, '0') }}
             :
             {{ String(props.seconds).padStart(2, '0') }}
+            </span>
           </template>
         </countdown>
       </template>
@@ -171,12 +173,6 @@ export default {
     }
   },
   methods: {
-    isTeacher() {
-      return Vue.prototype.$user.affiliation == 'member;staff';
-    },
-    isStudent() {
-      return Vue.prototype.$user.affiliation == 'member;student';
-    },
     setComponent() {
       switch (this.question.type) {
         case 'short-answer':
@@ -194,12 +190,12 @@ export default {
     previousQuestion() {
       if (this.answered != this.question.answered) this.submitQuestion();
 
-      this.$router.push(`/quiz/activities/${this.activity_id}/questions/${this.question.previous_question}`);
+      this.$router.push(`/activities/${this.activity_id}/questions/${this.question.previous_question}`);
     },
     nextQuestion() {
       if (this.answered != this.question.answered) this.submitQuestion();
 
-      this.$router.push(`/quiz/activities/${this.activity_id}/questions/${this.question.next_question}`);
+      this.$router.push(`/activities/${this.activity_id}/questions/${this.question.next_question}`);
     },
     submitQuestion() {
       axios({

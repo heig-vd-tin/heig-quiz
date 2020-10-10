@@ -1,7 +1,6 @@
 <template>
   <div>
     <portal to="navbar">
-
       <!-- Select roster -->
       <b-nav-item-dropdown :text="current_roster != null ? current_roster.name : 'Toutes les classes'">
         <b-dropdown-item @click="rosterChange(null)" :active="current_roster == null">
@@ -56,7 +55,7 @@
           <!-- View results -->
           <b-button
             v-if="data.item.status == 'finished'"
-            :to="`/quiz/activities/${data.item.id}/results`"
+            :to="`/activities/${data.item.id}/results`"
             variant="outline-primary"
             class="btn-circle"
             v-b-popover.hover.top="'Voir les résultats'"
@@ -113,7 +112,7 @@
             v-if="data.item.status == 'running' || data.item.status == 'finished'"
             variant="outline-info"
             class="btn-circle"
-            :to="`/quiz/activities/${data.item.id}/progression`"
+            :to="`/activities/${data.item.id}/progression`"
             v-b-popover.hover.top="'Voir la progression en temps réel.'"
           >
             <b-icon-bar-chart-fill />
@@ -129,8 +128,11 @@
             :time="data.item.duration * 1000 - (Date.now() - Date.parse(data.item.started_at))"
           >
             <template slot-scope="props">
-              {{ String(props.minutes).padStart(2, '0') }} :
-              {{ String(props.seconds).padStart(2, '0') }}
+              <span :class="{ 'text-danger': props.totalMilliseconds <= 30 * 1000 }">
+                {{ String(props.minutes).padStart(2, '0') }}
+                :
+                {{ String(props.seconds).padStart(2, '0') }}
+              </span>
             </template>
           </countdown>
 
