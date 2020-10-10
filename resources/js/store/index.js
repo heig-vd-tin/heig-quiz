@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import roster from './modules/roster'
 import activity from './modules/activity'
+import user from './modules/user'
 
 Vue.use(Vuex)
 
@@ -25,34 +26,24 @@ window.Echo = new Echo({
 /**
  * Store: client side state storage.
  */
-let store = new Vuex.Store({
+const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
     activity,
-    roster
+    roster,
+    user
   },
   state: {
-    connected: [],  // Connected users
-    user: {
-      name: 'Anonymous',
-      role: 'student'
-    }
+
   },
   getters: {
 
   },
   mutations: {
-    add_connected_user(state, user) {
-      state.connected.push(user)
-    },
-    login(state, user) {
-      state.user.name = `${user.firstname} ${user.lastname}`;
-      state.user.role = user.affiliation == 'member;staff' ? 'teacher' : 'student';
-    }
   },
   actions: {
     initialize({commit}) {
-      commit('login', this._vm.$user);
+      this.dispatch('user/created');
       this.dispatch('roster/created');
       this.dispatch('activity/created');
     }

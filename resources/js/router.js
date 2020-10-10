@@ -12,8 +12,9 @@ import Quizzes from "./components/Quizzes"
 import Results from "./components/Results"
 import Sandbox from "./components/sandbox/Sandbox"
 import Help from "./components/Help"
-
 import Dashboard from "./layouts/dashboard"
+
+import store from "./store"
 
 const routes = [
   {
@@ -125,6 +126,10 @@ const router = new VueRouter({
   mode: "history",
   routes
 });
+
+router.beforeEach((to, from, next) => {
+  next()
+})
 
 router.beforeResolve((to, from, next) => {
   next();

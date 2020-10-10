@@ -52,7 +52,7 @@ Vue.component('markdown-it-vue', MarkdownIt)
 /**
  * Vuex
  */
-import store from './store/store'
+import store from './store'
 
 /**
  * Portal
@@ -89,7 +89,6 @@ const app = new Vue({
   router,
   el: '#app',
   created() {
-    console.log('created')
     this.$store.dispatch('initialize')
   },
   mounted() {
