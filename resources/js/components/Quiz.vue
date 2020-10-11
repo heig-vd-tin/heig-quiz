@@ -1,5 +1,12 @@
 <template>
-  <div class="mt-4 container">
+  <div v-if="activity">
+    <!-- Activity Idle -->
+    <b-jumbotron v-if="activity.status == 'idle'" header="Fermé">
+      <template v-slot:lead>
+        L'activité n'est pas disponible, revenez plus tard...
+      </template>
+    </b-jumbotron>
+
     <!-- Activity Finished -->
     <b-jumbotron v-if="activity.status == 'finished'" header="Merci !">
       <template v-slot:lead>
@@ -7,33 +14,36 @@
         <b-button :to="`/activities/${activity.id}/results`" variant="primary">Voir la correction</b-button>
       </template>
     </b-jumbotron>
-    <!-- Activity Idle -->
-    <b-jumbotron v-if="activity.status == 'idle'" header="Fermé">
-      <template v-slot:lead>
-        L'activité n'est pas disponible, revenez plus tard.
-      </template>
-    </b-jumbotron>
+
     <!-- Activity Opened -->
     <b-jumbotron class="waiting-room" v-if="activity.status == 'opened'" header="Salle d'attente">
       <template v-slot:lead>
-        {{ students.here }} / {{ students.total }} étudiant{{ students.total > 1 ? 's' : '' }} connectés.
+        {{ here }} / {{ total }} étudiant{{ total > 1 ? 's' : '' }} connectés ; attente de
+        {{ total - here }}
+        étudiant{{ total - here > 1 ? 's' : '' }}...
+        <b-spinner v-if="total - here > 1" label="Spinning"></b-spinner>
         <br />
-        Attente de encore
-        {{ students.total - students.here }}
-        étudiant{{ students.total - students.here > 1 ? 's' : '' }}...
-        <b-spinner v-if="students.total - students.here > 1" label="Spinning"></b-spinner>
+        <div v-if="here">
+          Présent{{ here > 1 ? 's' : '' }} :
+          <ul>
+            <li v-for="student in students" :key="student.id">
+              {{ student.name }}
+            </li>
+          </ul>
+        </div>
       </template>
     </b-jumbotron>
+
     <!-- Wait for the end -->
     <b-jumbotron v-if="activity.status == 'running' && finished" header="Merci !">
       <template v-slot:lead>
         <p>L'activité n'est plus disponible pour édition. Vos résultats dans :</p>
         <countdown :time="timeLeft" @end="activity.status = 'finished'">
           <template slot-scope="props">
-            <span :class="{ 'text-danger' : props.totalMilliseconds <= 30 * 1000 }">
-            {{ String(props.minutes).padStart(2, '0') }}
-            :
-            {{ String(props.seconds).padStart(2, '0') }}
+            <span :class="{ 'text-danger': props.totalMilliseconds <= 30 * 1000 }">
+              {{ String(props.minutes).padStart(2, '0') }}
+              :
+              {{ String(props.seconds).padStart(2, '0') }}
             </span>
           </template>
         </countdown>
@@ -112,6 +122,7 @@ import MultipleChoice from './questions/MultipleChoice';
 import ShortAnswer from './questions/ShortAnswer';
 
 import VueCountdown from '@chenfengyuan/vue-countdown';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -135,17 +146,12 @@ export default {
   data() {
     return {
       finished: false,
-      activity: {},
       answered: null,
       name: '',
       component_nonce: 0,
       component_question: null,
       question: {},
       values: [],
-      students: {
-        here: 0,
-        total: 0
-      },
       timeLeft: 0
     };
   },
@@ -170,7 +176,17 @@ export default {
   computed: {
     percent() {
       return (this.question_id / this.activity.quiz.questions) * 100;
-    }
+    },
+    here() {
+      return this.students.length
+    },
+    total() {
+      return this.activity.roster.students
+    },
+    ...mapGetters('activity', [
+      'students',
+      'activity'
+    ])
   },
   methods: {
     setComponent() {
@@ -210,13 +226,6 @@ export default {
       if (this.answered != this.question.answered) this.submitQuestion();
       this.finished = true;
     },
-    loadActivity() {
-      axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {
-        this.activity = activity;
-        this.students.total = this.activity.roster.students;
-        if (this.activity.status == 'running') this.loadQuestion();
-      });
-    },
     loadQuestion() {
       axios.get(`/api/activities/${this.activity_id}/questions/${this.question_id}`).then(rep => {
         this.question = rep.data;
@@ -224,29 +233,13 @@ export default {
         this.setComponent();
       });
     },
-    joinActivityChannel() {
-      window.Echo.join(`activity.${this.activity_id}`)
-        .here(users => {
-          let students = 0;
-          users.forEach(student => {
-            if (student.type == 'student') students++;
-          });
-          this.students.here = students;
-        })
-        .joining(user => {
-          if (user.type == 'student') this.students.here++;
-        })
-        .leaving(user => {
-          if (user.type == 'student') this.students.here--;
-        })
-        .listen('ActivityUpdated', e => {
-          this.loadActivity();
-        });
-    }
+    ...mapActions('activity', ['joinActivity', 'leaveActivity'])
   },
   mounted() {
-    this.joinActivityChannel();
-    this.loadActivity();
+    this.joinActivity(this.activity_id);
+  },
+  destroyed() {
+    this.leaveActivity(this.activity_id);
   }
 };
 </script>

@@ -83,8 +83,12 @@ tar cvzf dist.tar.gz public/css/app.css public/css/app.css.map public/js/app.js 
 scp dist.tar.gz ...
 ```
 
-## PHP
+### PHP
 
 ```
 sudo apt install php-yaml php-zip
 ```
+
+### Shibboleth
+
+https://www.switch.ch/aai/guides/sp/installation/index.html?os=ubuntu20

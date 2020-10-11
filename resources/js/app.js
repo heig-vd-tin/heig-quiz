@@ -26,8 +26,8 @@ Vue.use(BootstrapVueIcons)
  * Authenticated user (from Laravel)
  */
 let meta_user = document.querySelector("meta[name='user']").getAttribute('content')
-if (!meta_user)
-  window.location.replace('/');
+// if (!meta_user)
+//   window.location.replace('/');
 Vue.prototype.$user = JSON.parse(meta_user);
 
 /**

@@ -1,18 +1,12 @@
 <?php
 use Illuminate\Support\Facades\Route;
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/quiz/{any}', function () {return view('vue');})->where('any', '.*');
-
-Auth::routes(['register' => false]);
 
 Route::get('/shibboleth-data', function () {});
 
 if (config('app.debug')) {
     Route::get('/debug/login/{id}', function ($id) {
         Auth::loginUsingId($id);
+        return redirect('/');
     });
 
     Route::get('/sandbox', function () {
@@ -31,3 +25,8 @@ if (config('app.debug')) {
         ];
     });
 }
+
+Route::get('/{any}', function () {
+    return view('app');}
+)->where('any', '.*');
+

@@ -12,11 +12,11 @@ import Dashboard from "./layouts/dashboard"
 
 const routes = [
   {
-    path: "",
+    path: "/",
     component: Dashboard,
     children: [
       {
-        path: "/home",
+        path: "/",
         name: "home",
         meta: {
           title: "Activités",
@@ -116,7 +116,7 @@ const routes = [
 
 const router = new VueRouter({
   history: true,
-  base: "/quiz",
+  base: "/",
   mode: "history",
   routes
 });

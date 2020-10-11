@@ -14,6 +14,7 @@ Demain :
 - [ ] Code type question
 - [ ] Generate new certificates for quiz.chevallier.io
 - [ ] Migrate to quiz.chevallier.io, migrate repository to heig-vd-tin
+- [ ] Migrate to Vue 3.0
 - [ ] Separate question type :
   - [ ] PHP Validator file
   - [ ] Vue file
