@@ -1,12 +1,8 @@
-# Chevallier.io
+# HEIG Quiz
 
-Base site for Teaching at HEIG-VD. This website features:
+Portail de Quiz pour la HEIG-VD.
 
-- Links to teaching materials
-- Login for students and teachers
-- Quiz system
-- List of exercises
-- Personnalized links for students
+![quiz](resources/img/quiz.svg)
 
 ## Development
 
