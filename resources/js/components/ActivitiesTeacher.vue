@@ -118,9 +118,9 @@
             <b-icon-bar-chart-fill />
           </b-button>
 
-          <span v-if="data.item.status == 'opened'">
+          <!-- <span v-if="data.item.status == 'opened'">
             {{ activities.presence.here }} / {{ data.item.roster.students }}
-          </span>
+          </span> -->
 
           <countdown
             @end="data.item.status = 'finished'"
@@ -199,10 +199,6 @@ export default {
           key: 'actions'
         }
       ],
-      presence: {
-        here: 0,
-        users: []
-      }
     };
   },
   watch: {
@@ -252,32 +248,6 @@ export default {
     },
     activityClickHandler(record, index) {
       this.$router.push({ name: 'quiz', params: { activity_id: record.id } });
-    },
-
-    leaveActivity(activity_id) {
-      window.Echo.leave(`activity.${activity_id}`);
-    },
-    listenActivity(activity_id) {
-      this.leaveActivity(activity_id);
-      window.Echo.join(`activity.${activity_id}`)
-        .here(users => {
-          this.activities.presence.users = users;
-          let students = 0;
-          users.forEach(student => {
-            if (student.type == 'student') students++;
-          });
-
-          this.activities.presence.here = students;
-          console.log('Here: ', users);
-        })
-        .joining(user => {
-          if (user.type == 'student') this.activities.presence.here++;
-          console.log(user);
-        })
-        .leaving(user => {
-          if (user.type == 'student') this.activities.presence.here--;
-          console.log(user);
-        });
     }
   }
 };
