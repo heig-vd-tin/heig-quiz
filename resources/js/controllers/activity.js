@@ -13,7 +13,7 @@ export default class Activity {
   }
 
   open(activity_id) {
-    axios.post(`/api/activities/${activity_id}/open`).then((err) => {
+    axios.post(`/api/activities/${activity_id}/open`).catch((err) => {
       this.app.error('Impossible d\'ouvrir cette activité !')
     });
   }

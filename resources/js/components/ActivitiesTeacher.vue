@@ -135,11 +135,6 @@
               </span>
             </template>
           </countdown>
-
-          <span v-if="data.item.status == 'running'">
-            <b-spinner small type="grow" label="Spinning"></b-spinner>
-            {{ activities.data[data.index].countdown }}
-          </span>
         </template>
       </b-table>
     </div>
@@ -147,12 +142,7 @@
 </template>
 
 <script>
-import TimeAgo from 'javascript-time-ago';
 import VueCountdown from '@chenfengyuan/vue-countdown';
-
-import fr from 'javascript-time-ago/locale/fr';
-TimeAgo.addLocale(fr);
-const timeAgo = new TimeAgo('fr-CH');
 
 export default {
   components: {
@@ -227,24 +217,6 @@ export default {
     rosterChange(roster) {
       console.log('RosterChange');
       this.current_roster = roster;
-    },
-    timeAgo(date) {
-      return timeAgo.format(Date.parse(date));
-    },
-    /**
-     * Convert a duration in seconds into a human value
-     */
-    humanDuration(duration) {
-      let minutes = parseInt(duration / 60, 10);
-      let seconds = parseInt(duration % 60, 10);
-
-      let text = '';
-      if (minutes > 0) text += minutes + ' minute';
-      if (minutes > 1) text += 's';
-      if (seconds > 0) text += ' ' + seconds + ' seconde';
-      if (seconds > 1) text += 's';
-
-      return text;
     },
     activityClickHandler(record, index) {
       this.$router.push({ name: 'quiz', params: { activity_id: record.id } });

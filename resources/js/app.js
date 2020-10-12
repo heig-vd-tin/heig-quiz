@@ -2,7 +2,6 @@ import Vue from 'vue'
 import PortalVue from 'portal-vue'
 import App from './App'
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
-
 import router from './router.js'
 import store from './store'
 
@@ -39,30 +38,10 @@ Vue.filter('capitalize', function (value) {
   return value.charAt(0).toUpperCase() + value.slice(1)
 })
 
-/**
- * Mixins
- */
-Vue.mixin({
-  methods: {
-    error: function (msg) {
-      this.$bvModal.msgBoxOk(msg, {
-        centered: true,
-        title: 'Oops !',
-        okVariant: 'danger',
-        noCloseOnEsc: true,
-        noCloseOnBackdrop: true,
-        okTitle: 'Fermer'
-      })
-      .then(value => {
-        this.boxOne = value
-      })
-    },
-  },
-})
-
 
 Vue.use(PortalVue)
 
+require('./mixins');
 
 const app = new Vue({
   store,

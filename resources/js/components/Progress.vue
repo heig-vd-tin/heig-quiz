@@ -1,9 +1,28 @@
 <template>
   <div>
     <div v-if="$store.state.user.role == 'teacher'" class="mt-4 container">
+      <b-row>
+        <b-col class="align-middle">
       <vue-toggle variant="info" :toggled.sync="showNames" label="Afficher noms"></vue-toggle>
       <vue-toggle variant="warning" class="pl-2" :toggled.sync="showTF" label="Afficher résultats"></vue-toggle>
       <vue-toggle variant="danger" class="pl-2" :toggled.sync="showAnswers" label="Afficher réponses"></vue-toggle>
+      </b-col>
+      <b-col lg="2" class="text-right align-middle">
+      <countdown
+        @end="activity.status = 'finished'"
+        v-if="activity.status == 'running'"
+        :time="activity.duration * 1000 - (Date.now() - Date.parse(activity.started_at))"
+      >
+        <template slot-scope="props">
+          <h2 class="lead" :class="{ 'text-danger': props.totalMilliseconds <= 30 * 1000 }">
+            {{ String(props.minutes).padStart(2, '0') }}
+            :
+            {{ String(props.seconds).padStart(2, '0') }}
+          </h2>
+        </template>
+      </countdown>
+      </b-col>
+      </b-row>
       <table v-if="loadedMatrix" class="matrix">
         <tr>
           <th>&nbsp;</th>
@@ -25,9 +44,11 @@
 
 <script>
 import Toggle from '../layouts/toggle'
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
 export default {
   components: {
+    countdown: VueCountdown,
     'vue-toggle': Toggle
   },
   data() {
