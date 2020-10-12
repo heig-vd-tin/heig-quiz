@@ -28,7 +28,11 @@
         étudiants ne pourront plus y accéder.
       </p>
 
-      <b-table striped hover :items="activities" :fields="fields" @row-clicked="activityClickHandler">
+
+      <b-table striped hover :items="activities" :fields="fields">
+        <template v-slot:cell(updated_at)="data">
+          <time-toggle :value="data.item.updated_at"></time-toggle>
+        </template>
         <template v-slot:cell(actions)="data">
           <!-- Show the activity -->
           <b-button
@@ -143,10 +147,12 @@
 
 <script>
 import VueCountdown from '@chenfengyuan/vue-countdown';
+import TimeToggle from '../layouts/time-toggle'
 
 export default {
   components: {
-    countdown: VueCountdown
+    countdown: VueCountdown,
+    TimeToggle
   },
   data() {
     return {
@@ -181,8 +187,7 @@ export default {
         {
           key: 'updated_at',
           label: 'Modifié',
-          sortable: true,
-          formatter: 'timeAgo'
+          sortable: true
         },
         {
           label: 'Actions',
@@ -217,9 +222,6 @@ export default {
     rosterChange(roster) {
       console.log('RosterChange');
       this.current_roster = roster;
-    },
-    activityClickHandler(record, index) {
-      this.$router.push({ name: 'quiz', params: { activity_id: record.id } });
     }
   }
 };

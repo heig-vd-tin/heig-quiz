@@ -39,6 +39,7 @@ Un autre jour :
   - [.] Preview question in realtime
   - [ ] Validate frontmatter
   - [ ] Button to insert default scaffolding for different questions
+- [ ] Once everybody has finished a quiz : the result is showed (stop waiting)
   
 ## Open questions
 

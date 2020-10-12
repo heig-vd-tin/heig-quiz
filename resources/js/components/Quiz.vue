@@ -165,9 +165,6 @@ export default {
         this.timeLeft = 0;
       }
     },
-    answered() {
-      console.log('QuestionUpdated');
-    },
     question_id() {
       console.log('Question Id Changed');
       this.loadQuestion();
@@ -237,6 +234,7 @@ export default {
   },
   mounted() {
     this.joinActivity(this.activity_id);
+    this.loadQuestion()
   },
   destroyed() {
     this.leaveActivity(this.activity_id);

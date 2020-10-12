@@ -1,8 +1,4 @@
 import Vue from 'vue'
-import TimeAgo from 'javascript-time-ago';
-import fr from 'javascript-time-ago/locale/fr';
-TimeAgo.addLocale(fr);
-const timeAgo = new TimeAgo('fr-CH');
 
 Vue.mixin({
   methods: {
@@ -18,12 +14,6 @@ Vue.mixin({
       .then(value => {
         this.boxOne = value
       })
-    },
-    /**
-     * Show a date in a form of "2 minutes ago"
-     */
-    timeAgo(date) {
-      return timeAgo.format(Date.parse(date));
     },
     /**
      * Convert a duration in seconds into a human value

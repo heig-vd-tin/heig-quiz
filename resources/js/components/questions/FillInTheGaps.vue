@@ -44,7 +44,7 @@ export default {
                 options: gaps[index].map((item, index) => {
                   return { value: item, text: item };
                 }),
-                answered: this.answered[index],
+                answered: this.answered ? this.answered[index] : null,
                 validation: this.validation ? this.validation[index] : null,
                 is_correct: this.validation ? this.answered[index] == this.validation[index] : null
               }
