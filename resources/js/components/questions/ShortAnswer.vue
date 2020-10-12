@@ -3,7 +3,7 @@
     <p>
       <markdown-it-vue mb-2 :content="content" />
     </p>
-    <b-form-group>
+    <b-form-group v-if="$store.state.user.role == 'student'">
       <b-form-input
         v-model="value"
         :size="width"
@@ -14,10 +14,22 @@
         {{ validation.expected }}
       </b-form-invalid-feedback>
     </b-form-group>
+    <b-form-group v-else>
+      <b-form-input
+        v-model="validation.expected"
+        :size="width"
+        :readonly="validation != null"
+      ></b-form-input>
+    </b-form-group>
   </div>
 </template>
 <script>
+import MarkdownItVue from 'markdown-it-vue'
+
 export default {
+  components: {
+    MarkdownItVue
+  },
   computed: {
     value: {
       get() {

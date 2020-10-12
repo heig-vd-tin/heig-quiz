@@ -73,6 +73,10 @@ class QuestionCreator
             'options' => Arr::get($fm, 'options'),
         ];
 
+        // Fix one answer on multiple-choice
+        if ($question->validation == 'multiple-choice' && is_integer($question->validation))
+            $question->validation = [$question->validation];
+
         // Check if the question exists
         $q = Question::where('content', 'like', $question->content)
             ->where('name', $question->name)

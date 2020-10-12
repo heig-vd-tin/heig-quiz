@@ -9,7 +9,7 @@ if (config('app.debug')) {
         return redirect('/');
     });
 
-    Route::get('/sandbox', function () {
+    Route::get('/debug/sandbox', function () {
 
         $validator = new JsonSchema\Validator;
         $data = (object)[

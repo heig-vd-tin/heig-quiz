@@ -10,8 +10,10 @@ import MarkdownItVue from 'markdown-it-vue';
 import 'markdown-it-vue/dist/markdown-it-vue.css';
 let MyMarkdownItVue = Vue.extend(MarkdownItVue);
 let Gap = Vue.extend(GapComponent);
+
 export default {
   components: {
+    MarkdownItVue,
     Gap
   },
   data() {
