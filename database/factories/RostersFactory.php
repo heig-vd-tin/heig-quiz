@@ -13,7 +13,7 @@ class RosterFactory extends Factory
 
     public function definition()
     {
-        $teachers_id = User::where('affiliation', 'member;staff')->pluck('id')->toArray();
+        $teachers_id = User::where('affiliation', 'not like', '%student%')->pluck('id')->toArray();
         return [
             'name' => Arr::random(['A', 'B', 'C']),
             'semester' => Arr::random([0, 0, 0, 0, 0, 1]),

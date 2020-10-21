@@ -13,7 +13,7 @@ class QuizFactory extends Factory
 
     public function definition()
     {
-        $teachers_id = User::where('affiliation', 'member;staff')->pluck('id')->toArray();
+        $teachers_id = User::where('affiliation', 'not like' '%student%')->pluck('id')->toArray();
         return [
             'name' => $this->faker->sentence(4),
             'user_id' => Arr::random($teachers_id),

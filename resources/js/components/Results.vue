@@ -145,10 +145,10 @@ export default {
       return null;
     },
     isTeacher() {
-      return Vue.prototype.$user.affiliation == "member;staff";
+      return !Vue.prototype.$user.affiliation.includes('student');
     },
     isStudent() {
-      return Vue.prototype.$user.affiliation == "member;student";
+      return Vue.prototype.$user.affiliation.includes('student');
     },
     loadActivity() {
       axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {

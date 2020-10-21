@@ -71,7 +71,7 @@ export default {
       }
     },
     isTeacher() {
-      return Vue.prototype.$user.affiliation == 'member;staff';
+      return !Vue.prototype.$user.affiliation.includes('student');
     },
     loadActivity() {
       axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {

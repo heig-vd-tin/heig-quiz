@@ -42,10 +42,11 @@ class User extends Authenticatable
         if (!is_array($roles))
             $roles = [$roles];
 
+        $is_student = strpos($this->affiliation, 'student') === false;
         foreach($roles as $role) {
-            if ($role == 'student' && $this->affiliation == 'member;student')
+            if ($role == 'student' && !$is_student)
                 return true;
-            if ($role == 'teacher' && $this->affiliation == 'member;staff')
+            if ($role == 'teacher' && $is_student)
                 return true;
         }
 

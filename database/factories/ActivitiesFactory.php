@@ -15,7 +15,7 @@ class ActivityFactory extends Factory
 
     public function definition()
     {
-        $teacher_id = User::where('affiliation', 'member;staff')->inRandomOrder()->limit(1)->get()[0]->id;
+        $teacher_id = User::where('affiliation', 'not like', '%student%')->inRandomOrder()->limit(1)->get()[0]->id;
         $quiz_id = Quiz::inRandomOrder()->limit(1)->get()[0]->id;
         $roster = Roster::inRandomOrder()->limit(1)->get()[0];
         $roster_id = $roster->id;

@@ -88,10 +88,10 @@ export default {
   },
   methods: {
     isTeacher() {
-      return Vue.prototype.$user.affiliation == "member;staff";
+      return !Vue.prototype.$user.affiliation.includes('student');
     },
     isStudent() {
-      return Vue.prototype.$user.affiliation == "member;student";
+      return Vue.prototype.$user.affiliation.includes('student');
     },
     loadQuestions() {
       axios.get("/api/questions").then((rep) => {

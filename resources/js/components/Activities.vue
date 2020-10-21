@@ -13,7 +13,7 @@ export default {
     }
   },
   mounted() {
-    if (Vue.prototype.$user.affiliation == 'member;student')
+    if (Vue.prototype.$user.affiliation.includes('student'))
       this.component = ActivityStudent;
     else
       this.component = ActivityTeacher;
