@@ -68,6 +68,17 @@ export default {
         context.dispatch('fetch');
       })
     },
+    create(context, form) {
+      console.log(form);
+      return new Promise((resolve, reject) => {
+        axios.post('/api/activities/create', form)
+        .then(response => {
+          context.dispatch('fetch')
+          resolve(response)
+        })
+        .catch(error => reject);
+      })
+    },
     joinActivity({commit}, activity_id) {
       console.log("JoinActivity ", activity_id)
       axios.get(`/api/activities/${activity_id}`).then(({ data: activity }) => {

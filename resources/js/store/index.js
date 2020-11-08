@@ -7,6 +7,7 @@ import axios from 'axios';
 import roster from './modules/roster'
 import activity from './modules/activity'
 import user from './modules/user'
+import quiz from './modules/quiz'
 
 Vue.use(Vuex)
 
@@ -31,7 +32,8 @@ const store = new Vuex.Store({
   modules: {
     activity,
     roster,
-    user
+    user,
+    quiz
   },
   state: {
 
@@ -40,12 +42,14 @@ const store = new Vuex.Store({
 
   },
   mutations: {
+
   },
   actions: {
     initialize({commit}) {
       this.dispatch('user/created');
       this.dispatch('roster/created');
       this.dispatch('activity/created');
+      this.dispatch('quiz/created');
     }
   }
 })
