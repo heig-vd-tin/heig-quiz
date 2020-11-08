@@ -31,7 +31,7 @@
           </template>
           <b-dropdown-item href="/logout">Déconnexion</b-dropdown-item>
         </b-nav-item-dropdown>
-        <b-nav-item class="octocat" href="https://github.com/yves-chevallier/chevallier.io">
+        <b-nav-item class="octocat" target="_blank" href="https://github.com/yves-chevallier/chevallier.io">
           <svg class="navbar-nav-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 499.36" focusable="false">
             <title>GitHub</title>
             <path
