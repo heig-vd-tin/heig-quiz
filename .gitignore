@@ -21,3 +21,6 @@ Homestead.*
 *.bak
 *.beforefix
 *:Zone.Identifier
+
+*.tar.gz
+quizzes
