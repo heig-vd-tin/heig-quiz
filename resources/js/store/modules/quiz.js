@@ -7,7 +7,7 @@ export default {
     return {
       count: 0,
       selected: null,
-      data: {}
+      data: []
     }
   },
   getters: {

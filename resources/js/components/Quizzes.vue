@@ -3,11 +3,11 @@
     <h2>Tous les quiz</h2>
 
     <!-- Quizzes list -->
-    <b-table v-if="quizzes.length" :items="quizzes" :fields="fields" striped hover>
+    <b-table :items="quizzes" :fields="fields" striped hover>
       <template v-slot:cell(name)="data">
         {{ data.item.name }}
         <br />
-        <b-badge class="mr-1 keyword" v-for="keyword in data.item.keywords" v-bind:key="keyword" variant="secondary">
+        <b-badge class="mr-1 keyword" v-for="keyword in data.item.keywords" v-bind:key="keyword.id" variant="secondary">
           {{ keyword }}
         </b-badge>
       </template>
@@ -92,7 +92,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   data() {
@@ -108,52 +108,19 @@ export default {
         shuffle_propositions: false
       },
       fields: [
-        {
-          key: 'id',
-          label: '#',
-          sortable: true
-        },
-        {
-          key: 'name',
-          label: 'Quiz',
-          sortable: true
-        },
-        {
-          key: 'questions',
-          label: 'Questions',
-          sortable: true
-        },
-        {
-          key: 'taken_times',
-          label: 'Utilisé',
-          sortable: true
-        },
-        {
-          key: 'owner.name',
-          label: 'Créateur',
-          sortable: true
-        },
-        {
-          key: 'difficulty',
-          label: 'Difficulté',
-          sortable: true
-        },
-        {
-          label: 'Actions',
-          key: 'actions'
-        }
+        { key: 'id', label: '#', sortable: true },
+        { key: 'name', label: 'Quiz', sortable: true },
+        { key: 'questions', label: 'Questions', sortable: true },
+        { key: 'taken_times', label: 'Utilisé', sortable: true },
+        { key: 'owner.name', label: 'Créateur', sortable: true },
+        { key: 'difficulty', label: 'Difficulté', sortable: true },
+        { key: 'actions', label: 'Actions' }
       ]
     };
   },
   computed: {
-    quizzes() {
-      console.log('rosters', this.$store.state.quiz.data);
-      return this.$store.state.quiz.data;
-    },
-    rosters() {
-      console.log('rosters', this.$store.state.roster.data);
-      return this.$store.state.roster.data;
-    }
+    ...mapState('quiz', {'quizzes': state => state.data}),
+    ...mapState('roster', {'rosters': state => state.data})
   },
   methods: {
     displayCreateActivityForm(quiz_id) {
@@ -180,8 +147,7 @@ export default {
       });
     },
     ...mapActions('activity', ['create'])
-  },
-  mounted() {}
+  }
 };
 </script>
 <style scoped>
