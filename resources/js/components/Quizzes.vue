@@ -111,7 +111,7 @@ export default {
         { key: 'id', label: '#', sortable: true },
         { key: 'name', label: 'Quiz', sortable: true },
         { key: 'questions', label: 'Questions', sortable: true },
-        { key: 'taken_times', label: 'Utilisé', sortable: true },
+        //{ key: 'taken_times', label: 'Utilisé', sortable: true },
         { key: 'owner.name', label: 'Créateur', sortable: true },
         { key: 'difficulty', label: 'Difficulté', sortable: true },
         { key: 'actions', label: 'Actions' }
@@ -136,10 +136,7 @@ export default {
       return valid;
     },
     handleSubmit() {
-      console.log('Handle Submit');
-      if (!this.checkFormValidity()) {
-        return;
-      }
+      if (!this.checkFormValidity()) return;
       form.duration = form.duration.minutes * 60 + form.duration.seconds;
       this.create(this.form).then(response => {
         this.$router.push('activities');
@@ -150,10 +147,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-.keyword {
-  font-size: 70%;
-  padding: 4px;
-  text-transform: lowercase;
-}
-</style>

@@ -1,9 +1,5 @@
 # What to do?
 
-- [x] Redirect to / if not logged
-
-Demain : 
-
 - [ ] Centralize join/leave channels
 - [ ] Popover on activity to see who's there, who's missing
 - [ ] Connected status on realtime results (circle green/yellow/red)
@@ -19,9 +15,6 @@ Demain :
   - [ ] PHP Validator file
   - [ ] Vue file
   - [ ] Schema file
-
-Un autre jour :
-
 - [ ] New Quiz form
   - [ ] Select questions from list add to a new Quiz
 - [ ] Validation 
@@ -69,22 +62,3 @@ Un autre jour :
 - [ ] Estimated time for question to be answered, get an estimated quiz time
 - [ ] Separate activities from questions pool
 - [ ] Git Sync
-
-## Discussions
-
-### Events
-
-A channel per entity:
-
-- activity
-  - ActivityCreated
-- activity.{id}
-  - ActivityStarted
-  - ActivityEnded
-  - ActivityJoined
-  - QuestionAnswered
-  - QuizFinished
-- roster
-  - NewActivitiesAvailable
-- quiz
-  - QuizCreated
