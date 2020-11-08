@@ -21,3 +21,7 @@ yarn-error.log
 *.bak
 *.beforefix
 *:Zone.Identifier
+
+quizzes
+*.tar.gz
+public/*.js
