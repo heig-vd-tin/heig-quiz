@@ -102,6 +102,17 @@ const routes = [
         component: () => import(/* webpackChunkName: "sandbox" */ "./components/sandbox/Sandbox")
       },
       {
+        path: "/courses",
+        name: "courses",
+        meta: {
+          title: "Cours",
+          icon: 'bucket',
+          teacher: true,
+          navbar: true
+        },
+        component: () => import(/* webpackChunkName: "sandbox" */ "./components/class/Class")
+      },
+      {
         path: "/help",
         name: "help",
         meta: {
