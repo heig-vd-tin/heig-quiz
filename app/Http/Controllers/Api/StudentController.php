@@ -20,4 +20,13 @@ class StudentController extends Controller
             ]
         ];
     }
+
+    function getStudents() {
+        $students = Student::with('user')->get()->all();
+
+        return [
+            'count' => count($students),
+            'students' => $students,
+        ];
+    }
 }

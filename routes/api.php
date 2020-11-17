@@ -57,6 +57,7 @@ Route::namespace('Api')->group(function () {
     // Teacher
     Route::group(['middleware' => 'role:teacher'], function() {
         Route::get('students', 'StudentController@index');
+        Route::get('studentsfull', 'StudentController@getStudents');
 
         Route::get('users', 'UserController@index');
         Route::get('users/{id}', 'UserController@show');
@@ -71,6 +72,7 @@ Route::namespace('Api')->group(function () {
         Route::get('rosters/{id}/students', 'RosterController@students');
         Route::get('rosters/{id}/course', 'RosterController@course');
         Route::get('rosters/{id}/activities', 'ActivityController@rosterActivities');
+        Route::post('rosters/add', 'RosterController@addStudent');
 
         Route::get('quizzes', 'QuizController@index');
         Route::get('quizzes/{id}', 'QuizController@show');
