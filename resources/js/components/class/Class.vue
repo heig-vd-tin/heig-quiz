@@ -1,20 +1,18 @@
 <template>
   <div>
-    <h2>Test class</h2>
-    <cmp-course @validate-course=validateCourse></cmp-course>
-    <cmp-roster @validate-roster=validateRoster></cmp-roster>
-    <cmp-student key:cpt_refresh v-if=roster :roster=roster></cmp-student>
+    <b-container fluid>
+        <cmp-roster class="mb-4" @validate-roster=validateRoster></cmp-roster>
+        <cmp-student class="mb-4" key:cpt_refresh v-if=roster :roster=roster></cmp-student>
+    </b-container>
   </div>
 </template>
 <script>
 
-import CmpCourse from "./Course.vue"
 import CmpRoster from "./Roster.vue"
 import CmpStudent from "./Student.vue"
 
 export default {
   components:{
-      'cmp-course': CmpCourse,
       'cmp-roster': CmpRoster,
       'cmp-student': CmpStudent
   },
@@ -35,7 +33,6 @@ export default {
 
       validateRoster : function(roster) {
           this.roster = roster
-          console.log(roster)
           this.cpt_refresh++
       },
   }, 

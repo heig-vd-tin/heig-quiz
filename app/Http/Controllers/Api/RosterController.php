@@ -58,6 +58,45 @@ class RosterController extends Controller
         return $course;
     }
 
+    function create(Request $request) {
+        Log::debug('Create roster');
+        $data = $request->all();
+        $r = new Roster();
+        $r->fill($data);
+        $r->teacher_id = Auth::id();
+
+        $r->save();
+
+        return response([
+            'message' => 'Roster added',
+            'roster' => $r
+        ], 200);
+    }
+
+    function deleteStudent(Request $request) {
+        Log::debug('Delete student to roster');
+
+        $r = Roster::findOrFail($request->roster_id);
+        if ($r->teacher_id != Auth::id()) {
+            return response([
+                'message' => "Only the roster's teacher can delete a student",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $s = Student::findOrFail($request->student_id);
+
+        $r->students()->detach($s->id);
+
+        $students = Roster::findOrFail($request->roster_id)->students;
+        $s = fractal($students, new StudentTransformer())->toArray();
+        return response([
+            'message' => 'Studdent deleted',
+            'roster' => $r,
+            'students' => $s
+        ], 200);
+    }
+
     function addStudent(Request $request) {
         Log::debug('Add student to roster');
 
