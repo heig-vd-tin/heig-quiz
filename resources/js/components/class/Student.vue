@@ -1,14 +1,14 @@
 <template>
   <div>
     <h2>Students</h2>
-    <b-form-input v-model="user" list="user-list"></b-form-input>
-    <datalist id="user-list">
-        <option v-for="u in usersList" :key="u.id">{{ u.name }}</option>
+    <b-form-input v-model="student" list="student-list"></b-form-input>
+    <datalist id="student-list">
+        <option v-for="s in studentsList" :key="s.id">{{ s.user.name }}</option>
     </datalist>
 
     <b-button variant="success" @click="addStudent">Add student</b-button>
 
-    <b-table striped hover :items="students"></b-table>
+    <b-table striped hover :key=cptRefresh :items="students"></b-table>
   </div>
 </template>
 <script>
@@ -17,22 +17,29 @@ export default {
 
   data() {
     return {
-        usersList:[],
-        user: '',
-        students: null
+        studentsList:[],
+        student: '',
+        students: null,
+        cptRefresh: 0
     }
   },
 
   props:{
       roster: null
   },
+ 
+  watch: {
+    roster: function (val) {
+        this.loadStudent()
+    }
+  },
 
   methods: {
       loadUser : function() {
         axios
-        .get('api/users')
+        .get('api/studentsfull')
         .then(resp => {
-            this.usersList = resp.data.users
+            this.studentsList = resp.data.students
         })
       },
 
@@ -45,12 +52,31 @@ export default {
       },
 
       getStudent: function(name) {
-
+        return this.studentsList.find(o => { return o.user.name === name })
       },
 
       addStudent: function() {
-          var u = this.usersList.find(o => { return o.name === this.user })
-          console.log(u);
+        var s = this.getStudent(this.student)
+
+        var data = {
+            'roster_id': this.roster.id,
+            'student_id': s.id
+        }
+
+        const vm = this
+        axios({
+            method: 'post',
+            url: 'api/rosters/add',
+            data: data
+        })
+        .then(function (reponse) {
+           vm.students = reponse.data.students.data
+           vm.cptRefresh++
+        })
+        .catch(function (erreur) {
+            console.log(erreur)
+        });
+
         //this.$emit("validate-roster", this.roster)
       }
   }, 

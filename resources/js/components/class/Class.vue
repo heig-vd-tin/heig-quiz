@@ -3,7 +3,7 @@
     <h2>Test class</h2>
     <cmp-course @validate-course=validateCourse></cmp-course>
     <cmp-roster @validate-roster=validateRoster></cmp-roster>
-    <cmp-student v-if=roster :roster=roster></cmp-student>
+    <cmp-student key:cpt_refresh v-if=roster :roster=roster></cmp-student>
   </div>
 </template>
 <script>
@@ -22,7 +22,8 @@ export default {
   data() {
     return {
         courses:[],
-        roster: null
+        roster: null,
+        cpt_refresh: 0
     }
   },
 
@@ -35,6 +36,7 @@ export default {
       validateRoster : function(roster) {
           this.roster = roster
           console.log(roster)
+          this.cpt_refresh++
       },
   }, 
 

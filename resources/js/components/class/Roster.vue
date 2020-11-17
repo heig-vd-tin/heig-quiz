@@ -36,7 +36,6 @@ export default {
       },
 
       validate: function() {
-        debugger
         this.$emit("validate-roster", this.roster)
       }
   }, 
