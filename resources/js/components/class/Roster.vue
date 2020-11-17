@@ -1,11 +1,11 @@
 <template>
   <div>
     <h2>Roster</h2>
-    <b-form-input v-model="roster" list="roster-list"></b-form-input>
-
-    <datalist id="roster-list">
-        <option v-for="r in rosters" :key="r.id">{{ r.name }}</option>
-    </datalist>
+    <b-form-select v-model="roster">
+      <option v-for="r in rosters" :key="r.id" v-bind:value="r">
+      {{ r.name }}
+      </option>
+    </b-form-select>
 
     <b-button variant="success" @click="validate">Validate roster</b-button>
 
@@ -18,6 +18,7 @@ export default {
   data() {
     return {
         rosters:[],
+        id_roster: null,
         roster: ''
     }
   },
@@ -35,6 +36,7 @@ export default {
       },
 
       validate: function() {
+        debugger
         this.$emit("validate-roster", this.roster)
       }
   }, 
