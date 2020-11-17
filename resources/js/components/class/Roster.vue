@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h2>Roster</h2>
+    <h2>Select Roster</h2>
     <b-form-select v-model="roster">
       <option v-for="r in rosters" :key="r.id" v-bind:value="r">
       {{ r.name }}
       </option>
     </b-form-select>
 
-    <b-button variant="success" @click="validate">Validate roster</b-button>
+    <b-button class="mb-4 mt-2" variant="success" @click="validate">Validate roster</b-button>
 
   </div>
 </template>

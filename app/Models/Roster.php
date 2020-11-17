@@ -18,6 +18,8 @@ class Roster extends Model
         'students'
     ];
 
+    protected $fillable = ['year', 'name', 'course_id', 'semester', 'teacher_id'];
+
     public function course()
     {
         return $this->belongsTo(Course::class);

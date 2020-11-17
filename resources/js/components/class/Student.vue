@@ -6,9 +6,15 @@
         <option v-for="s in studentsList" :key="s.id">{{ s.user.name }}</option>
     </datalist>
 
-    <b-button variant="success" @click="addStudent">Add student</b-button>
+    <b-button class="mb-4 mt-2" variant="success" @click="addStudent">Add student</b-button>
 
-    <b-table striped hover :key=cptRefresh :items="students"></b-table>
+    <b-table striped hover :key=cptRefresh :items="students" :fields="fields">
+      <template #cell(Actions)="row">
+        <b-button size="sm" @click="onDelete(row.item, row.index, $event.target)" class="mr-1">
+          Delete student
+        </b-button>
+      </template>
+    </b-table>
   </div>
 </template>
 <script>
@@ -20,7 +26,8 @@ export default {
         studentsList:[],
         student: '',
         students: null,
-        cptRefresh: 0
+        cptRefresh: 0,
+        fields: ['name', 'orientation', 'Actions']
     }
   },
 
@@ -35,6 +42,28 @@ export default {
   },
 
   methods: {
+      onDelete: function(student, index, button){
+
+        var data = {
+            'roster_id': this.roster.id,
+            'student_id': student.id
+        }
+
+        const vm = this
+        axios({
+            method: 'delete',
+            url: 'api/rosters/delete',
+            data: data
+        })
+        .then(function (reponse) {
+           vm.students = reponse.data.students.data
+           vm.cptRefresh++
+        })
+        .catch(function (erreur) {
+            console.log(erreur)
+        });
+      },
+
       loadUser : function() {
         axios
         .get('api/studentsfull')
@@ -76,8 +105,6 @@ export default {
         .catch(function (erreur) {
             console.log(erreur)
         });
-
-        //this.$emit("validate-roster", this.roster)
       }
   }, 
 

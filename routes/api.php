@@ -73,6 +73,8 @@ Route::namespace('Api')->group(function () {
         Route::get('rosters/{id}/course', 'RosterController@course');
         Route::get('rosters/{id}/activities', 'ActivityController@rosterActivities');
         Route::post('rosters/add', 'RosterController@addStudent');
+        Route::delete('rosters/delete', 'RosterController@deleteStudent');
+        Route::post('rosters/create', 'RosterController@create');
 
         Route::get('quizzes', 'QuizController@index');
         Route::get('quizzes/{id}', 'QuizController@show');
