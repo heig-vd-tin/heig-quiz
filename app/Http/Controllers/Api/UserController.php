@@ -16,7 +16,7 @@ class UserController extends Controller
         });
         return [
             'count' => count($users),
-            'courses' => $users,
+            'users' => $users,
         ];
     }
 
