@@ -23,4 +23,26 @@ class QuestionController extends Controller
         return fractal($questions->get(), new QuestionTransformer())->toArray();
     }
 
+    function getQuestions(Request $request, $keyword)
+    {
+        $i = Auth::id();
+
+        if (!$request->user()->isTeacher()){
+            return response([
+                'message' => "Only teacher can get questions",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        if( $keyword == "all"){
+            $q = Question::with('keywords')->get();
+        }
+        else{
+            $q = Question::whereHas('keywords', function ($query) use ($keyword) {
+                return $query->where('name', 'like', $keyword);
+            })->get();
+        }
+
+        return $q;
+    }
 }

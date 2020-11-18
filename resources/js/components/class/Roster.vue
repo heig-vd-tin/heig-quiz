@@ -1,14 +1,12 @@
 <template>
   <div>
     <h2>Select Roster</h2>
-    <b-form-select v-model="roster">
+    <b-form-select v-model="roster" @change="onRosterChange">
       <option v-for="r in rosters" :key="r.id" v-bind:value="r">
-      {{ r.name }}
+      {{ r.name }} / {{ r.semester }} / {{ r.year }}
       </option>
     </b-form-select>
-
-    <b-button class="mb-4 mt-2" variant="success" @click="validate">Validate roster</b-button>
-
+    
   </div>
 </template>
 <script>
@@ -35,7 +33,7 @@ export default {
         })
       },
 
-      validate: function() {
+      onRosterChange: function() {
         this.$emit("validate-roster", this.roster)
       }
   }, 

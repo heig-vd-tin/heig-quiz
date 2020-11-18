@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 use App\Transformer\QuizTransformer;
 use App\Models\Quiz;
+use App\Models\Question;
+use Auth;
+use Log;
 
 class QuizController extends Controller
 {
@@ -50,5 +53,74 @@ class QuizController extends Controller
             'quiz_id' => $id,
             'activities' => $activities
         ];
+    }
+
+    function create(Request $request) {
+        if( !Auth::user()->isTeacher() ){
+            return response([
+                'message' => "Only the teacher can create a quiz",
+                'error' => "Bad Request"
+            ], 400);
+        };
+
+        Log::debug('Create quiz');
+        $data = $request->all();
+        $q = new Quiz();
+        $q->fill($data);
+        $q->user_id = Auth::id();
+
+        $q->save();
+
+        return response([
+            'message' => 'Quiz created'
+        ], 200);
+    }
+
+    function deleteQuestion(Request $request) {
+        Log::debug('Delete question to quiz');
+
+        $quiz = Quiz::findOrFail($request->quiz_id);
+        if ($quiz->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the quiz's teacher can delete a question",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $question = Question::findOrFail($request->question_id);
+
+        $quiz->questions()->detach($question->id);
+
+        $questions = Quiz::findOrFail($request->quiz_id)->questions;
+        $quiz = fractal($quiz, new QuizTransformer())->toArray();
+        return response([
+            'message' => 'Question deleted',
+            'quiz' => $quiz,
+            'questions' => $questions
+        ], 200);
+    }
+
+    function addQuestion(Request $request) {
+        Log::debug('Add question to quiz');
+
+        $quiz = Quiz::findOrFail($request->quiz_id);
+        if ($quiz->user_id != Auth::id()) {
+            return response([
+                'message' => "Only the quiz's teacher can add a question",
+                'error' => "Bad Request"
+            ], 400);
+        }
+
+        $question = Question::findOrFail($request->question_id);
+
+        $quiz->questions()->attach($question->id);
+
+        $questions = Quiz::findOrFail($request->quiz_id)->questions;
+        $quiz = fractal($quiz, new QuizTransformer())->toArray();
+        return response([
+            'message' => 'Question added',
+            'quiz' => $quiz,
+            'questions' => $questions
+        ], 200);
     }
 }
