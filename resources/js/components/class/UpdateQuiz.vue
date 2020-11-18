@@ -42,10 +42,10 @@
         </datalist>
 
         <div class="my-2" v-if="state > 1 && question_name">{{ questionContent }}</div>
+
+        <b-button v-if="state > 1" class="my-3" variant="success" @click="addQuestion">Add question</b-button>
       </b-col>
     </b-row>
-
-    <b-button v-if="state > 1" class="my-3" variant="success" @click="addQuestion">Add question</b-button>
 
     <b-table v-if="state > 1" striped hover :items="questions_quiz" :fields="fields">
       <template #cell(Actions)="row">
