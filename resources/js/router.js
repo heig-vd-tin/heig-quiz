@@ -99,7 +99,29 @@ const routes = [
           teacher: true,
           navbar: true
         },
-        component: () => import(/* webpackChunkName: "sandbox" */ "./components/sandbox/Sandbox")
+        component: () => import("./components/sandbox/Sandbox")
+      },
+      {
+        path: "/createquiz",
+        name: "createquiz",
+        meta: {
+          title: "Create Quiz",
+          icon: 'bucket',
+          teacher: true,
+          navbar: true
+        },
+        component: () => import("./components/class/CreateQuiz")
+      },
+      {
+        path: "/updatequiz",
+        name: "updatequiz",
+        meta: {
+          title: "Update Quiz",
+          icon: 'bucket',
+          teacher: true,
+          navbar: true
+        },
+        component: () => import("./components/class/UpdateQuiz")
       },
       {
         path: "/createroster",
@@ -110,7 +132,7 @@ const routes = [
           teacher: true,
           navbar: true
         },
-        component: () => import(/* webpackChunkName: "sandbox" */ "./components/class/CreateRoster")
+        component: () => import("./components/class/CreateRoster")
       },
       {
         path: "/rosters",
@@ -121,7 +143,7 @@ const routes = [
           teacher: true,
           navbar: true
         },
-        component: () => import(/* webpackChunkName: "sandbox" */ "./components/class/Class")
+        component: () => import("./components/class/Class")
       },
       {
         path: "/help",

@@ -45,7 +45,9 @@ class Quiz extends Model
             }
             $count += 1;
         };
-        $difficulty = round($difficulty / $count);
+        if( $count > 0){
+            $difficulty = round($difficulty / $count);
+        }
         return $difficulty;
     }
 

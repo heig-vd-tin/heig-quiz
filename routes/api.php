@@ -81,6 +81,9 @@ Route::namespace('Api')->group(function () {
         Route::get('quizzes/{id}/questions', 'QuizController@questions');
         Route::get('quizzes/{id}/questions/{q}', 'QuizController@question');
         Route::get('quizzes/{id}/activities', 'QuizController@activities');
+        Route::post('quizzes/create', 'QuizController@create');
+        Route::post('quizzes/add', 'QuizController@addQuestion');
+        Route::delete('quizzes/delete', 'QuizController@deleteQuestion');
 
         Route::get('activities/{id}/roster', 'ActivityController@roster');
         Route::get('activities/{id}/quiz', 'ActivityController@quiz');
@@ -97,6 +100,7 @@ Route::namespace('Api')->group(function () {
         Route::post('activities/{id}/close', 'ActivityController@close');
 
         Route::get('questions', 'QuestionController@index');
+        Route::get('questions/{keyword}', 'QuestionController@getQuestions');
     });
 
     Route::get('activities/{id}/questions', 'ActivityController@questions');
