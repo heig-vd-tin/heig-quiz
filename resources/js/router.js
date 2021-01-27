@@ -102,6 +102,17 @@ const routes = [
         component: () => import("./components/sandbox/Sandbox")
       },
       {
+        path: "/createquestion",
+        name: "createquestion",
+        meta: {
+          title: "Create Question",
+          icon: 'bucket',
+          teacher: true,
+          navbar: true
+        },
+        component: () => import("./components/questions/CreateQuestion")
+      },
+      {
         path: "/createquiz",
         name: "createquiz",
         meta: {
