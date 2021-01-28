@@ -113,6 +113,17 @@ const routes = [
         component: () => import("./components/questions/CreateQuestion")
       },
       {
+        path: "/updatequestion",
+        name: "updatequestion",
+        meta: {
+          title: "Update Question",
+          icon: 'bucket',
+          teacher: true,
+          navbar: true
+        },
+        component: () => import("./components/questions/UpdateQuestion")
+      },
+      {
         path: "/createquiz",
         name: "createquiz",
         meta: {
