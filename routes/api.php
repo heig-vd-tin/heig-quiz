@@ -101,6 +101,8 @@ Route::namespace('Api')->group(function () {
 
         Route::get('questions', 'QuestionController@index');
         Route::get('questions/{keyword}', 'QuestionController@getQuestions');
+        Route::post('questions/testquestion', 'QuestionController@testQuestion');
+        Route::post('questions/create', 'QuestionController@create');
     });
 
     Route::get('activities/{id}/questions', 'ActivityController@questions');
