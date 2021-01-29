@@ -94,7 +94,13 @@
         <b-col sm="3">
           <b-button class="p-2" variant="info" @click="testQuestion">Test question</b-button>
         </b-col>
-        <b-col sm="3">
+
+        <b-col sm="9" v-if="question.type == 'code'">
+          <b-form-textarea :key="cpt_info_w" plaintext :value="question.test_info_w" rows="3" max-rows="6"></b-form-textarea>
+          <b-form-textarea :key="cpt_info_e" plaintext :value="question.test_info_e" rows="3" max-rows="6"></b-form-textarea>
+          <b-form-textarea :key="cpt_info_o" plaintext :value="question.test_info_o" rows="3" max-rows="6"></b-form-textarea>
+        </b-col>
+        <b-col sm="3" v-else>
           <b-badge class="p-3" v-if="question.answer_ok == null" variant="info">Not tested</b-badge> 
           <b-badge class="p-3" v-else-if="question.answer_ok" variant="success">Good answer</b-badge> 
           <b-badge class="p-3" v-else  variant="danger">Bad answer</b-badge>
@@ -133,6 +139,9 @@ export default {
 
   data() {
     return {
+        cpt_info_w: 1,
+        cpt_info_e: 2,
+        cpt_info_o: 3,
         component_nonce: 0,
         question:{
           'content': null,
@@ -184,6 +193,10 @@ export default {
   },
 
   methods: {
+    complet_code(){
+      return `#include <stdio.h>\n int main(){ ${this.question.answer} }` 
+    },
+
     validationChange(val){
       console.log(val) 
       this.question.validation = val
@@ -204,8 +217,8 @@ export default {
               Array.isArray(this.question.validation) ){
             this.question.validation = {}
           }
-          this.component_validation = 'q-code'
-          this.component_question = 'q-valid-code'
+          this.component_validation = 'q-valid-code'
+          this.component_question = 'q-code'
           break;
         case 'multiple-choice':
           if( this.question.validation === null ||
@@ -221,17 +234,32 @@ export default {
 
     testQuestion: function() {
       let q = this.question
-      axios({
-          method: 'post',
-          url: 'api/questions/testquestion',
-          data: this.question
-      })
-      .then(function (rep) {
-          q.answer_ok = rep.data.answer_ok
-      })
-      .catch(function (erreur) {
-          console.log(erreur)
-      });
+      let vm = this
+      let data = Object.assign({}, this.question);
+      if( this.question.type === 'code' ){
+        data.answer = this.complet_code()
+      }
+
+        axios({
+            method: 'post',
+            url: 'api/questions/testquestion',
+            data: data
+        })
+        .then(function (rep) {
+            q.answer_ok = rep.data.answer_ok
+            if( rep.data.test_info !== undefined ){
+              let txt = rep.data.test_info.split(',"')
+              q.test_info_w = txt[0]
+              q.test_info_e = txt[1]
+              q.test_info_o = txt[2]
+              vm.cpt_info_w++;
+              vm.cpt_info_e++;
+              vm.cpt_info_o++;
+            }
+        })
+        .catch(function (erreur) {
+            console.log(erreur)
+        });
     },
 
     previewQuestion: function() {

@@ -7,17 +7,36 @@ transformed into a textfield. The student have additional buttons:
 -->
 <template>
 <div>
-  TODO: Code type question
+  <p>
+    <markdown-it-vue mb-2 :content="content" />
+  </p>
 </div>
 </template>
 
 <script>
+import MarkdownItVue from 'markdown-it-vue'
+
 export default {
+  components: {
+    MarkdownItVue
+  },
+  
+    computed: {
+    value: {
+      get() {
+        return this.answered;
+      },
+      set(value) {
+        this.$emit('update:answered', value);
+      }
+    }
+  },
+
   props: {
     content: String,
+    answered: String,
     allowBuild: Boolean,
-    allowRun: Boolean,
-    value: String
+    allowRun: Boolean
   }
 }
 </script>
