@@ -51,8 +51,10 @@ class Question extends Model
     }
 
     protected function validateShortAnswer($value) {
-        if (Arr::has($this, 'validation.trim'))
+        if (Arr::has($this, 'validation.trim') && $this['validation']['trim'])
+        {
             $value = trim($value);
+        }
 
         if (Arr::has($this, 'validation.equals') && $value == Arr::get($this, 'validation.equals'))
             return true;
