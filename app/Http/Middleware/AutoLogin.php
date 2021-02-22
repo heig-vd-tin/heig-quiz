@@ -3,6 +3,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Student;
 use Closure;
 use Auth;
 
@@ -29,6 +30,12 @@ class AutoLogin
 		$u->name = $full;
 		$u->affiliation = $aff;
 		$u->save();
+
+		if( str_contains($aff, 'student'){
+			$s = new Student();
+			$s->user_id = $u->id;
+			$s->save();	
+		}	
 	}
 
 	if(!Auth::check()){
