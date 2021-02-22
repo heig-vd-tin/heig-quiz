@@ -31,7 +31,7 @@ class AutoLogin
 		$u->affiliation = $aff;
 		$u->save();
 
-		if( str_contains($aff, 'student'){
+		if( str_contains($aff, 'student') ){
 			$s = new Student();
 			$s->user_id = $u->id;
 			$s->save();	
