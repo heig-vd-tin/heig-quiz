@@ -43,10 +43,18 @@ class User extends Authenticatable
             $roles = [$roles];
 
         foreach($roles as $role) {
-            if ($role == 'student' && $this->affiliation == 'member;student')
-                return true;
-            if ($role == 'teacher' && $this->affiliation == 'member;staff')
-                return true;
+		if ($role == 'student' && 
+		    str_contains($this->affiliation, 'member') &&
+		    str_contains($this->affiliation, 'student'))
+		{
+		    return true;
+		}
+		if ($role == 'teacher' && 
+		    str_contains($this->affiliation, 'member') &&
+		    str_contains($this->affiliation, 'staff'))
+		{
+		    return true;
+		}
         }
 
         return false;
