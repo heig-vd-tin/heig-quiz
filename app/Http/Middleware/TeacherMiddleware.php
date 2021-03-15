@@ -15,8 +15,8 @@ class TeacherMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user() && $request->user()->affiliation != 'member;staff')
-            return new Response(view('unauthorized')->with('role', 'ADMIN'));
+        if ($request->user() && strpos($request->user()->affiliation, 'student') === false)
+                return new Response(view('unauthorized')->with('role', 'ADMIN'));
 
         return $next($request);
     }
