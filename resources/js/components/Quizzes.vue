@@ -137,7 +137,7 @@ export default {
     },
     handleSubmit() {
       if (!this.checkFormValidity()) return;
-      form.duration = form.duration.minutes * 60 + form.duration.seconds;
+      this.form.duration = this.form.duration.minutes * 60 + this.form.duration.seconds;
       this.create(this.form).then(response => {
         this.$router.push('activities');
         this.$bvModal.hide('new-activity-modal');
