@@ -109,10 +109,10 @@ export default {
           });
         })
         .joining(user => {
-          console.log("Student ", student)
+          console.log("Student ", user)
         })
         .leaving(user => {
-          console.log("Student ", student)
+          console.log("Student ", user)
         })
         .listen('ActivityUpdated', e => {
           this.loadActivity();
