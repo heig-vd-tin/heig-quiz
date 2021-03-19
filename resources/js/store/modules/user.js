@@ -19,7 +19,8 @@ export default {
   mutations: {
     update(state, user) {
       state.name = `${user.firstname} ${user.lastname}`;
-      state.role = user.affiliation == 'member;staff' ? 'teacher' : 'student';
+      state.role = user.affiliation.includes('member') && 
+		    user.affiliation.includes('staff') ? 'teacher' : 'student';
     }
   },
   actions: {
