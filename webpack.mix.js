@@ -1,5 +1,7 @@
 const mix = require('laravel-mix');
-require('laravel-mix-bundle-analyzer');
+
+//require('laravel-mix-bundle-analyzer');
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -12,10 +14,13 @@ require('laravel-mix-bundle-analyzer');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+   .vue()
    .sass('resources/sass/app.scss', 'public/css')
    .sourceMaps()
-   .browserSync({ proxy: 'localhost:8000' });
-
+   .browserSync({ proxy: 'localhost:8000' })
+   .options({
+      legacyNodePolyfills: true
+   });
 // Disabled by default because it is very slow...
 // if (mix.isWatching()) {
 //   mix.bundleAnalyzer();

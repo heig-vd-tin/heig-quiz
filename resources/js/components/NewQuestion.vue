@@ -12,7 +12,8 @@
 <script>
 
 import Question from './questions/Question'
-import YAML from 'yaml'
+//TODO(ycr): Not working with this module
+//import YAML from 'yaml' 
 
 export default {
   components: {
@@ -22,7 +23,8 @@ export default {
     markdown(value) {
       let matches = value.match(/(?<=^---\n).*?(?=\n---)/igms);
       if (matches) {
-        this.frontmatter = YAML.parse(matches[0])
+        //TODO(ycr): Not working with this module
+        // this.frontmatter = YAML.parse(matches[0])
       }
       this.question.content = value.replace(/^---\n.*?---\n/igms, '');
 
