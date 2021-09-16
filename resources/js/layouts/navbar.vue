@@ -1,7 +1,8 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand :to="{name: 'home'}">
-      <div class="logo-quiz d-inline-block align-top" alt="Kitten"></div>
+      <div class="logo-heig d-inline-block align-top" alt="HEIG-VD"></div>
+      <div class="logo-quiz d-inline-block align-top" alt="Quiz"></div>
     </b-navbar-brand>
     <b-navbar-brand>
       <slot name="title"></slot>

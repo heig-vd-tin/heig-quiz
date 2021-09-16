@@ -16,8 +16,6 @@
     <!-- TODO: Breadcrumb -->
     <!-- <b-breadcrumb :items="breadcrumb"></b-breadcrumb> -->
 
-    <a class="d-none d-lg-block logo-heig-vd" href="https://heig-vd.ch" target="_blank" />
-
     <div class="mt-2 container content-wrap">
       <router-view></router-view>
     </div>
@@ -68,15 +66,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 $footer-height: 100px;
-
-.logo-heig-vd {
-    background: url(../../img/logo-heig-vd.svg) no-repeat;
-    background-size: 100%;
-    position: absolute;
-    width: 60px;
-    height: 100px;
-    top: 100px;
-}
 
 .page-container {
   position: relative;
