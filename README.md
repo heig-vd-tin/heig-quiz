@@ -22,7 +22,7 @@ npm install
 docker-compose up
 
 php artisan key:generate
-php artisan migrate:freah --seed
+php artisan migrate:fresh --seed
 ```
 
 ### Configure Environment
