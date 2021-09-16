@@ -73,9 +73,9 @@ $footer-height: 100px;
     background: url(../../img/logo-heig-vd.svg) no-repeat;
     background-size: 100%;
     position: absolute;
-    width: 40px;
+    width: 60px;
     height: 100px;
-    top: 150px;
+    top: 100px;
 }
 
 .page-container {

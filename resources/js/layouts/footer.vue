@@ -6,10 +6,10 @@
 
         <div class="col-sm-4 hidden-xs text-right">
           <a href="http://www.vd.ch">
-            <img class="p-2" src="../../img/logo-vd.svg" alt="Canton de Vaud" height="80px" />
+            <img class="p-2" :src="require('../../img/logo-vd.svg').default" alt="Canton de Vaud" height="80px" />
           </a>
           <a href="http://www.hes-so.ch">
-            <img class="p-2" src="../../img/logo-hes-so.svg" alt="HES-SO" height="80px" />
+            <img class="p-2" :src="require('../../img/logo-hes-so.svg').default" alt="HES-SO" height="80px" />
           </a>
         </div>
       </div>
