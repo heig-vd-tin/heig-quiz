@@ -41,7 +41,7 @@ PUSHER_APP_SECRET=
 
 The cron allows task scheduling such as emitting an event when an activity is about to end. Artisan command will be called every minute.
 
-```
+```cron
 * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
@@ -49,17 +49,33 @@ The cron allows task scheduling such as emitting an event when an activity is ab
 
 You need more than one terminal...
 
-```
+First to start the Laravel development server:
+
+```bash
 php artisan serve
 ```
 
+Then start the pusher replacement websocket server:
+
+```bash
+php artisan websockets:serve
 ```
+
+Eventually the Vue development server:
+
+```bash
 npm run watch
 ```
 
+### Debug
+
+To debug websocket messages, you can go to :
+
+http://127.0.0.1:8000/laravel-websockets
+
 ### Reset all the migrations
 
-```
+```bash
 php artisan migrate:fresh --seed
 ```
 
@@ -69,7 +85,7 @@ php artisan migrate:fresh --seed
 
 Still have some issues on `npm` on the server side...
 
-```
+```bash
 npm run production
 tar cvzf dist.tar.gz public/css/app.css public/css/app.css.map public/js/app.js public/js/app.js.LICENSE.txt public/js/app.js.map
 scp dist.tar.gz ...
@@ -77,7 +93,7 @@ scp dist.tar.gz ...
 
 ### PHP
 
-```
+```bash
 sudo apt install php-yaml php-zip
 ```
 
