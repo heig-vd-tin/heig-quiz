@@ -27,11 +27,7 @@ php artisan migrate:fresh --seed
 
 ### Configure Environment
 
-In your `.env`  make sure that `APP_DEBUG` is set to `true` and give a default login with:
-
-```
-DEVEL_AUTOLOGIN="yves.chevallier@heig-vd.ch"
-```
+In your `.env`  make sure that `APP_DEBUG` is set to `true`. To login with any user use the route `/debug/login/{id}`.
 
 Then you should configure your MySQL `DB_CONNECTION=mysql` and your Pusher settings. You can get them by creating an account on pusher.com:
 
