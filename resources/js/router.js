@@ -9,6 +9,8 @@ import Quiz from "./components/Quiz"
 import Quizzes from "./components/Quizzes"
 import Results from "./components/Results"
 import Dashboard from "./layouts/dashboard"
+import StudentList from "./components/StudentList"
+import StudentResult from "./components/StudentResult"
 
 const routes = [
   {
@@ -60,6 +62,31 @@ const routes = [
         meta: {
           title: "Résultats",
           icon: 'awards'
+        },
+        props: route => ({
+          activity_id: parseInt(route.params.activity_id)
+        })
+      },
+      {
+        path: "/activities/:activity_id/studentResult/:student_id",
+        name: "studentResult",
+        component: StudentResult,
+        meta: {
+          title: "Résultat de l'étudiant",
+          icon: 'awards'
+        },
+        props: route => ({
+          activity_id: parseInt(route.params.activity_id),
+          student_id: parseInt(route.params.student_id)
+        })
+      },
+      {
+        path: "/activities/:activity_id/studentList",
+        name: "studentList",
+        component: StudentList,
+        meta: {
+          title: "Liste des étudiant",
+          icon: 'person-lines'
         },
         props: route => ({
           activity_id: parseInt(route.params.activity_id)

@@ -17,6 +17,18 @@
 
       <b-row class="question_line">
         <b-col sm="2">
+          <label>Points: </label>
+        </b-col>
+        <b-col sm="6">
+          <b-form-input v-model="question.points" type="number"></b-form-input>
+        </b-col>
+        <b-col sm="3">
+          <label class="help">Number of points</label>
+        </b-col>
+      </b-row>
+
+      <b-row class="question_line">
+        <b-col sm="2">
           <label>Content: </label>
         </b-col>
         <b-col sm="6">
@@ -120,10 +132,13 @@ import Code from './Code';
 import FillInTheGaps from './FillInTheGaps';
 import MultipleChoice from './MultipleChoice';
 import ShortAnswer from './ShortAnswer';
+import MultipleChoiceWithAnswer from './MultipleChoiceWithAnswer.vue';
 
 import ValidationMultiple from './validation/ValidationMultipleChoice'
 import ValidationShort from './validation/ValidationShortAnswer'
 import ValidationCode from './validation/ValidationCode'
+import ValidationFillInTheGaps from './validation/ValidationFillInTheGaps.vue'
+import ValidationMultipleAnswer from './validation/ValidationMultipleChoiceWithAnswer.vue';
 
 export default {
   components: { 
@@ -131,9 +146,12 @@ export default {
     'q-fill-in-the-gaps': FillInTheGaps,
     'q-multiple-choice': MultipleChoice,
     'q-short-answer': ShortAnswer, 
+    'q-multiple-choice-with-answer': MultipleChoiceWithAnswer,
     'q-valid-multiple': ValidationMultiple,
     'q-valid-short': ValidationShort,
     'q-valid-code': ValidationCode,
+    'q-valid-fill': ValidationFillInTheGaps,
+    'q-valid-multiple-answer': ValidationMultipleAnswer,
     'q-keyword' : Keyword
   },
 
@@ -146,11 +164,13 @@ export default {
         question:{
           'content': null,
           'name':'',
+          'points': null,
           'type': null,
           'difficulty': null,
           'validation': null,
           'answer': '',
           'answer_ok': null,
+          'options': null,
           keywords: []
         },
         component_question: null,
@@ -159,7 +179,9 @@ export default {
           { value: null, text: 'Please select an option' },
           { value: 'short-answer', text: 'Short-answer' },
           { value: 'multiple-choice', text: 'Multiple choice' },
-          { value: 'code', text: 'Code' }
+          { value: 'code', text: 'Code' },
+          { value: 'fill-in-the-gaps', text: 'Fill in the gaps'},
+          { value: 'multiple-choice-with-answer', text: 'Multiple choice with answer'}
         ]
     }
   },
@@ -228,6 +250,24 @@ export default {
           this.component_validation = 'q-valid-multiple'
           this.component_question = 'q-multiple-choice'
           break;
+        case 'fill-in-the-gaps':
+          if( this.question.validation === null ||
+              !Array.isArray(this.question.validation)){
+            this.question.validation = []
+          }
+          this.component_validation = 'q-valid-fill'
+          this.component_question = 'q-fill-in-the-gaps'
+          break;
+          
+        case 'multiple-choice-with-answer':
+          if( this.question.validation === null ||
+              !Array.isArray(this.question.validation) ){
+            this.question.validation = []
+          }
+          this.component_validation = 'q-valid-multiple-answer'
+          this.component_question = 'q-multiple-choice-with-answer'
+          break;
+          
       }
       this.component_nonce += 1
     },

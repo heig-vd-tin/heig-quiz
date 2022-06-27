@@ -89,8 +89,12 @@ Route::namespace('Api')->group(function () {
         Route::get('activities/{id}/quiz', 'ActivityController@quiz');
         Route::get('activities/{id}/progression', 'ActivityController@progression');
         Route::get('activities/{id}/results', 'ActivityController@results');
-
+        
+        Route::get('activities/{id}/studentList', 'ActivityController@studentList');
+        Route::get('activities/{id}/studentResult/{s}', 'ActivityController@studentAnswers');
+        
         Route::post('activities/create', 'ActivityController@create');
+        Route::post('activities/updateAnswer', 'ActivityController@updateAnswer');
 
         Route::post('activities/{id}/start', 'ActivityController@start');
         Route::post('activities/{id}/hide', 'ActivityController@set_hidden');

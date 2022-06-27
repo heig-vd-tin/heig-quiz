@@ -22,6 +22,7 @@ class AnswerTransformer extends Fractal\TransformerAbstract
         $answered = [
             'answered_at' => $answer->updated_at,
             'answered' => $answer->answer,
+            'point' => $answer->points,
         ];
 
         // Available to students once finished

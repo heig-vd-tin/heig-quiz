@@ -43,6 +43,7 @@
         "portal-vue": "^2.1.7",
         "process": "^0.11.10",
         "pusher-js": "^7.0.3",
+        "vue-simple-alert": "^1.1.1",
         "vuetify": "^2.5.8",
         "vuex": "^3.6.2",
         "yaml": "^1.10.2"

@@ -14,10 +14,8 @@ use Log;
 class QuizController extends Controller
 {
     function index(Request $request) {
-        if ($request->owned)
-            $quiz = Quiz::where('user_id', Auth::id())->get();
-        else
-            $quiz = Quiz::all();
+
+        $quiz = Quiz::where('user_id', Auth::id())->get();
 
         return fractal($quiz, new QuizTransformer())->toArray();
     }

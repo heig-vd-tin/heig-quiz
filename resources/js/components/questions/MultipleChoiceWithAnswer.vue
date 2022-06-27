@@ -2,7 +2,6 @@
   <div>
     <b-card-text>
       <markdown-it-vue :content="markdownContent" />
-      points : {{points}}
     </b-card-text>
     <b-list-group class="mt-3 mb-4">
       <b-list-group-item v-for="(proposition, index) in propositions" :key="index">
@@ -51,7 +50,6 @@ export default {
     is_correct: { type: Boolean, default: null },
     choices: Object,
     students: Number,
-    points: Number
   },
   data() {
     return {
