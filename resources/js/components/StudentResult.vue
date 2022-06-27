@@ -1,66 +1,23 @@
 <template>
   <div>
     <h2 v-if="activity.quiz">
-      Quiz n°{{ activity.quiz.id }}
-      <span v-if="activity.mark">(note : {{ activity.mark }})</span>
+      Quiz n°{{ activity.quiz.id }} {{ activity.quiz.name }}
     </h2>
+    <h2>
+        Étudiant id : {{ student_id }}
+    </h2>
+
     <b-card class="mb-4 mt-1" v-for="(question, index) in questions" :key="question.id">
-      <template v-slot:header>
-        <b-progress
-          :id="`progress-${question.id}`"
-          v-if="question.statistics"
-          class="opacity-50 pb"
-          :max="
-            question.statistics.correct_answers +
-              question.statistics.incorrect_answers +
-              question.statistics.missing_answers
-          "
-        >
-          <b-progress-bar :value="question.statistics.correct_answers" variant="success"></b-progress-bar>
-          <b-progress-bar striped :value="question.statistics.incorrect_answers" variant="danger"></b-progress-bar>
-          <b-progress-bar striped :value="question.statistics.missing_answers" variant="warning"></b-progress-bar>
-        </b-progress>
-
-        <b-popover
-          v-if="question.statistics"
-          :target="`progress-${question.id}`"
-          triggers="hover"
-          placement="auto"
-          delay="5"
-        >
-          <div v-if="question.statistics.correct_answers > 0">
-            Réponses correctes :
-            <strong>{{ question.statistics.correct_answers }}</strong>
-            <br />
-          </div>
-          <div v-if="question.statistics.incorrect_answers > 0">
-            Réponses incorrectes :
-            <strong>{{ question.statistics.incorrect_answers }}</strong>
-            <br />
-          </div>
-          <div v-if="question.statistics.missing_answers > 0">
-            Non répondus :
-            <strong>{{ question.statistics.missing_answers }}</strong>
-            <br />
-          </div>
-        </b-popover>
-
-        <h2 class="mt-2 mb-0">
-          <span v-if="$store.state.user.role == 'student'">
-            <b-icon-check2 class="text-success" v-if="question.is_correct" />
-            <b-icon-x v-else class="text-danger" />
-          </span>
-          <strong>Question {{ index + 1 }}.</strong>
-          {{ question.name }}
-        </h2>
-      </template>
 
       <component class="mb-4" :is="question.component" v-bind="question"></component>
+      <component class="mb-4" :is="answers[index].component" v-bind="answers[index]"></component>
 
       <b-alert show variant="info" v-if="question.explanation">
         <markdown-it-vue mb-2 :content="question.explanation" />
       </b-alert>
     </b-card>
+
+
   </div>
 </template>
 
@@ -69,6 +26,9 @@ import Code from './questions/Code';
 import FillInTheGaps from './questions/FillInTheGaps';
 import MultipleChoice from './questions/MultipleChoice';
 import ShortAnswer from './questions/ShortAnswer';
+
+import Answers from './questions/Answer';
+
 import MarkdownItVue from 'markdown-it-vue'
 export default {
   components: {
@@ -76,16 +36,20 @@ export default {
     'q-fill-in-the-gaps': FillInTheGaps,
     'q-multiple-choice': MultipleChoice,
     'q-short-answer': ShortAnswer,
+    'a-answer': Answers,
+
     MarkdownItVue
   },
   data() {
     return {
       questions: {},
+      answers: {},
       activity: {}
     };
   },
   props: {
-    activity_id: null
+    activity_id: null,
+    student_id: null
   },
   watch: {
     current_roster(roster) {
@@ -121,19 +85,34 @@ export default {
         this.activity = activity;
       });
     },
-    loadQuiz() {
+    loadQuestions() {
       axios.get(`/api/activities/${this.activity_id}/questions`).then(({ data: { data, count } }) => {
         this.questions = data;
 
         this.questions.forEach(question => {
           question.component = this.getComponent(question);
         });
+        
+      });
+    },
+    loadAnswers() {
+      
+      axios.get(`/api/activities/${this.activity_id}/studentResult/${this.student_id}`).then(({ data: answers }) => {
+        
+        this.answers = answers;
+        
+        this.answers.forEach(answer => {
+          answer.component = 'a-answer';
+        });
+        
       });
     }
   },
+  
   mounted() {
     this.loadActivity();
-    this.loadQuiz();
+    this.loadQuestions();
+    this.loadAnswers();
   }
 };
 </script>

@@ -1,7 +1,8 @@
 <template>
   <div>
-    <p>
+    <p> 
       <markdown-it-vue mb-2 :content="content" />
+      points : {{points}}
     </p>
     <b-form-group v-if="$store.state.user.role == 'student'">
       <b-form-input
@@ -45,7 +46,8 @@ export default {
     width: { type: String, default: '30' },
     answered: String,
     validation: Object,
-    is_correct: { type: [Boolean, null], required: false }
+    is_correct: { type: [Boolean, null], required: false },
+    points: Number
   }
 };
 </script>

@@ -17,6 +17,7 @@ use Log;
 
 use App\Transformer\ActivityTransformer;
 use App\Transformer\QuestionTransformer;
+use SebastianBergmann\Environment\Console;
 
 class ActivityController extends Controller
 {
@@ -58,6 +59,28 @@ class ActivityController extends Controller
             $item['teacher'] = url("/api/users/{$item['teacher_id']}");
         });
         return $roster;
+    }
+
+    function studentList($id) {
+        $activity = Activity::findOrFail($id);
+        $students = $activity->roster->students()->with('user')->get();
+        return $students;
+    }
+
+    function studentAnswers($activity_id, $student_id) {
+        $answers = Answer::where([['activity_id', $activity_id],['student_id', $student_id]])->get();
+        return $answers;
+    }
+
+    function updateAnswers(Request $request) {
+        $answer = Answer::find($request->id);
+        if($answer !== null){
+            $answer->points = $request->points;
+            $answer->is_correct = $request->is_correct;
+            $answer->new_validation = $request->new_validation;
+        }
+        return $answer->save();
+
     }
 
     function rosterActivities($roster) {
@@ -293,6 +316,7 @@ class ActivityController extends Controller
         }
 
         $quiz = Quiz::findOrFail($request->quiz_id);
+        $is_public = $quiz->is_exam;
 
         $activity = Activity::create([
             'user_id' => Auth::id(),
@@ -301,7 +325,8 @@ class ActivityController extends Controller
             'duration' => $request->input('duration', 600),
             'shuffle_questions' => $request->input('shuffle_questions', false),
             'shuffle_propositions' => $request->input('shuffle_propositions', false),
-            'seed' => $request->input('seed', random_int(0, 4294967295))
+            'seed' => $request->input('seed', random_int(0, 4294967295)),
+            'hidden' => $is_public
         ]);
 
         return response([

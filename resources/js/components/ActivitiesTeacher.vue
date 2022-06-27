@@ -67,6 +67,18 @@
             <b-icon-trophy-fill />
           </b-button>
 
+          <!-- View results -->
+          <b-button
+            v-if="data.item.status == 'finished'"
+            :to="`/activities/${data.item.id}/studentList`"
+            variant="outline-primary"
+            class="btn-circle"
+            v-b-popover.hover.top="'Liste des étudiants'"
+          >
+            <b-icon-person-lines-fill />
+          </b-button>
+          
+
           <!-- Delete an activity -->
           <b-button
             v-if="data.item.status == 'idle'"

@@ -26,7 +26,9 @@ class QuestionTransformer extends Fractal\TransformerAbstract
             'name' => $question->name,
             'content' => $question->content,
             'options' => $question->options,
-            'type' => $question->type
+            'type' => $question->type,
+            'points' => $question->points,
+            'hint' => $question->hint
         ];
 
         // Only for teachers

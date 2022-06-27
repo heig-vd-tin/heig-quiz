@@ -9,6 +9,7 @@ transformed into a textfield. The student have additional buttons:
 <div>
   <p>
     <markdown-it-vue mb-2 :content="content" />
+    points : {{points}}
   </p>
 </div>
 </template>

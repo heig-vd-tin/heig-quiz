@@ -20,8 +20,10 @@ class QuizTransformer extends Fractal\TransformerAbstract
                 'name' => $quiz->owner->name
             ],
             'keywords' => $quiz->keywords,
+            'is_exam' => $quiz->is_exam,
             'created_at' => $quiz->created_at->timestamp,
             'updated_at' => $quiz->updated_at->timestamp,
+            
 
             // Links
             'quiz_url' => url("api/quizzes/$quiz->id"),
