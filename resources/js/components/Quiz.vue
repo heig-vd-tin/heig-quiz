@@ -86,6 +86,15 @@
                 Précédent
               </b-button>
             </b-col>
+
+            <b-col v-if=!need_help>
+              <b-button pill variant="warning" @click="needHelp">help</b-button>
+            </b-col>
+
+            <b-col v-else>
+              <b-button pill variant="primary" @click="needHelp">stop help</b-button>
+            </b-col>
+
             <b-col cols="5">
               <h2 class="display-3 time">
                 <countdown :time="timeLeft" @end="activity.status = 'finished'">
@@ -97,6 +106,10 @@
                 </countdown>
               </h2>
             </b-col>
+            <b-col v-if="question.type === 'code'">
+              <b-button class="mt-3" variant="success" @click="testCode">Tester le code</b-button>
+            </b-col>
+
             <b-col>
               <b-button v-if="question.next_question" pill variant="outline-secondary" @click="nextQuestion">
                 Suivant
@@ -106,6 +119,10 @@
                 Terminer
               </b-button>
             </b-col>
+          </b-row>
+          <b-row v-if="question.type == 'code'" class="text-center align-middle">
+            status : {{message.status}}
+            sortie : {{message.output}}
           </b-row>
         </b-container>
       </b-card>
@@ -152,7 +169,12 @@ export default {
       component_question: null,
       question: {},
       values: [],
-      timeLeft: 0
+      need_help: false,
+      timeLeft: 0,
+      message: {
+        'output': null,
+        'status': null
+      }
     };
   },
   watch: {
@@ -186,6 +208,24 @@ export default {
     ])
   },
   methods: {
+    testCode() {
+      axios({
+        method: 'post',
+        url: '/api/activities/testCode',
+        data: {
+          'id': this.question.id,
+          'value': this.answered
+        }
+      }).then((reponse) => {
+          this.message.status = reponse.data.status;
+          this.message.output = reponse.data.output;
+          console.log(reponse)
+          
+      }).catch(function (erreur) {
+        console.log(erreur)
+      });
+    },
+  
     setComponent() {
       switch (this.question.type) {
         case 'short-answer':
@@ -197,32 +237,45 @@ export default {
         case 'multiple-choice':
           this.component_question = 'q-multiple-choice';
           break;
+        case 'code':
+          this.component_question = 'q-code';
+          break;
       }
       this.component_nonce += 1;
     },
+
     previousQuestion() {
       if (this.answered != this.question.answered) this.submitQuestion();
 
       this.$router.push(`/activities/${this.activity_id}/questions/${this.question.previous_question}`);
     },
+
     nextQuestion() {
       if (this.answered != this.question.answered) this.submitQuestion();
 
       this.$router.push(`/activities/${this.activity_id}/questions/${this.question.next_question}`);
     },
+
+    needHelp() {
+      this.need_help = !this.need_help;
+      this.submitQuestion();
+    },
+
     submitQuestion() {
       axios({
         method: 'post',
         url: `/api/activities/${this.activity_id}/questions/${this.question_id}`,
-        data: { answer: this.answered }
+        data: { answer: this.answered, need_help: this.need_help }
       }).catch(function(erreur) {
         console.log(erreur);
       });
     },
+
     submitQuiz() {
       if (this.answered != this.question.answered) this.submitQuestion();
       this.finished = true;
     },
+
     loadQuestion() {
       axios.get(`/api/activities/${this.activity_id}/questions/${this.question_id}`).then(rep => {
         this.question = rep.data;
@@ -232,10 +285,12 @@ export default {
     },
     ...mapActions('activity', ['joinActivity', 'leaveActivity'])
   },
+
   mounted() {
     this.joinActivity(this.activity_id);
     this.loadQuestion()
   },
+
   destroyed() {
     this.leaveActivity(this.activity_id);
   }

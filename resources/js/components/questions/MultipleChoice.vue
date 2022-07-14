@@ -1,9 +1,17 @@
 <template>
   <div>
+    <b-button v-if="hint"
+    variant="success"
+    class="btn-circle running"
+    v-b-popover.hover.top="hint"
+    >
+      <b-icon-question-circle-fill />
+    </b-button>
     <b-card-text>
       <markdown-it-vue :content="markdownContent" />
       points : {{points}}
     </b-card-text>
+    
     <b-list-group class="mt-3 mb-4">
       <b-list-group-item v-for="(proposition, index) in propositions" :key="index">
         <b-row class="text-center align-middle">
@@ -51,7 +59,8 @@ export default {
     is_correct: { type: Boolean, default: null },
     choices: Object,
     students: Number,
-    points: Number
+    points: Number,
+    hint: String
   },
   data() {
     return {

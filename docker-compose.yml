@@ -18,5 +18,20 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
 
+  RemoteCodeCompiler:
+    build: ../RemoteCodeCompiler
+    image: remodecodecompiler
+    container_name: remotecodecompiler
+    restart: unless-stopped
+    ports:
+      - 8080:8082
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - EXECUTION_MEMORY_MAX=10000
+      - EXECUTION_MEMORY_MIN=0
+      - EXECUTION_TIME_MAX=60
+      - EXECUTION_TIME_MIN=0
+
 volumes:
   mysql-data:

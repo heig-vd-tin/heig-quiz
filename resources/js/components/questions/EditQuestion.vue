@@ -2,6 +2,7 @@
   <div class="my-3">
     <b-container class="p-0">
       <h2 class="mb-3">Question</h2>
+      
 
       <b-row class="question_line">
         <b-col sm="2">
@@ -24,6 +25,18 @@
         </b-col>
         <b-col sm="3">
           <label class="help">Number of points</label>
+        </b-col>
+      </b-row>
+
+      <b-row class="question_line">
+        <b-col sm="2">
+          <label>Hint: </label>
+        </b-col>
+        <b-col sm="6">
+          <b-form-input v-model="question.hint" type="text"></b-form-input>
+        </b-col>
+        <b-col sm="3">
+          <label class="help">Aide pour l'étudiant</label>
         </b-col>
       </b-row>
 
@@ -67,8 +80,14 @@
       
       <component class="question_line" :is="component_validation" 
                               :validation="question.validation"
-                              v-on:onValidationChange="validationChange">
+                              v-on:onValidationChange="validationChange">       
       </component>
+
+      <component class="question_line" :is="component_options" 
+                              :options="question.options"
+                              v-on:onOptionsChange="optionsChange">       
+      </component>
+
 
       <b-row class="question_line">
         <b-col sm="2">
@@ -88,14 +107,26 @@
       <component class="mb-4" :key="component_nonce" :is="component_question" v-bind="question"></component>
     </b-container>
 
-    <h2 v-if="can_preview && question.type != 'multiple-choice'">Answer</h2> 
-    <b-container v-if="can_preview && question.type != 'multiple-choice'" fluid class="question_line">
+    <h2 v-if="can_preview && question.type != 'multiple-choice' && question.type != 'multiple-choice-with-answer'">Answer</h2> 
+    <b-container v-if="can_preview && question.type != 'multiple-choice' && question.type != 'multiple-choice-with-answer'" fluid class="question_line">
       <b-row class="my-4">
         <b-col sm="2">
           <label>Answer: </label>
         </b-col>
-        <b-col sm="6">
+
+        <b-col sm="6" v-if="question.type != 'code'">
           <b-form-textarea v-model="question.answer" rows="3" max-rows="6"></b-form-textarea>
+        </b-col>
+
+        <b-col sm="6" v-else>
+          <codemirror ref="myCm"
+            rows="3" 
+            max-rows="6"
+            v-model="question.answer"
+            :value="value" 
+            :options="cmOptions"
+          >
+          </codemirror>
         </b-col>
         <b-col sm="3">
           <label textWrap="true" class="help">You can test an answer here</label>
@@ -108,9 +139,7 @@
         </b-col>
 
         <b-col sm="9" v-if="question.type == 'code'">
-          <b-form-textarea :key="cpt_info_w" plaintext :value="question.test_info_w" rows="3" max-rows="6"></b-form-textarea>
-          <b-form-textarea :key="cpt_info_e" plaintext :value="question.test_info_e" rows="3" max-rows="6"></b-form-textarea>
-          <b-form-textarea :key="cpt_info_o" plaintext :value="question.test_info_o" rows="3" max-rows="6"></b-form-textarea>
+          
         </b-col>
         <b-col sm="3" v-else>
           <b-badge class="p-3" v-if="question.answer_ok == null" variant="info">Not tested</b-badge> 
@@ -140,6 +169,19 @@ import ValidationCode from './validation/ValidationCode'
 import ValidationFillInTheGaps from './validation/ValidationFillInTheGaps.vue'
 import ValidationMultipleAnswer from './validation/ValidationMultipleChoiceWithAnswer.vue';
 
+import OptionsFillInThegaps from './options/OptionsFillInTheGaps.vue';
+import OptionsCode from './options/OptionsCode.vue';
+
+// require component
+import { codemirror } from 'vue-codemirror'
+
+// require styles
+import 'codemirror/lib/codemirror.css'
+// language js
+import 'codemirror/mode/javascript/javascript.js'
+// theme css
+import 'codemirror/theme/base16-dark.css'
+
 export default {
   components: { 
     'q-code': Code,
@@ -148,41 +190,57 @@ export default {
     'q-short-answer': ShortAnswer, 
     'q-multiple-choice-with-answer': MultipleChoiceWithAnswer,
     'q-valid-multiple': ValidationMultiple,
+
     'q-valid-short': ValidationShort,
     'q-valid-code': ValidationCode,
     'q-valid-fill': ValidationFillInTheGaps,
     'q-valid-multiple-answer': ValidationMultipleAnswer,
-    'q-keyword' : Keyword
+
+    'q-options-fill': OptionsFillInThegaps,
+    'q-options-code': OptionsCode,
+
+    'q-keyword' : Keyword,
+    codemirror,
   },
 
   data() {
     return {
-        cpt_info_w: 1,
-        cpt_info_e: 2,
-        cpt_info_o: 3,
-        component_nonce: 0,
-        question:{
-          'content': null,
-          'name':'',
-          'points': null,
-          'type': null,
-          'difficulty': null,
-          'validation': null,
-          'answer': '',
-          'answer_ok': null,
-          'options': null,
-          keywords: []
-        },
-        component_question: null,
-        component_validation: null,
-        question_type_options:[
-          { value: null, text: 'Please select an option' },
-          { value: 'short-answer', text: 'Short-answer' },
-          { value: 'multiple-choice', text: 'Multiple choice' },
-          { value: 'code', text: 'Code' },
-          { value: 'fill-in-the-gaps', text: 'Fill in the gaps'},
-          { value: 'multiple-choice-with-answer', text: 'Multiple choice with answer'}
-        ]
+      cmOptions: {
+        // codemirror options
+        tabSize: 2,
+        mode: 'text/javascript',
+        theme: 'base16-dark',
+        lineNumbers: true,
+        line: true,
+      },
+      cpt_info_w: 1,
+      cpt_info_e: 2,
+      cpt_info_o: 3,
+      component_nonce: 0,
+      question:{
+        'content': null,
+        'name':'',
+        'points': 0,
+        'type': null,
+        'difficulty': null,
+        'validation': null,
+        'answer': '',
+        'answer_ok': null,
+        'hint': null,
+        'options': null,
+        keywords: []
+      },
+      component_question: null,
+      component_validation: null,
+      component_options: null,
+      question_type_options:[
+        { value: null, text: 'Please select an option' },
+        { value: 'short-answer', text: 'Short-answer' },
+        { value: 'multiple-choice', text: 'Multiple choice' },
+        { value: 'code', text: 'Code' },
+        { value: 'fill-in-the-gaps', text: 'Fill in the gaps'},
+        { value: 'multiple-choice-with-answer', text: 'Multiple choice with answer'}
+      ]
     }
   },
 
@@ -224,7 +282,15 @@ export default {
       this.question.validation = val
     },
 
+    optionsChange(val){
+      console.log(val) 
+      this.question.options = val
+    },
+
     setComponent() {
+
+      this.component_options = {}
+      this.question.options = {}
       switch (this.question.type) {
         case 'short-answer':
           if( this.question.validation === null ||
@@ -239,8 +305,10 @@ export default {
               Array.isArray(this.question.validation) ){
             this.question.validation = {}
           }
+          this.question.options = {}
           this.component_validation = 'q-valid-code'
           this.component_question = 'q-code'
+          this.component_options = 'q-options-code'
           break;
         case 'multiple-choice':
           if( this.question.validation === null ||
@@ -255,14 +323,16 @@ export default {
               !Array.isArray(this.question.validation)){
             this.question.validation = []
           }
+          this.question.options = {}
           this.component_validation = 'q-valid-fill'
           this.component_question = 'q-fill-in-the-gaps'
+          this.component_options = 'q-options-fill'
           break;
           
         case 'multiple-choice-with-answer':
           if( this.question.validation === null ||
               !Array.isArray(this.question.validation) ){
-            this.question.validation = []
+            this.question.validation = {}
           }
           this.component_validation = 'q-valid-multiple-answer'
           this.component_question = 'q-multiple-choice-with-answer'
@@ -308,6 +378,7 @@ export default {
 
     saveQuestion: function() {
       let vm = this
+
       axios({
           method: 'post',
           url: 'api/questions/create',

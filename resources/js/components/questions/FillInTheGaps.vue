@@ -1,7 +1,17 @@
 <template>
-  <b-form inline ref="content">
-    <markdown-it-vue @hook:mounted="parseGaps(options.gaps)" :content="content" />
-  </b-form>
+  <div>
+    <b-button v-if="hint"
+    variant="success"
+    class="btn-circle running"
+    v-b-popover.hover.top="hint"
+    >
+      <b-icon-question-circle-fill />
+    </b-button>
+    <p>Points : {{points}}</p>
+    <b-form inline ref="content">
+      <markdown-it-vue @hook:mounted="parseGaps(options.gaps)" :content="content" />
+    </b-form>
+  </div>
 </template>
 <script>
 import GapComponent from './gap';
@@ -25,7 +35,9 @@ export default {
     content: String, // Question Markdown content
     options: Object, // Gaps type
     answered: Array,
-    validation: Array
+    validation: Array,
+    points: Number,
+    hint: String
   },
   methods: {
     /**
