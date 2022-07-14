@@ -18,7 +18,7 @@
                 <label>Validation explanation: </label>
             </b-col>
             <b-col sm="6">
-                <b-form-textarea v-model="text_explanation" rows="3" max-rows="6"></b-form-textarea>
+                <b-form-textarea v-model="validation.explanation" rows="3" max-rows="6"></b-form-textarea>
             </b-col>
             <b-col sm="3">
                 <label  class="help"></label>
@@ -38,7 +38,7 @@ export default {
   },
 
   props: {
-    validation: Array
+    validation: Object
   },
 
   computed: {
@@ -52,7 +52,8 @@ export default {
         }
       },
       set: function (newValue) {
-          this.$emit('onValidationChange', newValue.split(','))
+        this.validation.list = newValue.split(',');
+        console.log(this.validation);
       }
     }
   },

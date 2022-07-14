@@ -67,7 +67,7 @@
             <b-icon-trophy-fill />
           </b-button>
 
-          <!-- View results -->
+          <!-- View student list -->
           <b-button
             v-if="data.item.status == 'finished'"
             :to="`/activities/${data.item.id}/studentList`"
@@ -133,11 +133,11 @@
           >
             <b-icon-bar-chart-fill />
           </b-button>
-
-          <!-- <span v-if="data.item.status == 'opened'">
+          <!--
+          <span v-if="data.item.status == 'opened'">
             {{ activities.presence.here }} / {{ data.item.roster.students }}
-          </span> -->
-
+          </span>
+          -->
           <countdown
             @end="data.item.status = 'finished'"
             v-if="data.item.status == 'running'"
@@ -145,6 +145,8 @@
           >
             <template slot-scope="props">
               <span :class="{ 'text-danger': props.totalMilliseconds <= 30 * 1000 }">
+                {{ String(props.heures).padStart(1, '0')}}
+                :
                 {{ String(props.minutes).padStart(2, '0') }}
                 :
                 {{ String(props.seconds).padStart(2, '0') }}

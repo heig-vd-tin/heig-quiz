@@ -54,6 +54,8 @@ Route::namespace('Api')->group(function () {
     Route::get('activities', 'ActivityController@index');
     Route::get('activities/{id}', 'ActivityController@show');
 
+    Route::post('activities/testCode', 'ActivityController@compilation'); //code compilation
+
     // Teacher
     Route::group(['middleware' => 'role:teacher'], function() {
         Route::get('students', 'StudentController@index');

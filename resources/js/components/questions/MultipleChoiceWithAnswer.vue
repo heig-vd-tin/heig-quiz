@@ -1,5 +1,12 @@
 <template>
   <div>
+    <b-button v-if="hint"
+    variant="success"
+    class="btn-circle running"
+    v-b-popover.hover.top="hint"
+    >
+      <b-icon-question-circle-fill />
+    </b-button>
     <b-card-text>
       <markdown-it-vue :content="markdownContent" />
     </b-card-text>
@@ -20,6 +27,7 @@
           <b-col class="text-left align-middle">
             <markdown-it-vue :content="proposition" />
           </b-col>
+          
           <b-col v-if="choices" class="text-right align-middle">
             <b-progress class="mt-2" :max="students" show-value>
               <b-progress-bar :value="choices[index]" :variant="getVariant(index)">{{ Math.round(choices[index] / students * 100, 1) }}%</b-progress-bar>
@@ -50,6 +58,8 @@ export default {
     is_correct: { type: Boolean, default: null },
     choices: Object,
     students: Number,
+    points: Number,
+    hint: String
   },
   data() {
     return {

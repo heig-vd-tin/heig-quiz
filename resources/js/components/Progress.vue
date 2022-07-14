@@ -21,6 +21,9 @@
           </h2>
         </template>
       </countdown>
+      <b-button>
+
+      </b-button>
       </b-col>
       </b-row>
       <table v-if="loadedMatrix" class="matrix">
@@ -69,7 +72,10 @@ export default {
   methods: {
     colorClass(value) {
       let classes = ''
-      if (this.showTF && value.answer != null) {
+
+      if (this.showTF && value.need_help == true){
+        return 'bg-warning'
+      } else if (this.showTF && value.answer != null) {
           return value.is_correct ? 'bg-success' : 'bg-danger'
       } else if (value.answer != null) {
           return 'bg-info';

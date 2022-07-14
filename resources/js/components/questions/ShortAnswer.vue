@@ -4,6 +4,13 @@
       <markdown-it-vue mb-2 :content="content" />
       points : {{points}}
     </p>
+    <b-button v-if="hint"
+    variant="success"
+    class="btn-circle running"
+    v-b-popover.hover.top="hint"
+    >
+      <b-icon-question-circle-fill />
+    </b-button>
     <b-form-group v-if="$store.state.user.role == 'student'">
       <b-form-input
         v-model="value"
@@ -47,7 +54,8 @@ export default {
     answered: String,
     validation: Object,
     is_correct: { type: [Boolean, null], required: false },
-    points: Number
+    points: Number,
+    hint: String
   }
 };
 </script>

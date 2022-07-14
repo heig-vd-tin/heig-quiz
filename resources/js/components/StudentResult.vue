@@ -12,6 +12,10 @@
       <component class="mb-4" :is="question.component" v-bind="question"></component>
       <component class="mb-4" :is="answers[index].component" v-bind="answers[index]"></component>
 
+      <b-col v-if="question.type === 'code'">
+        <b-button class="mt-3" variant="success" @click="testCode(index)">Tester le code</b-button>
+      </b-col>
+
       <b-alert show variant="info" v-if="question.explanation">
         <markdown-it-vue mb-2 :content="question.explanation" />
       </b-alert>
@@ -51,17 +55,7 @@ export default {
     activity_id: null,
     student_id: null
   },
-  watch: {
-    current_roster(roster) {
-      let id = roster != null ? roster.id : null;
-
-      // Hide roster column if one is selected
-      let field = this.activities.fields.find(field => field.key == 'roster.name');
-      field.class = id ? 'd-none' : '';
-
-      this.loadActivities(id);
-    }
-  },
+  
   methods: {
     getComponent(question) {
       switch (question.type) {
@@ -80,11 +74,31 @@ export default {
       }
       return null;
     },
+
+    testCode(index) {
+      axios({
+        method: 'post',
+        url: '/api/activities/testCode',
+        data: {
+          'id': this.question[index].id,
+          'value': this.answers[index].answer
+        }
+      }).then(function (reponse) {
+          this.message.status = reponse.data.status;
+          this.message.output = reponse.data.output;
+          console.log(reponse)
+          
+      }).catch(function (erreur) {
+        console.log(erreur)
+      });
+    },
+
     loadActivity() {
       axios.get(`/api/activities/${this.activity_id}`).then(({ data: activity }) => {
         this.activity = activity;
       });
     },
+
     loadQuestions() {
       axios.get(`/api/activities/${this.activity_id}/questions`).then(({ data: { data, count } }) => {
         this.questions = data;
@@ -95,18 +109,23 @@ export default {
         
       });
     },
+
     loadAnswers() {
       
       axios.get(`/api/activities/${this.activity_id}/studentResult/${this.student_id}`).then(({ data: answers }) => {
-        
+
         this.answers = answers;
-        
+
+        for (let i = 0; i < this.questions.length; ++i) {
+          this.answers.push({answer: null, is_correct: false, new_validation: null, points: 0, id: 1});
+        }
+
         this.answers.forEach(answer => {
           answer.component = 'a-answer';
         });
         
       });
-    }
+    },
   },
   
   mounted() {

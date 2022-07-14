@@ -11,6 +11,7 @@ class updateAnswersTable extends Migration
         Schema::table('answers', function (Blueprint $table) {
             $table->after('is_correct', function ($table) {
                 $table->double('points');
+                $table->tinyInteger('need_help')->default(false);
             });
         });
     }
@@ -20,6 +21,7 @@ class updateAnswersTable extends Migration
         Schema::table('answers', function (Blueprint $table) {
             
             $table->dropColumn('points');
+            $table->tinyInteger('need_help')->default(false);
             
         });
     }

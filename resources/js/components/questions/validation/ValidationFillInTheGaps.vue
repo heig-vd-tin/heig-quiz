@@ -11,30 +11,15 @@
           <label  class="help">List of answers in the order (banana,apple,egg) </label>
         </b-col>
       </b-row>
-
-      <div v-for="(gap, index) in gaps">
-        <b-row class="my-1">
-          <b-col sm="2">
-            <label>gaps: </label>
-          </b-col>
-          <b-col sm="6">
-            <b-form-input v-model="gaps[index]" type="text"></b-form-input>
-          </b-col>
-          <b-col sm="3">
-            <b-button @click="deleteGap(index)">delete</b-button>
-            <label  class="help">List of possible answer (fruit,banana,strawberries) </label>
-          </b-col>
-        </b-row>
-      </div>
-      <b-button @click="addGaps">New gaps</b-button>
   </div>
+  
 </template>
 <script>
 
 export default {
   data() {
     return {
-      gaps:['']
+      
     }
   },
 
@@ -47,12 +32,12 @@ export default {
       console.log(index);
       console.log(this.finds);
       this.gaps.splice(index, 1);
-    }
+    },
+
   },
 
   props: {
     validation: Array,
-    options: Array
   },
 
   computed: {
@@ -67,24 +52,9 @@ export default {
       },
       set: function (newValue) {
           this.$emit('onValidationChange', newValue.split(','))
-          
-      }
-    },
-
-    gaps: {
-      get: function() {
-        
-      },
-
-      set: function(newValue) {
-        console.log(newValue);
-        
       }
     }
-
   },
-
-  
 
   mounted() {
   }
