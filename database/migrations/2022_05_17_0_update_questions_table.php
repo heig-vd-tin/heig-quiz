@@ -11,10 +11,10 @@ class UpdateQuestionsTable extends Migration
     {
         Schema::table('questions', function (Blueprint $table) {
             $table->after('explanation', function ($table) {
-                $table->text('hint');
+                $table->text('hint')->nullable()->default(null);
                 $table->tinyInteger('is_public')->default(false);
                 $table->unsignedInteger('count_views')->default(0);
-                $table->double('points');
+                $table->double('points')->default(0);
             });
         });
     }

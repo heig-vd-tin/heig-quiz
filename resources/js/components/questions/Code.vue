@@ -11,8 +11,6 @@ transformed into a textfield. The student have additional buttons:
       <markdown-it-vue mb-2 :content="content" />
       points : {{ points }}
     </p>
-
-
     <b-button v-if="hint" variant="success" class="btn-circle running" v-b-popover.hover.top="hint">
       <b-icon-question-circle-fill />
     </b-button>
@@ -23,7 +21,6 @@ transformed into a textfield. The student have additional buttons:
               :options="cmOptions"
               >
       </codemirror>
-
     </b-form-group>
 
   </div>

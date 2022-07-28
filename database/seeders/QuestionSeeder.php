@@ -228,10 +228,10 @@ Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un *-*. Les deux *-* d'
         Question::create([
           'name' => 'boucle for en java',
           'type' => 'code',
+          'points' => 5,
+          'hint' => 'Good luck',
           'content' => 'Réaliser une boucle for de 0 à 9 en affichant chaque itération',
-          'validation' => [
-              0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-          ],
+          'validation' => '0, 1, 2, 3, 4, 5, 6, 7, 8, 9',
           'options' => [
             'language' => 'JAVA'
           ],

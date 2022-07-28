@@ -8,11 +8,11 @@
         <label> Quiz : </label>
       </b-col>
       <b-col sm="9">
-        <b-form-input v-model="quiz_name" @change="onQuizNameChange" list="quiz-list"></b-form-input>
+        <b-select v-model="quiz_name" @change="onQuizNameChange">
 
-        <datalist id="quiz-list">
-          <option v-for="qu in quizzes" :key="qu.id">{{ qu.name }}</option>
-        </datalist>
+          <option v-for="(quiz, index) in quizzes" :value="quiz.name">{{ quiz.name }}</option>
+
+        </b-select>
       </b-col>
     </b-row>
 
@@ -30,16 +30,17 @@
       </b-col>
     </b-row>
 
-    <b-row v-if="state > 1" class="my-3">
+    <b-row v-if="state > 0" class="my-3">
       <b-col sm="3">
         <label> Questions : </label>
       </b-col>
       <b-col sm="9">
-        <b-form-input v-model="question_name" list="question-list"></b-form-input>
+        <b-select v-model="question_name" @change="stateTwo">
 
-        <datalist id="question-list">
-          <option v-for="q in questions" :key="q.id">{{ q.name }}</option>
-        </datalist>
+          <option v-for="(question, index) in questions" :value="question.name" :key="question.id">{{ question.name }}</option>
+
+        </b-select>
+
 
         <div class="my-2" v-if="state > 1 && question_name">{{ questionContent }}</div>
 
@@ -112,6 +113,10 @@ export default {
     },
 
     loadQuestions : function() {
+      if (this.keyword == '') {
+        this.keyword = 'all';
+      }
+
       axios
       .get(`api/questions/${this.keyword}`)
       .then(resp => {
@@ -131,12 +136,17 @@ export default {
       this.loadkeywords()
       this.quiz = this.getQuiz(this.quiz_name)
       this.state = 1;
+      this.loadQuestions();
+      this.loadQuizQuestions()
     },
 
     onKeywordChange: function() {
       this.loadQuestions()
-      this.loadQuizQuestions()
-      this.state = 2
+      this.state = 1
+    },
+
+    stateTwo() {
+      this.state = 2;
     },
 
     onDelete: function(question, index, button){

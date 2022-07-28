@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActivityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -104,6 +105,8 @@ Route::namespace('Api')->group(function () {
         Route::post('activities/{id}/delete', 'ActivityController@delete');
         Route::post('activities/{id}/open', 'ActivityController@open');
         Route::post('activities/{id}/close', 'ActivityController@close');
+        Route::post('/activities/{id}/finish', 'ActivityController@finish');
+        Route::post('activities/{id}/addTime', 'ActivityController@addTime');
 
         Route::get('questions', 'QuestionController@index');
         Route::get('questions/{keyword}', 'QuestionController@getQuestions');

@@ -41,7 +41,7 @@ class ActivityController extends Controller
       $activities = $request->user()->student->activities()->where('hidden', false);
 
     if ($request->user()->isTeacher() && $request->owned)
-      $activities = $request->user()->activities();
+      $activities = $request->user()->activities()->where('id', Auth::id())->get();
 
     if (($roster_id = $request->input('roster_id')))
       $activities->where('roster_id', $roster_id);
@@ -82,21 +82,42 @@ class ActivityController extends Controller
     return $students;
   }
 
+  function addTime(Request $data){
+
+    $activity = Activity::findOrFail($data->id);
+    $activity->duration += $data->time;
+    return $activity->save();
+  }
+
   function studentAnswers($activity_id, $student_id)
   {
     $answers = Answer::where([['activity_id', $activity_id], ['student_id', $student_id]])->get();
     return $answers;
   }
 
-  function updateAnswers(Request $request)
+  function updateAnswer(Request $request)
   {
-    $answer = Answer::find($request->id);
-    if ($answer !== null) {
+    $answer = null;
+    
+    if($request->id != -1) {
+      $answer = Answer::find($request->id);
+      if ($answer !== null) {
+        $answer->points = $request->points;
+        $answer->is_correct = $request->is_correct;
+        $answer->new_validation = $request->new_validation;
+      }
+    } else {
+      
+      $answer = new Answer();
+      $answer->student_id = $request->student_id;
+      $answer->activity_id = $request->activity_id;
+      $answer->question_id = $request->question_id;
       $answer->points = $request->points;
-      $answer->is_correct = $request->is_correct;
       $answer->new_validation = $request->new_validation;
+      
     }
-    return $answer->save();
+    $answer->save();
+    return $answer;
   }
 
   function compilation(Request $request)
@@ -106,47 +127,37 @@ class ActivityController extends Controller
     $question = Question::find($request->id);
     $language = $question->options['language'];
 
-    $url = '';
+    $url = 'http://localhost:8080/compiler/';
     $code = $request->value;
-
-    $file_source_code = '';
-
-    $file_expected_output = 'output.txt';
+    $fileName = '';
 
     switch ($language) {
       case 'C':
-        $url = 'http://localhost:8080/compiler/c';
-        $file_source_code = 'code.c';
+        $url = $url . 'c';
+        $fileName = 'sourceCode.c';
         break;
       case 'CPP':
-        $url = 'http://localhost:8080/compiler/cpp';
-        $file_source_code = 'code.cpp';
+        $url = $url . 'cpp';
+        $fileName = 'sourceCode.cpp';
         break;
       case 'JAVA':
-        $url = 'http://localhost:8080/compiler/java';
-        $file_source_code = 'code.java';
+        $url = $url . 'java';
+        $fileName = 'sourceCode.java';
         break;
       case 'PYTHON':
-        $url = 'http://localhost:8080/compiler/python';
-        $file_source_code = 'code.py';
+        $url = $url . 'python';
+        $fileName = 'sourceCode.py';
         break;
     }
 
-    $file_input = 'input.txt';
-    file_put_contents($file_input, '1');
-    file_put_contents($file_source_code, $code);
-    file_put_contents($file_expected_output, $question->validation);
-
-    
-
-    $response = Http::attach('inputFile', file_get_contents($file_input), 'input.txt')
-                    ->attach('outputFile', file_get_contents($file_expected_output), 'output.txt')
-                    ->attach('sourceCode', file_get_contents($file_source_code), 'code.txt')
+    $response = Http::attach('inputFile', '1', 'input.txt')
+                    ->attach('outputFile', $question->validation, 'output.txt')
+                    ->attach('sourceCode', $code, $fileName)
                     ->post($url, [
                       'memoryLimit' => 500,
                       'timeLimit' => 30
                     ]);
-
+    
     return $response;
   }
 
@@ -198,6 +209,7 @@ class ActivityController extends Controller
     $activity->started_at = Carbon::now();
     $activity->save();
   }
+  
 
   /**
    * Progression matrix (students / questions).
@@ -317,6 +329,34 @@ class ActivityController extends Controller
     $activity->update(['opened_at' => Carbon::now()]);
   }
 
+  function finish($id)
+  {
+    $activity = Activity::findOrFail($id);
+
+    if ($activity->user_id != Auth::id()) {
+      return response([
+        'message' => "Only the owner of an activity can finish an activity",
+        'error' => "Unauthorized"
+      ], 403);
+    }
+
+    if ($activity->hidden) {
+      return response([
+        'message' => "Cannot finish a hidden activity",
+        'error' => "Bad Request"
+      ], 400);
+    }
+
+    if ($activity->status != 'running') {
+      return response([
+        'message' => "Only running activities can be finished",
+        'error' => "Bad Request"
+      ], 400);
+    }
+
+    $activity->update(['ended_at' => Carbon::now()]);
+  }
+
   function close($id)
   {
     $activity = Activity::findOrFail($id);
@@ -394,7 +434,6 @@ class ActivityController extends Controller
     }
 
     $quiz = Quiz::findOrFail($request->quiz_id);
-    $is_public = $quiz->is_exam;
 
     $activity = Activity::create([
       'user_id' => Auth::id(),
@@ -404,7 +443,7 @@ class ActivityController extends Controller
       'shuffle_questions' => $request->input('shuffle_questions', false),
       'shuffle_propositions' => $request->input('shuffle_propositions', false),
       'seed' => $request->input('seed', random_int(0, 4294967295)),
-      'hidden' => $is_public
+      'hidden' => false
     ]);
 
     return response([
@@ -437,6 +476,15 @@ class ActivityController extends Controller
     if ($request->isMethod('post') && $activity->status == 'running') {
       $answered = $request->answer;
       $need_help = $request->need_help;
+      
+      $is_correct = false;
+      $is_correct = $question->validate($answered);
+
+      $points = 0;
+      
+      if ($is_correct) {
+        $points = $question->points;
+      }
       Answer::updateOrCreate(
         [
           'activity_id' => $activity_id,
@@ -445,8 +493,9 @@ class ActivityController extends Controller
         ],
         [
           'answer' => $answered,
-          'is_correct' => $question->validate($answered),
-          'need_help' => $need_help
+          'is_correct' => $is_correct,
+          'need_help' => $need_help,
+          'points' => $points
         ]
       );
     }

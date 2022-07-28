@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       activity: {},
-      studentList:{},
+      studentList:[],
       fields: [
         { key: 'id', label: '#', sortable: true },
         { key: 'name', label: 'Étudiant', sortable: true },
@@ -65,9 +65,9 @@ export default {
     },
 
     loadStudents() {
-        axios.get(`/api/activities/${this.activity_id}/studentList`).then(({data: studentList}) => {
-            this.studentList = studentList;
-        });
+      axios.get(`/api/activities/${this.activity_id}/studentList`).then(({data: studentList}) => {
+        this.studentList = studentList;
+      });
     }
     
   },

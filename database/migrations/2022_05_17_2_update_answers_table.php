@@ -10,7 +10,8 @@ class updateAnswersTable extends Migration
     {
         Schema::table('answers', function (Blueprint $table) {
             $table->after('is_correct', function ($table) {
-                $table->double('points');
+                $table->double('points')->default(0);
+                $table->text('new_validation')->nullable();
                 $table->tinyInteger('need_help')->default(false);
             });
         });
@@ -20,8 +21,7 @@ class updateAnswersTable extends Migration
     {
         Schema::table('answers', function (Blueprint $table) {
             
-            $table->dropColumn('points');
-            $table->tinyInteger('need_help')->default(false);
+          $table->dropIfExists(['points', 'new_validation', 'need_help']);
             
         });
     }

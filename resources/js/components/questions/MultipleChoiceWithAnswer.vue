@@ -9,7 +9,9 @@
     </b-button>
     <b-card-text>
       <markdown-it-vue :content="markdownContent" />
+      points : {{points}}
     </b-card-text>
+    
     <b-list-group class="mt-3 mb-4">
       <b-list-group-item v-for="(proposition, index) in propositions" :key="index">
         <b-row class="text-center align-middle">
@@ -27,7 +29,6 @@
           <b-col class="text-left align-middle">
             <markdown-it-vue :content="proposition" />
           </b-col>
-          
           <b-col v-if="choices" class="text-right align-middle">
             <b-progress class="mt-2" :max="students" show-value>
               <b-progress-bar :value="choices[index]" :variant="getVariant(index)">{{ Math.round(choices[index] / students * 100, 1) }}%</b-progress-bar>
@@ -36,6 +37,16 @@
         </b-row>
       </b-list-group-item>
     </b-list-group>
+    <b-row>
+      <b-col>
+        <p>
+          justification :
+        </p>
+        <b-form-textarea v-model="justification">
+
+        </b-form-textarea>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -47,6 +58,7 @@ let re = /^##\s*([A-Z]|\d+)\b\s*(.*?)(?=^##|$(?![\s\S]))/gms;
 import MarkdownItVue from 'markdown-it-vue'
 
 export default {
+
   components: {
     MarkdownItVue
   },
@@ -63,6 +75,7 @@ export default {
   },
   data() {
     return {
+      justification: '',
       value: 45,
       max: 100,
       selectedPropositions: new Proxy([], {
@@ -78,6 +91,15 @@ export default {
       this.selectedPropositions.forEach((value, index) => {
         if (value) values.push(index + 1);
       });
+      values.push(this.justification);
+      this.$emit('update:answered', values);
+    },
+    justification(){
+      let values = [];
+      this.selectedPropositions.forEach((value, index) => {
+        if (value) values.push(index + 1);
+      });
+      values.push(this.justification);
       this.$emit('update:answered', values);
     }
   },
