@@ -128,8 +128,9 @@ class ActivityController extends Controller
 
     $url = 'http://localhost:8080/compiler/';
     $code = $request->value;
-    $fileName = 'sourceCode.';
+    $fileName = 'source.';
 
+    
     switch ($language) {
       case 'C':
         $url = $url.'c';
@@ -148,38 +149,7 @@ class ActivityController extends Controller
         $fileName = $fileName.'py';
         break;
     }
-
-    /*
-    $client = new Client();
-    $response = $client->request('POST', $url, [
-      'multipart' => [
-        [
-          'name' => 'inputFile',
-          'contents' => '1',
-          'filename' => 'input.txt'
-        ],
-        [
-          'name' => 'outputFile',
-          'contents' => $question->validation,
-          'filename' => 'output.txt'
-        ],
-        [
-          'name' => 'sourceCode',
-          'contents' => $code,
-          'filename' => $fileName
-        ], 
-        [
-          'name' => 'memoryLimit',
-          'contents' => 500
-        ],
-        [
-          'name' => 'timeLimit',
-          'contents' => 30
-        ]
-      ]
-    ]);
-    */
-
+    
     $response = Http::attach('inputFile', '1', 'input.txt')
                     ->attach('outputFile', $question->validation, 'output.txt')
                     ->attach('sourceCode', $code, $fileName)
@@ -187,7 +157,6 @@ class ActivityController extends Controller
                       'memoryLimit' => 500,
                       'timeLimit' => 30
                     ]); 
-    
 
     return $response;
   }
