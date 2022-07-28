@@ -36,6 +36,12 @@ export default class Activity {
     });
   }
 
+  finish(activity_id) {
+    axios.post(`/api/activities/${activity_id}/finish`).catch((err) => {
+      this.app.error('Impossible de finir cette activité !');
+    });
+  }
+
   delete(activity_id) {
     this.app.$bvModal.msgBoxConfirm('Voulez-vous vraiment supprimer cette activité ?', {
       title: 'Supprimer ?',

@@ -56,6 +56,7 @@ class QuestionTransformer extends Fractal\TransformerAbstract
             $output = array_merge($output, [
                 'answered_at' => $question->answer->updated_at,
                 'answered' => $question->answer->answer,
+                'need_help' => $question->answer->need_help
             ]);
         }
 

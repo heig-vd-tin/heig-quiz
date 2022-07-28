@@ -18,7 +18,12 @@
       </b-row>
 
       <b-button class="my-3" variant="success" @click="createQuiz">Create quiz</b-button>
-      
+
+      <b-row class="my-1" v-if="alert == 1">
+        <b-col sm="3">
+          <label> {{msg}} </label>
+        </b-col>
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -31,16 +36,19 @@ export default {
         quiz:{
           'name':'',
           'is_exam': false
-        }
+        },
+        alert: 0,
+        msg: ''
     }
   },
 
   methods: {
-    clearInput: function () {
+    clearInput() {
       this.quiz = {
         'name': '',
         'is_exam': false
       };
+
     },
 
     createQuiz: function() {
@@ -49,12 +57,16 @@ export default {
           url: 'api/quizzes/create',
           data: this.quiz
       })
-      .then(function (reponse) {
+      .then((reponse) => {
+          this.clearInput();
+          this.alert = 1;
           console.log("quiz created");
-          clearInput();
+          this.msg = 'quiz créé'
       })
-      .catch(function (erreur) {
-          console.log(erreur)
+      .catch((erreur) => {
+        this.alert = 1;
+        console.log(erreur)
+        this.msg = 'Erreur à la création : ' + erreur;
       });
     },
   }, 

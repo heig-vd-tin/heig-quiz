@@ -14,6 +14,8 @@ use Log;
 
 use App\Transformer\QuestionTransformer;
 
+use function PHPUnit\Framework\isEmpty;
+
 class QuestionController extends Controller
 {
     function index(Request $request)

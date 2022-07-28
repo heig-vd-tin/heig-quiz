@@ -189,8 +189,8 @@ export default {
     'q-multiple-choice': MultipleChoice,
     'q-short-answer': ShortAnswer, 
     'q-multiple-choice-with-answer': MultipleChoiceWithAnswer,
-    'q-valid-multiple': ValidationMultiple,
 
+    'q-valid-multiple': ValidationMultiple,
     'q-valid-short': ValidationShort,
     'q-valid-code': ValidationCode,
     'q-valid-fill': ValidationFillInTheGaps,
@@ -291,6 +291,7 @@ export default {
 
       this.component_options = {}
       this.question.options = {}
+
       switch (this.question.type) {
         case 'short-answer':
           if( this.question.validation === null ||
@@ -330,10 +331,7 @@ export default {
           break;
           
         case 'multiple-choice-with-answer':
-          if( this.question.validation === null ||
-              !Array.isArray(this.question.validation) ){
-            this.question.validation = {}
-          }
+          this.question.validation = []
           this.component_validation = 'q-valid-multiple-answer'
           this.component_question = 'q-multiple-choice-with-answer'
           break;

@@ -46,6 +46,8 @@ class Question extends Model
                 return $this->validateCode($value);
             case 'fill-in-the-gaps':
                 return $this->validateFillInTheGaps($value);
+            case 'multiple-choice-with-answer':
+                return $this->validateMultipleChoiceWithAnswer($value);
         }
         return false;
     }
@@ -56,11 +58,11 @@ class Question extends Model
             $value = trim($value);
         }
 
-        if (Arr::has($this, 'validation.equals') && $value == Arr::get($this, 'validation.equals'))
+        if (Arr::has($this, 'validation.equals') && strval($value) == Arr::get($this, 'validation.equals'))
             return true;
 
         if (Arr::has($this, 'validation.pattern')) {
-            if (preg_match(Arr::get($this, 'validation.pattern'), $value)) {
+            if (preg_match(Arr::get($this, 'validation.pattern'), strval($value))) {
                 return true;
             }
         }
@@ -75,6 +77,15 @@ class Question extends Model
         sort($value);
 
         return $value == $target;
+    }
+
+    protected function validateMultipleChoiceWithAnswer($value) {
+      $target = array_unique($this->validation->list);
+      sort($target);
+      $answer = array_unique($value->list);
+      sort($value->list);
+
+      return $value->list == $target;
     }
 
     protected function validateFillInTheGaps($value) {

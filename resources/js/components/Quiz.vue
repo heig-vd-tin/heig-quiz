@@ -41,6 +41,8 @@
         <countdown :time="timeLeft" @end="activity.status = 'finished'">
           <template slot-scope="props">
             <span :class="{ 'text-danger': props.totalMilliseconds <= 30 * 1000 }">
+              {{ String(props.hours)}}
+              :
               {{ String(props.minutes).padStart(2, '0') }}
               :
               {{ String(props.seconds).padStart(2, '0') }}
@@ -79,6 +81,18 @@
             }
           "
         ></component>
+        <b-row v-if="question.type == 'code'" class="align-left">
+          <b-col>
+            <h3>
+              status : {{message.status}}
+            </h3>
+          </b-col>
+          <b-col>
+            <h3>
+              sortie : {{message.output}}
+            </h3>
+          </b-col>
+        </b-row>
         <b-container>
           <b-row class="text-center align-middle">
             <b-col>
@@ -88,17 +102,19 @@
             </b-col>
 
             <b-col v-if=!need_help>
-              <b-button pill variant="warning" @click="needHelp">help</b-button>
+              <b-button pill v-model="need_help" variant="warning" @click="needHelp">help</b-button>
             </b-col>
 
             <b-col v-else>
-              <b-button pill variant="primary" @click="needHelp">stop help</b-button>
+              <b-button pill v-model="need_help" variant="primary" @click="needHelp">stop help</b-button>
             </b-col>
 
             <b-col cols="5">
               <h2 class="display-3 time">
                 <countdown :time="timeLeft" @end="activity.status = 'finished'">
                   <template slot-scope="props">
+                    {{ String(props.hours)}}
+                    :
                     {{ String(props.minutes).padStart(2, '0') }}
                     :
                     {{ String(props.seconds).padStart(2, '0') }}
@@ -106,8 +122,9 @@
                 </countdown>
               </h2>
             </b-col>
+
             <b-col v-if="question.type === 'code'">
-              <b-button class="mt-3" variant="success" @click="testCode">Tester le code</b-button>
+              <b-button class="mt-3" pill variant="success" @click="testCode">Tester le code</b-button>
             </b-col>
 
             <b-col>
@@ -119,10 +136,6 @@
                 Terminer
               </b-button>
             </b-col>
-          </b-row>
-          <b-row v-if="question.type == 'code'" class="text-center align-middle">
-            status : {{message.status}}
-            sortie : {{message.output}}
           </b-row>
         </b-container>
       </b-card>
@@ -137,6 +150,7 @@ import Code from './questions/Code';
 import FillInTheGaps from './questions/FillInTheGaps';
 import MultipleChoice from './questions/MultipleChoice';
 import ShortAnswer from './questions/ShortAnswer';
+import MultipleChoiceWithAnswer from './questions/MultipleChoiceWithAnswer.vue';
 
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import { mapActions, mapGetters } from 'vuex';
@@ -147,6 +161,7 @@ export default {
     'q-fill-in-the-gaps': FillInTheGaps,
     'q-multiple-choice': MultipleChoice,
     'q-short-answer': ShortAnswer,
+    'q-multiple-choice-with-answer': MultipleChoiceWithAnswer,
     countdown: VueCountdown
   },
   props: {
@@ -163,12 +178,13 @@ export default {
   data() {
     return {
       finished: false,
-      answered: null,
+      answered: '',
       name: '',
       component_nonce: 0,
       component_question: null,
       question: {},
       values: [],
+      need_help_list: [],
       need_help: false,
       timeLeft: 0,
       message: {
@@ -240,18 +256,21 @@ export default {
         case 'code':
           this.component_question = 'q-code';
           break;
+        case 'multiple-choice-with-answer':
+          this.component_question = 'q-multiple-choice-with-answer';
+          break;
       }
       this.component_nonce += 1;
     },
 
     previousQuestion() {
-      if (this.answered != this.question.answered) this.submitQuestion();
+      this.submitQuestion();
 
       this.$router.push(`/activities/${this.activity_id}/questions/${this.question.previous_question}`);
     },
 
     nextQuestion() {
-      if (this.answered != this.question.answered) this.submitQuestion();
+      this.submitQuestion();
 
       this.$router.push(`/activities/${this.activity_id}/questions/${this.question.next_question}`);
     },
@@ -272,7 +291,8 @@ export default {
     },
 
     submitQuiz() {
-      if (this.answered != this.question.answered) this.submitQuestion();
+      this.submitQuestion();
+
       this.finished = true;
     },
 
@@ -280,6 +300,7 @@ export default {
       axios.get(`/api/activities/${this.activity_id}/questions/${this.question_id}`).then(rep => {
         this.question = rep.data;
         this.answered = this.question.answered;
+        this.need_help = this.question.need_help;
         this.setComponent();
       });
     },
