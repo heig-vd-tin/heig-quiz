@@ -125,6 +125,7 @@
 
             <b-col v-if="question.type === 'code'">
               <b-button class="mt-3" pill variant="success" @click="testCode">Tester le code</b-button>
+              <p v-if="question.options.language == 'JAVA'">Nommé votre public classe "source"</p>
             </b-col>
 
             <b-col>
