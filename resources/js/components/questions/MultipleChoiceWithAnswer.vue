@@ -42,7 +42,11 @@
         <p>
           justification :
         </p>
-        <b-form-textarea v-model="justification">
+        <b-form-textarea v-if="$store.state.user.role == 'student'" v-model="justification">
+
+        </b-form-textarea>
+
+        <b-form-textarea v-if="$store.state.user.role == 'teacher'" v-model="justification" readonly="true">
 
         </b-form-textarea>
       </b-col>

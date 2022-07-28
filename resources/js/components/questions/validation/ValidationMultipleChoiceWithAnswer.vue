@@ -43,7 +43,7 @@ export default {
     validation_list: function(newVal, oldVal){
       this.validation = newVal.split(',');
       this.validation.push(this.validation_justification);
-      console.log(this.validation);
+      this.$emit('onValidationChange', this.validation);
     },
     validation_justification: function(newVal, oldVal){
       let size = this.validation.length;
@@ -53,7 +53,7 @@ export default {
       } else {
         this.validation[size-1] = newVal;
       }
-      console.log(this.validation);
+      this.$emit('onValidationChange', this.validation);
     } 
   },
   

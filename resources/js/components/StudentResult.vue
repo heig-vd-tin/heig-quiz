@@ -12,8 +12,8 @@
     <b-card class="mb-4 mt-1" v-for="(question, index) in questions" :key="question.id">
 
       <component class="mb-4" :is="question.component" v-bind="question"></component>
-      <span v-if="question.type == 'fill-in-the-gaps' || question.type == 'multiple-choice'">Réponse enregistré</span>
-      <b-form-input v-if="question.type == 'fill-in-the-gaps' || question.type == 'multiple-choice'" 
+      <span v-if="question.type == 'fill-in-the-gaps' || question.type == 'multiple-choice' || question.type == 'multiple-choice-with-answer'">Réponse Attendu</span>
+      <b-form-input v-if="question.type == 'fill-in-the-gaps' || question.type == 'multiple-choice' || question.type == 'multiple-choice-with-answer'" 
                     type="text" 
                     readonly="true" 
                     v-model="question.validation">
@@ -22,6 +22,12 @@
 
       <b-col v-if="question.type === 'code'">
         <b-button class="mt-3" variant="success" @click="testCode(index)">Tester le code</b-button>
+        <p>
+          status : {{message.status}}
+        </p>
+        <p>
+          output : {{message.output}}
+        </p>
       </b-col>
 
       <b-alert show variant="info" v-if="question.explanation">
@@ -96,19 +102,21 @@ export default {
     },
 
     testCode(index) {
+      console.log(index)
       axios({
         method: 'post',
         url: '/api/activities/testCode',
         data: {
-          'id': this.question[index].id,
+          'id': this.questions[index].id,
           'value': this.answers[index].answer
         }
-      }).then(function (reponse) {
+      }).then((reponse) => {
           this.message.status = reponse.data.status;
           this.message.output = reponse.data.output;
           console.log(reponse)
           
-      }).catch(function (erreur) {
+      }).catch((erreur) => {
+        this.message.status = "erreur : code non envoyés"
         console.log(erreur)
       });
     },
@@ -135,21 +143,26 @@ export default {
     loadAnswers() {
       
       axios.get(`/api/activities/${this.activity_id}/studentResult/${this.student_id}`).then(({ data: answers }) => {
-        console.log(answers.length);
-        while (answers.length < this.questions.length) {
+
+        for (i = 0; i < this.questions.length; ++i) {
           let voidAnswer = {
-              activity_id:this.activity_id, 
+              activity_id: this.activity_id, 
               student_id: this.student_id, 
-              question_id: this.questions[answers.length].id,
+              question_id: this.questions[i].id,
               answer: null, 
               is_correct: false, 
               new_validation: null, 
               points: 0,
               id: -1
           }
-
-          answers.push(voidAnswer);
+          if (i == answers.length) {
+            answers.push(voidAnswer)
+          } else if(this.questions[i].id != answers[i].question_id) {
+            answers.splice(i, 0, voidAnswer);
+          }
         }
+        
+        
 
 
         this.answers = answers;
