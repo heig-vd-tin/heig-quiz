@@ -122,33 +122,63 @@ class ActivityController extends Controller
 
   function compilation(Request $request)
   {
-    
 
     $question = Question::find($request->id);
     $language = $question->options['language'];
 
     $url = 'http://localhost:8080/compiler/';
     $code = $request->value;
-    $fileName = '';
+    $fileName = 'sourceCode.';
 
     switch ($language) {
       case 'C':
-        $url = $url . 'c';
-        $fileName = 'sourceCode.c';
+        $url = $url.'c';
+        $fileName = $fileName.'c';
         break;
       case 'CPP':
-        $url = $url . 'cpp';
-        $fileName = 'sourceCode.cpp';
+        $url = $url.'cpp';
+        $fileName = $fileName.'cpp';
         break;
       case 'JAVA':
-        $url = $url . 'java';
-        $fileName = 'sourceCode.java';
+        $url = $url.'java';
+        $fileName = $fileName.'java';
         break;
       case 'PYTHON':
-        $url = $url . 'python';
-        $fileName = 'sourceCode.py';
+        $url = $url.'python';
+        $fileName = $fileName.'py';
         break;
     }
+
+    /*
+    $client = new Client();
+    $response = $client->request('POST', $url, [
+      'multipart' => [
+        [
+          'name' => 'inputFile',
+          'contents' => '1',
+          'filename' => 'input.txt'
+        ],
+        [
+          'name' => 'outputFile',
+          'contents' => $question->validation,
+          'filename' => 'output.txt'
+        ],
+        [
+          'name' => 'sourceCode',
+          'contents' => $code,
+          'filename' => $fileName
+        ], 
+        [
+          'name' => 'memoryLimit',
+          'contents' => 500
+        ],
+        [
+          'name' => 'timeLimit',
+          'contents' => 30
+        ]
+      ]
+    ]);
+    */
 
     $response = Http::attach('inputFile', '1', 'input.txt')
                     ->attach('outputFile', $question->validation, 'output.txt')
@@ -156,8 +186,9 @@ class ActivityController extends Controller
                     ->post($url, [
                       'memoryLimit' => 500,
                       'timeLimit' => 30
-                    ]);
+                    ]); 
     
+
     return $response;
   }
 
@@ -476,7 +507,7 @@ class ActivityController extends Controller
     if ($request->isMethod('post') && $activity->status == 'running') {
       $answered = $request->answer;
       $need_help = $request->need_help;
-      
+
       $is_correct = false;
       $is_correct = $question->validate($answered);
 
