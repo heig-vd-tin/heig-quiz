@@ -89,6 +89,12 @@ class ActivityController extends Controller
     return $activity->save();
   }
 
+  function stop(Request $data) {
+    $activity = Activity::findOrFail($data->id);
+    $activity->duration = $data->time;
+    return $activity->save();
+  }
+
   function studentAnswers($activity_id, $student_id)
   {
     $answers = Answer::where([['activity_id', $activity_id], ['student_id', $student_id]])->get();
@@ -124,12 +130,13 @@ class ActivityController extends Controller
   {
 
     $question = Question::find($request->id);
+
     $language = $question->options['language'];
 
     $url = 'http://localhost:8080/compiler/';
     $code = $request->value;
     $fileName = 'source.';
-
+    
     
     switch ($language) {
       case 'C':

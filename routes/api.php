@@ -107,11 +107,13 @@ Route::namespace('Api')->group(function () {
         Route::post('activities/{id}/close', 'ActivityController@close');
         Route::post('/activities/{id}/finish', 'ActivityController@finish');
         Route::post('activities/{id}/addTime', 'ActivityController@addTime');
+        Route::post('activities/{id}/stop', 'ActivityController@stop');
 
         Route::get('questions', 'QuestionController@index');
         Route::get('questions/{keyword}', 'QuestionController@getQuestions');
         Route::post('questions/testquestion', 'QuestionController@testQuestion');
         Route::post('questions/create', 'QuestionController@create');
+        Route::post('questions/delete', 'QuestionController@delete');
     });
 
     Route::get('activities/{id}/questions', 'ActivityController@questions');

@@ -53,6 +53,14 @@
           </td>
         </tr>
       </table>
+      <b-row class="align-right">
+        <b-col class="text-right align-middle">
+          <b-button @click="stop">
+            Stop
+          </b-button>
+          
+        </b-col>
+      </b-row>
     </div>
     <div v-else class="mt-4 container">
       Pas d'accès étudiants
@@ -104,7 +112,7 @@ export default {
         id: this.activity_id,
         time: this.add_time*60
       }
-      
+
       axios({
         method: 'post',
         url: `/api/activities/${this.activity_id}/addTime`,
@@ -118,6 +126,25 @@ export default {
       });
       
       console.log(this.activity.duration);
+    },
+
+    stop() {
+      let time = {
+        id: this.activity_id,
+        time: ((Date.now() - Date.parse(this.activity.started_at))/1000)+1
+      }
+
+      axios({
+        method: 'post',
+        url: `/api/activities/${this.activity_id}/stop`,
+        data: time
+      })
+      .then((response) => {
+        this.activity.duration = ((Date.now() - Date.parse(this.activity.started_at))/1000)+1;
+      })
+      .catch((error) => {
+        console.log(error)
+      });
     },
 
     loadActivity() {

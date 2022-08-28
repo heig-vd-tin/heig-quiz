@@ -15,6 +15,7 @@ class QuestionSeeder extends Seeder
     {
         // 1
         $q1 = Question::create([
+            'user_id' => 1,
             'name' => 'Transformation binaire',
             'content' => 'Que vaut 7 en binaire ?',
             'validation' => [
@@ -30,6 +31,7 @@ class QuestionSeeder extends Seeder
 
         // 2
         $q2 = Question::create([
+            'user_id' => 1,
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0x8` en binaire ?',
             'validation' => (object)[
@@ -43,6 +45,7 @@ class QuestionSeeder extends Seeder
 
         // 3
         $q3 = Question::create([
+            'user_id' => 1,
             'name' => 'Transformation binaire',
             'content' => 'Que vaut `0` en binaire ?',
             'validation' => (object)[
@@ -56,6 +59,7 @@ class QuestionSeeder extends Seeder
 
         // 4
         $q4 = Question::create([
+            'user_id' => 1,
             'name' => 'Complément à deux',
             'type' => 'multiple-choice',
             'options' => (object)[
@@ -93,6 +97,7 @@ Ajouter 1 puis inverer tous les bits
         // @a,b,c@ pour les listes possibles et
         // @...@ pour les champs libres
         $q5 = Question::create([
+           'user_id' => 1,
             'name' => 'Shunting Yard',
             'type' => 'fill-in-the-gaps',
             'content' => "
@@ -125,6 +130,7 @@ Dans l'algorithme de Shunting-yard dont l'image suivante résume le principe, pl
         ]);
 
         $q6 = Question::create([
+            'user_id' => 1,
             'content' => "Comment déclarer une variable nommée `i`, un entier 32-bits non signé égal à la valeur `42` ?",
             'validation' => (object)[
                 'pattern' => '/\b(unsigned\s+int|uint32_t)\s+i\s*=\s*42\s*;?\b/',
@@ -140,6 +146,7 @@ Dans l'algorithme de Shunting-yard dont l'image suivante résume le principe, pl
 
 
         $q7 = Question::create([
+            'user_id' => 1,
             'name' => 'Philostrate',
             'type' => 'multiple-choice',
             'content' => "
@@ -168,6 +175,7 @@ La quatrième proposition est certainement la bonne
 
 
         Question::create([
+            'user_id' => 1,
             'name' => 'Montage électronique',
             'type' => 'fill-in-the-gaps',
             'content' => "
@@ -226,6 +234,7 @@ Dans le circuit ci-dessous. On reconnaît qu'il s'agit d'un *-*. Les deux *-* d'
         ]);
 
         Question::create([
+          'user_id' => 1,
           'name' => 'boucle for en java',
           'type' => 'code',
           'points' => 5,

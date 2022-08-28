@@ -80,12 +80,12 @@ class Question extends Model
     }
 
     protected function validateMultipleChoiceWithAnswer($value) {
-      $target = array_unique($this->validation->list);
+      $target = array_unique($this->validation);
       sort($target);
-      $answer = array_unique($value->list);
-      sort($value->list);
+      $answer = array_unique($value);
+      sort($value);
 
-      return $value->list == $target;
+      return $value == $target;
     }
 
     protected function validateFillInTheGaps($value) {

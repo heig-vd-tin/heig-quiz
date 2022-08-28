@@ -30,7 +30,7 @@ class QuestionController extends Controller
     function getQuestions(Request $request, $keyword)
     {
         $i = Auth::id();
-
+        
         if (!$request->user()->isTeacher()){
             return response([
                 'message' => "Only teacher can get questions",
@@ -39,11 +39,11 @@ class QuestionController extends Controller
         }
 
         if( $keyword == "all"){
-            $q = Question::with('keywords')->get();
+            $q = Question::where('user_id', $i)->get();
         }
         else{
             $q = Question::whereHas('keywords', function ($query) use ($keyword) {
-                return $query->where('name', 'like', $keyword);
+                return $query->where('name', 'like', $keyword)->where('user_id', $i);
             })->get();
         }
 
@@ -68,8 +68,11 @@ class QuestionController extends Controller
 
     function create(Request $request) {
         Log::debug('Create question');
-        $data = $request->all();
+        $request->user_id = 1;
         
+        $data = $request->all();
+        $data['user_id'] = Auth::id();
+
         if(array_key_exists('id', $data) && $data['id'])
         {
             $q = Question::findOrFail($data['id']);
@@ -127,5 +130,9 @@ class QuestionController extends Controller
             'message' => 'Question created',
             'roster' => $q
         ], 200);
+    }
+
+    function delete(Request $request) {
+        return Question::where('id', $request->id)->where('user_id', Auth::id())->delete();
     }
 }
