@@ -48,7 +48,7 @@
       </b-col>
     </b-row>
 
-    <b-table v-if="state > 1" striped hover :items="questions_quiz" :fields="fields">
+    <b-table v-if="state > 0" striped hover :items="questions_quiz" :fields="fields">
       <template #cell(Actions)="row">
         <b-button size="sm" @click="onDelete(row.item, row.index, $event.target)" class="mr-1">
           Delete question

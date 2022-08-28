@@ -218,6 +218,7 @@ export default {
       cpt_info_o: 3,
       component_nonce: 0,
       question:{
+        'user_id': 0,
         'content': null,
         'name':'',
         'points': 0,
@@ -304,7 +305,7 @@ export default {
         case 'code':
           if( this.question.validation === null ||
               Array.isArray(this.question.validation) ){
-            this.question.validation = {}
+            this.question.validation = "";
           }
           this.question.options = {}
           this.component_validation = 'q-valid-code'

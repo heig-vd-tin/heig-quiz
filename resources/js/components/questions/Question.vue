@@ -12,6 +12,7 @@
 import Code from './Code';
 import FillInTheGaps from './FillInTheGaps';
 import MultipleChoice from './MultipleChoice';
+import MultipleChoiceWithAnswer from './MultipleChoiceWithAnswer.vue';
 import ShortAnswer from './ShortAnswer';
 
 export default {
@@ -39,6 +40,12 @@ export default {
           break;
         case 'multiple-choice':
           return 'q-multiple-choice';
+          break;
+        case 'code':
+          return 'q-multiple-choice';
+          break;
+        case 'multiple-choice-with-answer':
+          return 'q-multiple-choice-with-answer';
           break;
       }
       return null;

@@ -266,13 +266,15 @@ export default {
 
     previousQuestion() {
       this.submitQuestion();
-
+      this.message.output = '';
+      this.message.status = '';
       this.$router.push(`/activities/${this.activity_id}/questions/${this.question.previous_question}`);
     },
 
     nextQuestion() {
       this.submitQuestion();
-
+      this.message.output = '';
+      this.message.status = '';
       this.$router.push(`/activities/${this.activity_id}/questions/${this.question.next_question}`);
     },
 

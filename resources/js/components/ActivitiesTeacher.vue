@@ -112,17 +112,6 @@
             <b-icon-play-fill />
           </b-button>
 
-          <!-- Finish the activity -->
-          <b-button
-            v-if="data.item.status == 'running'"
-            @click="$activity.finish(data.item.id)"
-            variant="outline-warning"
-            class="btn-circle"
-            v-b-popover.hover.top="'Finir l\'activité'"
-          >
-            <b-icon-dash-circle-fill />
-          </b-button>
-
           <!-- Open an activity -->
           <b-button
             v-if="data.item.status == 'opened'"
@@ -153,7 +142,7 @@
           <countdown
             @end="data.item.status = 'finished'"
             v-if="data.item.status == 'running'"
-            :time="data.item.duration * 1000 - (Date.now() - Date.parse(data.item.started_at))"
+            :time="data.item.duration * 1000 - (Date.now() - Date.parse(data.item.started_at)) + 2000"
             
           >
             <template slot-scope="props">
@@ -250,6 +239,7 @@ export default {
       console.log('RosterChange');
       this.current_roster = roster;
     }
+
   }
 };
 

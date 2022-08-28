@@ -12,9 +12,10 @@ class UpdateQuestionsTable extends Migration
         Schema::table('questions', function (Blueprint $table) {
             $table->after('explanation', function ($table) {
                 $table->text('hint')->nullable()->default(null);
-                $table->tinyInteger('is_public')->default(false);
-                $table->unsignedInteger('count_views')->default(0);
-                $table->double('points')->default(0);
+                $table->tinyInteger('is_public')->nullable()->default(false);
+                $table->unsignedInteger('count_views')->nullable()->default(0);
+                $table->double('points')->nullable()->default(0);
+                $table->foreignId('user_id')->nullable()->constrained();
             });
         });
     }
@@ -22,7 +23,7 @@ class UpdateQuestionsTable extends Migration
     public function down()
     {
         Schema::table('questions', function (Blueprint $table) {
-            $table->dropIfExists(['hint', 'is_public', 'count_views', 'points']);
+            $table->dropIfExists(['hint', 'is_public', 'count_views', 'points', 'user_id']);
         });
     }
 }

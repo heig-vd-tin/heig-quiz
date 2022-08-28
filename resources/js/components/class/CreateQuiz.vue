@@ -58,10 +58,15 @@ export default {
           data: this.quiz
       })
       .then((reponse) => {
-          this.clearInput();
-          this.alert = 1;
-          console.log("quiz created");
-          this.msg = 'quiz créé'
+
+        if(this.quiz.is_exam) {
+          this.msg = 'Examen créé'
+        } else {
+          this.msg = 'Quiz créé'
+        }
+
+        this.clearInput();
+        this.alert = 1;
       })
       .catch((erreur) => {
         this.alert = 1;

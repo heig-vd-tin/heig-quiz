@@ -24,9 +24,14 @@
         sort-icon-left
         sort-desc
         sort-by="id">
-      <template #cell(Actions)="row">
+      <template #cell(Edit)="row">
         <b-button size="sm" @click="onEdit(row.item, row.index, $event.target)" class="mr-1">
           Edit question
+        </b-button>
+      </template>
+      <template #cell(Delete)="row">
+        <b-button size="sm" @click="onDelete(row.item, row.index, $event.target)" class="mr-1">
+          Delete question
         </b-button>
       </template>
     </b-table>
@@ -53,7 +58,8 @@ export default {
           {key: 'id', sortable: true},
           {key: 'name', sortable: true},
           {key: 'content', sortable: true},
-          {key: 'Actions'}
+          {key: 'Edit'},
+          {key: 'Delete'}
         ],
         state: 0
     }
@@ -85,6 +91,26 @@ export default {
     onEdit: function(question, index, button){
       this.question = question
       this.cpt++
+    },
+
+    onDelete: function(question, index, button){
+      console.log(question.id);
+      axios({
+          method: 'post',
+          url: '/api/questions/delete',
+          data: {
+            'id': question.id
+          }
+      })
+      .then(function (reponse) {
+          console.log("question delete")
+          this.questions.splice(index, 1)
+          vm.$emit("questiondelete", vm.question)
+          
+      })
+      .catch(function (erreur) {
+          console.log(erreur)
+      });
     }
   },
 
